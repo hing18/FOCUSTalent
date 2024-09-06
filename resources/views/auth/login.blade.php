@@ -59,7 +59,7 @@
         
                           <div class="pt-4 text-center">
                             <span class="align-items-center w-auto">
-                                <img src="{{ asset('assets/img/HeadControl.png')}}" alt="" width="60%">
+                                <img src="{{ asset('assets/img/Ft2.png')}}" alt="" width="90%">
                             </span>
                             <p class="text-center small"><b>Iniciar Sesión</b></p>
                           </div>
@@ -70,7 +70,7 @@
                               <label for="email" class="form-label">Correo</label>
                               <div class="input-group">
                                 <span class="input-group-text" id="inputGroupPrepend"><i class="fas fa-at text-secondary"></i></span>
-                                <input type="email" id="email" name="email" class="form-control" value="admin@headcontrol.com" required>
+                                <input type="email" id="email" name="email" class="form-control" required>
                               </div>
                             </div>
         
@@ -78,7 +78,7 @@
                               <label for="password" class="form-label">Contraseña</label>
                                 <div class="input-group ">
                                     <span class="input-group-text" id="inputGroupPrepend"><i class="fas fa-lock text-secondary"></i></span>
-                                    <input type="password" id="password" name="password" class="form-control" value="12345678" required>
+                                    <input type="password" id="password" name="password" class="form-control" required>
                                 </div>
                             </div>
         

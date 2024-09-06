@@ -28,7 +28,7 @@ class SolvacantesContoller extends Controller
                 $data_vacantes_motivo=DB::select("SELECT id, motivo FROM vacantes_motivo WHERE status='true'");
                 $data_vacantes_genero=DB::select("SELECT id, letra, genero FROM vacantes_genero");
                 $data_vacantes_edades=DB::select("SELECT id, rango FROM vacantes_edades WHERE status='true'");
-                $data_planilleras=DB::select("SELECT cod_planillera, planillera FROM colab_planillera_ceco group by cod_planillera, planillera order by cod_planillera");
+                $data_PAGADORAs=DB::select("SELECT COD_PAGADORA, PAGADORA FROM colab_planillera_ceco group by COD_PAGADORA, PAGADORA order by COD_PAGADORA");
 
                 return view('re.solvacantes')
                 ->with('data_sups',$data_sups)
@@ -37,7 +37,7 @@ class SolvacantesContoller extends Controller
                 ->with('data_vacantes_motivo',$data_vacantes_motivo)
                 ->with('data_vacantes_genero',$data_vacantes_genero)
                 ->with('data_vacantes_edades',$data_vacantes_edades)                
-                ->with('data_planilleras',$data_planilleras);
+                ->with('data_PAGADORAs',$data_PAGADORAs);
             }
             else{   return view('auth.login');}
         }
@@ -66,7 +66,7 @@ class SolvacantesContoller extends Controller
         $tiempocalculado= $data['tiempocalculado'];
         $id_motivo= $data['id_motivo'];
         $fileToUpload= $data['fileToUpload'];
-        $sel_planillera= $data['sel_planillera'];
+        $sel_PAGADORA= $data['sel_PAGADORA'];
         $sel_ceco= $data['sel_ceco'];
         $id_user_solicitante= Auth::user()->id;
         $newname='-';$sube=0;
@@ -149,8 +149,8 @@ class SolvacantesContoller extends Controller
             $new->id_motivo =  $id_motivo;
             $new->autorizacion =  $newnamecompleto;
             $new->id_user_solicitante =  $id_user_solicitante;
-            $new->cod_planillera =  $sel_planillera;
-            $new->cod_ceco =  $sel_ceco;
+            $new->COD_PAGADORA =  $sel_PAGADORA;
+            $new->cod_cia =  $sel_ceco;
             $new->save();
 
             $query = DB::select("SELECT  `vacsol`.`id_puesto`,sum(`vacsol`.`cantidad`) as `totcantidad`
@@ -220,8 +220,8 @@ class SolvacantesContoller extends Controller
     public function ceco(Solvacantes $solvacantes)
     {
         $data= request()->except('_token');
-        $cod_planillera= $data['cod_planillera'];           
-        $data_cecos = DB::select("SELECT cod_cia_costo,centrocosto FROM colab_planillera_ceco WHERE cod_planillera='$cod_planillera' order by cod_cia_costo");
+        $COD_PAGADORA= $data['COD_PAGADORA'];           
+        $data_cecos = DB::select("SELECT cod_cia,nom_cia FROM colab_planillera_ceco WHERE COD_PAGADORA='$COD_PAGADORA' order by cod_cia");
         echo (json_encode($data_cecos));
     }
 

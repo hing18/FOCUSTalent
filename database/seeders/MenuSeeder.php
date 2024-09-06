@@ -195,6 +195,18 @@ class MenuSeeder extends Seeder
                 'created_at' => '2024-01-01 12:00:00',
                 'updated_at' => '2024-01-01 12:00:00'
             ),
+            15 => 
+            array (
+                'id' => 16,
+                'name_menu' => 'Entrevistas',
+                'id_sup' => 2,
+                'link' => 'entrevistas',
+                'icono' => '<i class="bi bi-circle"></i>',
+                'orden' => 15,
+                'tipo' => 'H',
+                'created_at' => '2024-01-01 12:00:00',
+                'updated_at' => '2024-01-01 12:00:00'
+            ),
         ));
     }
 }

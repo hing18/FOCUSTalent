@@ -35,8 +35,8 @@ return new class extends Migration
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrentOnUpdate();
             $table->text('observacion')->nullable();
-            $table->string('cod_planillera',6)->nullable();
-            $table->string('cod_ceco',6)->nullable();
+            $table->string('COD_PAGADORA',6)->nullable();
+            $table->string('cod_cia',6)->nullable();
         });
     }
 

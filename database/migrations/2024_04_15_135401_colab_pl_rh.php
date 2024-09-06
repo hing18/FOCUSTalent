@@ -17,8 +17,8 @@ return new class extends Migration
             $table->string('NOMBRE_SEP',100)->nullable();
             $table->string('APELLIDO_SEP',100)->nullable();
             $table->string('NO_EMPLE',10)->nullable();
-            $table->string('COD_PLANILLERA',5)->nullable();
-            $table->string('PLANILLERA',100)->nullable();
+            $table->string('COD_PAGADORA',5)->nullable();
+            $table->string('PAGADORA',100)->nullable();
             $table->string('COD_GRUPO',5)->nullable();
             $table->string('NOM_GRUPO',10)->nullable();
             $table->string('COD_SGRUPO',5)->nullable();
@@ -32,8 +32,8 @@ return new class extends Migration
             $table->string('H_RESPONSABLE',5)->nullable();
             $table->string('COD_UE',5)->nullable();
             $table->string('UNI_ECO',150)->nullable();
-            $table->string('COD_CIA_COSTO',15)->nullable();
-            $table->string('CENTROCOSTO',100)->nullable();
+            $table->string('COD_CIA',15)->nullable();
+            $table->string('nom_cia',100)->nullable();
             $table->string('COD_PUESTO_PL',15)->nullable();
             $table->string('COD_PUESTO_UNIPL',15)->nullable();
             $table->string('NOM_POSICIONPL',100)->nullable();

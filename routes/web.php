@@ -12,6 +12,7 @@ use App\Http\Controllers\re\SolvacantesContoller;
 use App\Http\Controllers\re\OfertasContoller;
 use App\Http\Controllers\re\EntrevistasContoller;
 use App\Http\Controllers\re\CurriculumContoller;
+use App\Http\Controllers\rl\ContworkController;
 use App\Http\Controllers\conf\UsersContoller;
 use App\Http\Controllers\conf\RolesContoller;
 use App\Http\Controllers\emails\ContactanosController;
@@ -20,6 +21,7 @@ use App\Http\Controllers\DashboardContoller;
 use App\Http\Controllers\re\CartapdfController;
 use App\Mail\ContactanosMailable;
 use App\Models\re\Entrevistas;
+use App\Models\re\Ofertas;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 
@@ -82,6 +84,8 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
         Route::post('descriptivos/destroy','destroy')->name('descriptivos.destroy');
         Route::post('descriptivos/edit','edit')->name('descriptivos.edit');
         Route::post('descriptivos/update','update')->name('descriptivos.update');
+        Route::post('descriptivos/addtarea','addtarea')->name('descriptivos.addtarea');
+        Route::post('descriptivos/destroyres','destroyres')->name('descriptivos.destroyres');
     });
 
     Route::controller(PosicionesContoller::class)->group(function(){
@@ -122,13 +126,30 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
         Route::post('ofertas/notientre','notientre')->name('ofertas.notientre');
         Route::post('ofertas/destroyentre','destroyentre')->name('ofertas.destroyentre');
         Route::post('ofertas/pdf','pdf')->name('ofertas.pdf');
+        Route::post('ofertas/cartapdf','cartapdf')->name('ofertas.cartapdf');
+        Route::post('ofertas/subir','subir')->name('ofertas.subir');
+        Route::post('ofertas/subirfoto','subirfoto')->name('ofertas.subirfoto');
+        Route::post('ofertas/deldocofl','deldocofl')->name('ofertas.deldocofl');
+        Route::post('ofertas/dependientes','dependientes')->name('ofertas.dependientes');
+        Route::post('ofertas/destroydepend','destroydepend')->name('ofertas.destroydepend');
+        Route::post('ofertas/contactos','contactos')->name('ofertas.contactos');
+        Route::post('ofertas/destroycontacto','destroycontacto')->name('ofertas.destroycontacto');
+        Route::post('ofertas/valsipe','valsipe')->name('ofertas.valsipe');
+        Route::post('ofertas/valmarcacion','valmarcacion')->name('ofertas.valmarcacion');
+        Route::post('ofertas/cartapdfcontrato','cartapdfcontrato')->name('ofertas.cartapdfcontrato');
+        Route::post('ofertas/pruebaspsico','pruebaspsico')->name('ofertas.pruebaspsico');
+        Route::post('ofertas/destroypruebapsico','destroypruebapsico')->name('ofertas.destroypruebapsico');
+        Route::post('ofertas/descarte','descarte')->name('ofertas.descarte');
+        
     });
 
-
-    Route::controller(CartapdfController::class)->group(function(){
-        Route::get('ofertas/PDFcartaoferta','index')->name('cartapdf');
-    });
-
+    Route::controller(ContworkController::class)->group(function(){
+        Route::get('contratos','index')->name('contwork');
+        Route::post('contratos/show','show')->name('rl.show');
+        Route::post('contratos/showfoto','showfoto')->name('rl.showfoto');
+        
+    
+});
     Route::controller(EntrevistasContoller::class)->group(function(){
         Route::get('entrevistas','index')->name('entrevistas');
     });

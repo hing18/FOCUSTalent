@@ -11,19 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('usr_part_curri_docattach',function(Blueprint $table){
+        Schema::create('descrip_habilidades',function(Blueprint $table){
             $table->id();
-            $table->integer('id_curri')->nullable();    
-            $table->integer('iddoc')->nullable();    
-            $table->string('nomdoc',200)->nullable();
-            $table->integer('id_participante')->nullable();
+            $table->integer('iddf')->nullable();
+            $table->text('habilidad')->nullable();
+            $table->string('nivel',15)->nullable();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrentOnUpdate();
-        });       
+        }); 
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
-    {
-        Schema::dropIfExists('usr_part_curri_docattach');
-    }
+    {   Schema::dropIfExists('descrip_habilidades');}
 };

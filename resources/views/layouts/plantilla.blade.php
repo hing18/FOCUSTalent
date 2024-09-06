@@ -27,6 +27,9 @@
         <!-- font-awesome 6.5.1 -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"></script>
         <link href="https://cdn.datatables.net/buttons/3.0.1/css/buttons.dataTables.css"rel="stylesheet">
+
+       
+
     </head>
     <body>
         <style>
@@ -89,6 +92,15 @@
                 cursor: pointer;
             }
             
+            .oflinfo{
+                background-color: #fff;
+            }        
+
+            .oflinfo:hover{
+                background-color: #ecf1f2;
+                cursor: pointer;
+            }
+
             .activar_part{
                 
                 color: #13890d;
@@ -103,14 +115,13 @@
         <!-- ======= Header ======= -->
         <header id="header" class="header fixed-top d-flex align-items-center">
 
-            <div class="row">
-                <div class="col">
-                    <span class="align-items-center">
-                        <img src="{{ asset('assets/img/HeadControl.png')}}" alt="" width="100%">
-                    </span>
+            <div class="row text-start">
+                <div class="col-4 d-flex align-items-center">
+                        <img src="{{ asset('assets/img/Ft2.png')}}" alt="" width="100%">
+                   
                 </div>
-                <div class="col">
-                        <i class="bi bi-list toggle-sidebar-btn"></i>
+                <div class="col ms-0">
+                        <i class="bi bi-list toggle-sidebar-btn text-light"></i>
                 </div>
             </div><!-- End Logo -->
             
@@ -118,8 +129,10 @@
                 <ul class="d-flex align-items-center">
                     <li class="nav-item dropdown pe-3">
                         <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-                            <img src="{{ asset('assets/img/profile-img.png') }}" alt="Profile" class="rounded-circle">
-                            <span class="d-none d-md-block dropdown-toggle ps-2">{{ Auth::user()->name }}</span>
+                            <img src="{{ asset('assets/img/messages-3.jpg') }}" alt="Profile" class="rounded-circle">
+                            
+
+                            <span class="d-none d-md-block dropdown-toggle ps-2 text-light">{{ Auth::user()->name }}</span>
                         </a><!-- End Profile Iamge Icon -->
                         <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
                             <li class="dropdown-header">
@@ -152,19 +165,17 @@
 
         </aside><!-- End Sidebar-->
 
-        <main id="main" class="main">
-            <section class="section dashboard">
-                <div class="row">
+        <main id="main" class="main pt-0">
+            
+               
 
-                    <div class="pagetitle">
-                    <h5 class="text-primary fw-bold">@yield('title')</h5>
-                    </div> 
+   
                     
-                    <div class="row-12" >
+                    <div class="row-12 pt-0" >
                         <smal>@yield('content')</smal>
                     </div>
-                </div>
-            </section>
+                
+           
         </main>
 
         @endauth
@@ -188,6 +199,9 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
         <script src="https://cdn.datatables.net/2.0.2/js/dataTables.js"></script>
         <script src="https://cdn.datatables.net/2.0.2/js/dataTables.bootstrap5.js"></script>
+
+        
+
       
         <!-- Template Main JS File -->
         <script src="{{ asset('assets/js/main.js')}}"></script>
@@ -202,7 +216,77 @@
                         "className": "align-middle", "targets": "_all"
                     }],
                 });
+
+
+                $image_crop = $('#image_demo').croppie({
+                    enableExif: true,
+                    viewport: {
+                    width:200,
+                    height:200,
+                    type:'square' //circle
+                    },
+                    boundary:{
+                    width:300,
+                    height:300
+                    }    
+                });
+
+                $('#insert_image').on('change', function(){
+                       var reader = new FileReader();
+                        reader.onload = function (event) {
+                            $image_crop.croppie('bind', {
+                                url: event.target.result
+                            }).then(function(){
+                                console.log('jQuery bind complete');
+                            });
+                        }
+                        reader.readAsDataURL(this.files[0]);
+                        $('#insertimageModal').modal('show');
+                    
+                });          
+
+
+
+                $('.crop_image').click(function(event){
+                    
+                    $image_crop.croppie('result', {
+                    type: 'canvas',
+                    size: 'viewport'
+                    }).then(function(response){
+
+                    $.ajax({
+                        url:"{{ route('ofertas.subirfoto') }}",
+                        type:'POST',
+                        data:{"image":response,"num_aprob_ofl":$('#id_curri').val(),"_token":$('input[name="_token"]').val()},
+                        success:function(data){
+                            $('#insertimageModal').modal('hide');
+                   // load_images();
+                   
+                        //document.getElementById('img_photo').setAttribute("src", data);
+                        
+                        $('#insert_image').val('');
+                        $('#space_photo').html(data);
+
+
+                        
+                        
+                        }
+                    })
+                    });
+                });
+
+                $('.corp_back').click(function(event){
+                    $('#insert_image').val('');
+                });
+
             });
+  
+
+            
         </script>
     </body>
+    
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.css"  />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.js"></script>
 </html>

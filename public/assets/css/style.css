@@ -227,7 +227,7 @@ h6 {
 .card-header,
 .card-footer {
   border-color: #ebeef4;
-  background-color: #fff;
+  background-color: #ffffff;
   color: #798eb3;
   padding: 15px;
 }
@@ -379,9 +379,9 @@ h6 {
 .header {
   transition: all 0.5s;
   z-index: 997;
-  height: 60px;
+  height: 45px;
   box-shadow: 0px 2px 20px rgba(1, 41, 112, 0.1);
-  background-color: #f7f8fb;
+  background-color: #37517E;
   padding-left: 20px;
   /* Toggle Sidebar Button */
   /* Search Bar */
@@ -468,7 +468,7 @@ h6 {
 
 .header-nav .nav-icon {
   font-size: 22px;
-  color: #012970;
+  color: #ffff;
   margin-right: 25px;
   position: relative;
 }
@@ -599,7 +599,7 @@ h6 {
 --------------------------------------------------------------*/
 .sidebar {
   position: fixed;
-  top: 60px;
+  top: 45px;
   left: 0;
   bottom: 0;
   width: 225px;
@@ -610,7 +610,7 @@ h6 {
   scrollbar-width: thin;
   scrollbar-color: #aab7cf transparent;
   box-shadow: 0px 0px 20px rgba(1, 41, 112, 0.1);
-  background-color: #f7f8fb;
+  background-color: #EAEFF8;
 }
 
 @media (max-width: 1199px) {
@@ -675,7 +675,7 @@ h6 {
   font-size: 11px;
   text-transform: uppercase;
   color: #899bbd;
-  font-weight: 500;
+  
   margin: 10px 0 5px 15px;
 }
 
@@ -683,10 +683,10 @@ h6 {
   display: flex;
   align-items: center;
   font-size: 14px;
-  font-weight: 600;
-  color: #4154f1;
+ 
+  color: #fff;
   transition: 0.3;
-  background: #f6f9ff;
+  background: #37517E;
   padding: 8px 8px;
   border-radius: 4px;
 }
@@ -694,7 +694,7 @@ h6 {
 .sidebar-nav .nav-link i {
   font-size: 13px;
   margin-right: 10px;
-  color: #4154f1;
+  color: #fff;
 }
 
 .sidebar-nav .nav-link.collapsed {
@@ -734,7 +734,7 @@ h6 {
   display: flex;
   align-items: center;
   font-size: 14px;
-  font-weight: 500;
+ 
   color: #012970;
   transition: 0.3;
   padding: 2px 0 2px 30px;
@@ -750,11 +750,13 @@ h6 {
 
 .sidebar-nav .nav-content a:hover,
 .sidebar-nav .nav-content a.active {
-  color: #4154f1;
+  color: #fff;  
+  border-radius: 4px;
+  background: #0fb0e6;
 }
 
 .sidebar-nav .nav-content a.active i {
-  background-color: #4154f1;
+  background-color: #fff;
 }
 
 /*--------------------------------------------------------------
@@ -777,7 +779,7 @@ h6 {
 
 .dashboard .filter .icon:hover,
 .dashboard .filter .icon:focus {
-  color: #4154f1;
+  color: #aab7cf;
 }
 
 .dashboard .filter .dropdown-header {
@@ -991,7 +993,7 @@ h6 {
   font-size: 12px;
   text-overflow: ellipsis;
   white-space: nowrap;
-  color: #666;
+  color: #012970;
 }
 
 /*--------------------------------------------------------------

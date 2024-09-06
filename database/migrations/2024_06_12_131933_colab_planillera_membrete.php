@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void{
     Schema::create('colab_planillera_membretes',function(Blueprint $table){
         $table->id();
-        $table->string('id_planillera',6)->nullable();
+        $table->string('id_PAGADORA',6)->nullable();
         $table->string('nombre_memb',100)->nullable();    
         $table->string('apartado',250)->nullable();
         $table->string('email',100)->nullable();
@@ -25,5 +25,5 @@ return new class extends Migration
 
 public function down(): void
 {
-    Schema::dropIfExists('colab_planillera_membrete');}
+    Schema::dropIfExists('colab_PAGADORA_membrete');}
 };

@@ -85,11 +85,11 @@
         <form class="row">
           <div class="mb-3 row">
             <div class="col-sm-6">
-              <label for="sel_planillera" class="form-label col-form-label-sm"><b>Planillera:</b></label>
-                <select id="sel_planillera" class="form-select form-select-sm" onchange="findceco(this)" >
+              <label for="sel_PAGADORA" class="form-label col-form-label-sm"><b>PAGADORA:</b></label>
+                <select id="sel_PAGADORA" class="form-select form-select-sm" onchange="findceco(this)" >
                   <option value='0' class="text-muted" selected>Seleccione</option>
-                  @foreach( $data_planilleras as $planilleras )
-                    <option value="{{ $planilleras->cod_planillera }}">{{ $planilleras->cod_planillera }} - {{ $planilleras->planillera }}</option>
+                  @foreach( $data_PAGADORAs as $PAGADORAs )
+                    <option value="{{ $PAGADORAs->COD_PAGADORA }}">{{ $PAGADORAs->COD_PAGADORA }} - {{ $PAGADORAs->PAGADORA }}</option>
                   @endforeach
                 </select>
             </div>
@@ -304,7 +304,7 @@
     var archivo = document.getElementById("doc_autorizacion").files;    
     var tiempocalculado=tiempocalculador(tiemporeal,cantidad);
     var comentarios = document.getElementById("textareacoment").value;
-    var sel_planillera = document.getElementById("sel_planillera").value;
+    var sel_PAGADORA = document.getElementById("sel_PAGADORA").value;
     var sel_ceco = document.getElementById("sel_ceco").value;
 
     if((id_motivo==3 || id_motivo==4)&&archivo.length==0)
@@ -341,7 +341,7 @@
                 data.append("tiempocalculado",tiempocalculado);
                 data.append("id_motivo",id_motivo);
                 data.append("fileToUpload",file);
-                data.append("sel_planillera",sel_planillera);
+                data.append("sel_PAGADORA",sel_PAGADORA);
                 data.append("sel_ceco",sel_ceco);
                 data.append("_token" ,_token);
               $.ajax({
@@ -385,13 +385,13 @@
     { mal('Por favor seleccionar el centro de costo.');}
   }
 
-  function findceco(cod_planillera)
+  function findceco(COD_PAGADORA)
   { var _token = $('input[name="_token"]').val();
 
-    if(cod_planillera.value.length>0)
+    if(COD_PAGADORA.value.length>0)
     {
       var parametros = {
-        "cod_planillera" : cod_planillera.value,
+        "COD_PAGADORA" : COD_PAGADORA.value,
         "_token":_token};
         $.ajax({
           data:  parametros, 
@@ -403,7 +403,7 @@
             $('#sel_ceco').empty();
             $('#sel_ceco').append("<option value='0'>Seleccionar</option>"); 
             jQuery(data).each(function(i, item){  
-              $('#sel_ceco').append("<option value='"+ item.cod_cia_costo +"'>"+item.cod_cia_costo+' - '+ item.centrocosto+ "</option>"); 
+              $('#sel_ceco').append("<option value='"+ item.cod_cia +"'>"+item.cod_cia+' - '+ item.nom_cia+ "</option>"); 
             });
             $('#sel_ceco').removeAttr("disabled");           
         }

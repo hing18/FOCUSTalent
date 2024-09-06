@@ -42,5 +42,6 @@ class DatabaseSeeder extends Seeder
 
 
         $this->call(usr_partici_etapas_proceso::class);
+         $this->call(usr_tipo_parentesco::class);
     }
 }

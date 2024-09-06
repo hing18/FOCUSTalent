@@ -22,7 +22,7 @@
         
         font-family: Arial, Helvetica, sans-serif;
     }
-    .planillera{
+    .PAGADORA{
         font-size: 36px;
         color: #595959;
         font-weight: bold;
@@ -81,7 +81,7 @@
 @endforeach
     <body>
         <header>
-            <div class="font-arial planillera">@php echo $nombre_memb; @endphp</div>            
+            <div class="font-arial PAGADORA">@php echo $nombre_memb; @endphp</div>            
             <div class="font-arial apartado">@php echo $apartado; @endphp</div>            
             <div class="font-arial apartado">@php echo $email; @endphp</div>          
             <div class="font-arial apartado">@php echo $tel; @endphp</div>

@@ -19,6 +19,9 @@ return new class extends Migration
             $table->integer('id_jer')->nullable();
             $table->integer('id_puesto')->nullable();
             $table->integer('id_etapa')->nullable();
+            $table->integer('valida_sipe')->default(0)->comment('0-no validado. 1-validado.'); 
+            $table->integer('marcacion')->default(0)->comment('0-no marca. 1-si marca.'); 
+            $table->text('motivo_descarte')->nullable();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrentOnUpdate();
         });

@@ -24,6 +24,8 @@ return new class extends Migration
             $table->integer('id_nacionalidad')->nullable();
             $table->string('id_tipo_doc_letra',2)->nullable();
             $table->string('num_doc',20)->nullable();
+            $table->string('num_ss',20)->nullable();
+            $table->string('estadocivil',20)->nullable();
             $table->date('f_vencimiento')->nullable();
             $table->string('tel',50)->nullable();
             $table->string('email',100)->nullable();
@@ -38,6 +40,7 @@ return new class extends Migration
             $table->date('f_vence_permiso_trab')->nullable();
             $table->string('permiso_doc',50)->nullable();
             $table->string('estado_registro',20)->nullable()->comment('contratado, no contratado');
+            $table->text('motivo_descarte')->nullable();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrentOnUpdate();
         });
