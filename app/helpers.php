@@ -1,10 +1,25 @@
 
 <?php
-
+use Illuminate\Support\Facades\DB;
 if (! function_exists('current_user')) {
     function current_user()
     {
-        return auth()->user();
+        return (auth()->user());
+    }
+}
+
+if (! function_exists('photo_user')) {
+    function photo_user($id)
+    {        
+        $query = DB::select("SELECT emp.photo as photo, emp.genero FROM users as us left join m_empleados as emp on (us.codigo=emp.id) where us.id=$id");           
+        foreach($query as $s){
+            if($s->photo!=null)
+            {   echo '<img src="data:image/png;base64,'.base64_encode($s->photo).'" alt="Profile" class="rounded-circle"/>';}
+            else
+            {
+                if($s->genero=='F'){ echo'<img src="/storage/profiles/photo/ella.png" alt="Profile" class="rounded-circle">';}
+                else { echo'<img src="/storage/profiles/photo/el.png" alt="Profile" class="rounded-circle">';}}
+        }
     }
 }
 
@@ -22,7 +37,7 @@ if (! function_exists('select_tree_cat_id')) {
     }
 }
 
-use Illuminate\Support\Facades\DB;
+
 if (! function_exists('get_cats_by_cat_id')) {
     function get_cats_by_cat_id($id){
         $data= array();

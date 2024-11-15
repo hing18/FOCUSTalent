@@ -20,13 +20,17 @@
         text-transform: uppercase;
     }
 </style>
-<div class="pagetitle text-primary">
+<div class="card">
+  <div class="card-header pb-0">
+
   <h4><i class="fas fa-file-signature"></i> Generardor de Contratos</h4>
-</div><!-- End Page Title -->
-<hr>
+
+</div>
+<div class="card-body">
   <small>
     <div id="preload" class="align-items-center justify-content-center text-center"><div class="spinner-border spinner-border-sm text-primary" role="status"></div></div>
   </small>
+    <!-- LISTADO PRINCIPAL OFERTAS LABORALES-->
     <div id="iframe" style="display: none;">
         @csrf
       <div id="div_tabla">
@@ -40,8 +44,7 @@
               <th class="text-light text-center">FECHA DE INGRESO</th>
             </tr>
           </thead>
-          <tbody class="text-dark" id="bodyMyTable">
-           
+          <tbody class="text-dark" id="bodyMyTable">           
             @foreach($data_parti as $data)
               @php
                 $id_parti=$data->id_parti;
@@ -103,8 +106,7 @@
                           </ul>
                           <div class="tab-content pt-2">            
                             <!-- DETALLE DEL PUESTO -->
-                            <div class="tab-pane fade show active profile-edit  profile-overview" id="profile-edit">
-            
+                            <div class="tab-pane fade show active profile-edit  profile-overview" id="profile-edit">            
                               <h5 class="card-title">Detalle del Puesto</h5>
 
                               <div class="row mb-2">
@@ -113,12 +115,12 @@
                               </div>
 
                               <div class="row mb-2">
-                                <div class="col-lg-3 col-md-4 label">Propósito de Puesto</div>
-                                <p class="small fst-italic" id="lb_proposito">Sunt est soluta temporibus accusantium neque nam maiores cumque temporibus. Tempora libero non est unde veniam est qui dolor. Ut sunt iure rerum quae quisquam autem eveniet perspiciatis odit. Fuga sequi sed ea saepe at unde.</p>
+                                <div class="col-lg-4 col-md-4 label">Propósito de Puesto</div>
+                                <p id="lb_proposito" class="small fst-italic">...</p>
                               </div>
 
                               <div class="row mb-2">
-                                <div class="col-lg-3 col-md-4 label">Unidad Económinca</div>
+                                <div class="col-lg-3 col-md-4 label">Und. Económica</div>
                                 <div id="lb_ue" class="col-lg-9 col-md-8 mayusc"></div>
                               </div>
         
@@ -177,7 +179,7 @@
                               </div>
             
                               <div class="row mb-2">
-                                <div class="col-lg-3 col-md-4 label">Cedula</div>
+                                <div class="col-lg-3 col-md-4 label">Cédula</div>
                                 <div id="lb_cedula" class="col-lg-9 col-md-8"></div>
                               </div>
             
@@ -255,31 +257,31 @@
             </div>
         </div>
     </div>
-<div id="idformulariocontrato"></div>
-<!-- Modal -->
-<div id="insertimageModal" class="modal" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header py-0 bg-light">
-        <h5 class="modal-title text-primary">Recortar y guardar</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div class="row ">
-          <div class="col-md profile-card pt-4 d-flex flex-column align-items-center">
-            <div id="image_demo" style="width:350px; margin-top:10px"></div>
+    <div id="idformulariocontrato"></div>
+    <!-- Modal -->
+    <div id="insertimageModal" class="modal" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header py-0 bg-light">
+            <h5 class="modal-title text-primary">Recortar y guardar</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-
+          <div class="modal-body">
+            <div class="row ">
+              <div class="col-md profile-card pt-4 d-flex flex-column align-items-center">
+                <div id="image_demo" style="width:350px; margin-top:10px"></div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer py-0 bg-light">
+            <button type="button" class="btn btn-sm btn-secondary corp_back" data-bs-dismiss="modal"><i class="fa-solid fa-arrow-left pr-2"></i> Cancelar</button>
+            <button class="btn btn-sm btn-primary crop_image"><i class="fas fa-cut"></i> Recortar y guardar</button>
+          </div>
         </div>
-      </div>
-      <div class="modal-footer py-0 bg-light">
-        <button type="button" class="btn btn-sm btn-secondary corp_back" data-bs-dismiss="modal"><i class="fa-solid fa-arrow-left pr-2"></i> Cancelar</button>
-        <button class="btn btn-sm btn-primary crop_image"><i class="fas fa-cut"></i> Recortar y guardar</button>
       </div>
     </div>
   </div>
 </div>
-
 @endsection
 <script type='text/javascript'>
     // ----- DETALLE DEL CANDIDATO
@@ -519,10 +521,8 @@
   { var _token = $('input[name="_token"]').val();
     var id_c = $('#id_curri').val();
     var id_p = $('#id_participante').val();
+    alert(id_p);
     
   }
-
-
-
 
 </script>

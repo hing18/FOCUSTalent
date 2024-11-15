@@ -11,6 +11,11 @@ use App\Http\Controllers\auth\RegisterController;
 use App\Http\Controllers\re\SolvacantesContoller;
 use App\Http\Controllers\re\OfertasContoller;
 use App\Http\Controllers\re\EntrevistasContoller;
+use App\Http\Controllers\gd\EvaluacionController;
+use App\Http\Controllers\gd\ConfevalController;
+
+
+use App\Http\Controllers\me\EmpleadosController;
 use App\Http\Controllers\re\CurriculumContoller;
 use App\Http\Controllers\rl\ContworkController;
 use App\Http\Controllers\conf\UsersContoller;
@@ -18,6 +23,7 @@ use App\Http\Controllers\conf\RolesContoller;
 use App\Http\Controllers\emails\ContactanosController;
 
 use App\Http\Controllers\DashboardContoller;
+use App\Http\Controllers\go\ProcedimientosController;
 use App\Http\Controllers\re\CartapdfController;
 use App\Mail\ContactanosMailable;
 use App\Models\re\Entrevistas;
@@ -49,8 +55,11 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
         Route::get('estructura','index')->name('estructura');
         Route::get('unidades/create','create')->name('estructura.create');
         Route::get('unidades','unidades')->name('estructura.unidades');
-        Route::post('unidades/procedimientos','muestra')->name('estructura.procedimientos');
         Route::put('unidades/update','update')->name('estructura.update');
+    });
+
+    Route::controller(ProcedimientosController::class)->group(function(){
+        Route::post('procedimientos/show','show')->name('procedimientos.show');
     });
 
     Route::controller(CompetenciasContoller::class)->group(function(){
@@ -86,6 +95,8 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
         Route::post('descriptivos/update','update')->name('descriptivos.update');
         Route::post('descriptivos/addtarea','addtarea')->name('descriptivos.addtarea');
         Route::post('descriptivos/destroyres','destroyres')->name('descriptivos.destroyres');
+        Route::post('descriptivos/edit_respon','edit_respon')->name('descriptivos.edit_respon');
+        
     });
 
     Route::controller(PosicionesContoller::class)->group(function(){
@@ -168,7 +179,24 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
         Route::get('dashboard','index')->name('dashboard');
     });
 
+    // EVALUACIÓN Y DESARROLLO
+    Route::controller(EvaluacionController::class)->group(function(){
+        Route::get('evaluacion','index')->name('evaluacion');
+        Route::post('evaluacion/evaluado','evaluado')->name('evaluacion.evaluado');
+        Route::post('evaluacion/showfoto','showfoto')->name('evaluacion.showfoto');
+        Route::post('evaluacion/compcursos','compcursos')->name('evaluacion.compcursos');
+        Route::post('evaluacion/save','save')->name('evaluacion.save');
+        Route::post('evaluacion/print','print')->name('evaluacion.print');        
+        
+    });
+    // ADMINISTRACIÓN DE PERSONAL
+    Route::controller(EmpleadosController::class)->group(function(){
+        Route::get('empleados','index')->name('empleados');
+    });
 
+    Route::controller(ConfevalController::class)->group(function(){
+        Route::get('config_eval','index')->name('confeval');
+    });
 // ENVIO DE EMAIL
 
 /*Route::get('contactanos', function(){

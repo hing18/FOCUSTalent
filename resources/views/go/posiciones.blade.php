@@ -48,7 +48,7 @@
             <tr>
               <th class="text-light text-center">POSICIÓN</th>
               <th class="text-light text-center">DESCRIPTIVO</th>
-              <th class="text-light text-center">UNIDAD ECONÓMICA</th>
+              <th class="text-light text-center">UNIDAD</th>
               <th class="text-light text-center">JEFE INMEDIATO</th>
               <th class="text-light text-center" width='8%'>ESTATUS</th>
               <th class="text-light text-center" width='6%'><i class="fas fa-cog"></i></th>
@@ -131,9 +131,9 @@
           </div>
           <hr>
           
-          <div class="text-primary"><b>UBICACIÓN DE LA POSICIÓN</b></div> <div class="text-secondary mb-3"><small>Seleccione la unidad económica y luego la <b>sección en donde estará ubicada la posición a crear</b></small></div>
+          <div class="text-primary"><b>UBICACIÓN DE LA POSICIÓN</b></div> <div class="text-secondary mb-3"><small>Seleccione la unidad y luego la <b>sección en donde estará ubicada la posición a crear</b></small></div>
             <div class="mb-3 col-4">            
-              <label for="sel_ue" class="col-form-label col-form-label-sm">Unidad Económica:</label>              
+              <label for="sel_ue" class="col-form-label col-form-label-sm">Unidad:</label>              
               <select class="form-select form-select-sm" name="sel_ue" id="sel_ue" aria-label="Default select example" onchange="showsecc('pue',0)">
                 <option value='0' selected>Seleccione</option>
                   @foreach( $data_est as $est )              
@@ -415,7 +415,7 @@ function showsecc(opt,id_unisecc)
         "_token":_token};
         $.ajax({
           data:  parametros, 
-          url:   "{{ route('estructura.procedimientos') }}",
+          url:   "{{ route('procedimientos.show') }}",
           type:  'POST', 
           cache: true, 
 
@@ -450,7 +450,7 @@ function showsecc(opt,id_unisecc)
         "_token":_token};
         $.ajax({
           data:  parametros, 
-          url:   "{{ route('estructura.procedimientos') }}",
+          url:   "{{ route('procedimientos.show') }}",
           type:  'POST', 
           cache: true, 
 

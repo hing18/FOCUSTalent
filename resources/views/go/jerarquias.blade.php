@@ -236,7 +236,6 @@
       document.getElementById('bto_guarda').style.display="block";
       document.getElementById('status').checked=true;
     }
-    
     //EDITA
     if(opt==2)
     { document.getElementById('ModalLabel').innerHTML ='<i class="fa-solid fa-pen-to-square  fa-lg"></i> Edita Jerarquía';

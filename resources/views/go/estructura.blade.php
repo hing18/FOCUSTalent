@@ -17,7 +17,7 @@
       </div>
       <div class="col-4" id="div_ue" >        
         <select class="form-select form-select-sm" name="sel_ue" id="sel_ue" aria-label="Default select example" onchange="muestra_estructura(2)" style="display:none">
-          <option value='0' selected>Seleccione Unidad Económica</option>
+          <option value='0' selected>Seleccione Unidad</option>
         </select>
     </div>
   </div>
@@ -44,7 +44,7 @@ function muestra_estructura(opt)
         "_token" : _token};
       $.ajax({
         data:  parametros,
-        url:   "{{ route('estructura.procedimientos') }}", 
+        url:   "{{ route('procedimientos.show') }}", 
         type:  'POST', 
         dataType: "json",
         cache: true, 
@@ -73,7 +73,7 @@ function muestra_estructura(opt)
       "_token":_token};
       $.ajax({
         data:  parametros, 
-        url:   "{{ route('estructura.procedimientos') }}",
+        url:   "{{ route('procedimientos.show') }}",
         type:  'POST', 
         cache: true, 
 

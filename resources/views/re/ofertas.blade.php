@@ -153,7 +153,7 @@
             <div class="col-11">
               <h6 class="mb-0 text-primary">
                 <small><b>#{{$ofertas->id}} <span id="despue_{{$ofertas->id}}">{{$ofertas->descpue}}</span></b>, 
-                <small>{{$ofertas->seccion}}, {{$ofertas->unidad_economica}}</small></small>
+                <small> {{$ofertas->unidad_economica}}</small></small>
               </h6>
             </div>
             <div class="col-1 d-grid gap-4 d-md-flex justify-content-md-end">
@@ -288,7 +288,7 @@
               </div>
 
               <div class="form-group row mb-2">          
-                <label class="col-sm-3 col-form-label-sm">Unidad económinca:</label>            
+                <label class="col-sm-3 col-form-label-sm">Unidad económica:</label>            
                 <div class="col-sm-8"> 
                     <input  id="lb_ue" class="form-control form-control-sm" type="text" value="" aria-label="Disabled input example" disabled readonly>
                 </div>
@@ -1205,7 +1205,7 @@
                                           <span id="lb_nom_cia" class="text-primary"></span></label>
                                         </div>
                                         <div class="row">
-                                          <label class="col-sm col-form-label-sm">Unidad Económinca: 
+                                          <label class="col-sm col-form-label-sm">Unidad Económica: 
                                           <span id="lb_contrato_unidad" class="text-primary"></span></label>
                                         </div>
     

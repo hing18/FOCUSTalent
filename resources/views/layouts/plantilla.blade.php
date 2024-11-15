@@ -9,14 +9,14 @@
         <meta content="" name="description">
         <meta content="" name="keywords">
 
-        <!-- Favicons -->
-        <link href="assets/img/favicon.png') }}" rel="icon">
-        <link href="assets/img/REGENCY_GROUP_Sf.png" rel="apple-touch-icon">
+        <link href="{{ asset('assets/img/favicon.png')}}" rel="icon">
+
+
         <!-- Google Fonts -->
        <!-- <link href="https://fonts.gstatic.com" rel="preconnect">
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
          Vendor CSS Files -->
-        
+
         <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
         <link href="{{ asset('assets/vendor/bootstrap-icons/bootstrap-icons.css')}}" rel="stylesheet">
 
@@ -31,86 +31,8 @@
        
 
     </head>
-    <body>
-        <style>
-            table.dataTable td {  font-size: 0.75em;}
-            table.dataTable th {  font-size: 0.75em;}
-
-            .editlink{                
-                color:#007BFF;
-            }
-            .editlink:hover{
-                
-                color:#6C757D;
-                cursor: pointer
-            }
-
-            .msnwarning
-            {
-                color:#ffcc00 
-            }
-            .msnwarning:hover{
-                
-                color:#007BFF;
-                cursor: pointer;
-            }
-            .msnwarningactivo
-            {
-                color:#20881a 
-            }
-            .msnwarningactivo:hover{
-                
-                color:#007BFF;
-                cursor: pointer;
-            }
-
-            .edit{                
-                color:#6C757D;
-            }
-            .edit:hover{
-                
-                color:#007BFF;
-                cursor: pointer;
-            }
-            .dell{
-                
-                color:#6C757D;
-            }
-            .dell:hover{
-                
-                color:#DC3545;
-                cursor: pointer;
-            }
-            
-            .activar{
-                
-                color: #13890d;
-            }
-            .activar:hover{
-                
-                color: #0d6efd;
-                cursor: pointer;
-            }
-            
-            .oflinfo{
-                background-color: #fff;
-            }        
-
-            .oflinfo:hover{
-                background-color: #ecf1f2;
-                cursor: pointer;
-            }
-
-            .activar_part{
-                
-                color: #13890d;
-            }
-            .activar_part:hover{
-                
-                color: #0d6efd;
-                cursor: pointer;
-            }
-        </style>
+    <body>        
+        <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
         @auth
         <!-- ======= Header ======= -->
         <header id="header" class="header fixed-top d-flex align-items-center">
@@ -129,7 +51,9 @@
                 <ul class="d-flex align-items-center">
                     <li class="nav-item dropdown pe-3">
                         <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-                            <img src="{{ asset('assets/img/messages-3.jpg') }}" alt="Profile" class="rounded-circle">
+                           {{ photo_user(Auth::user()->id) }}
+                         
+                            
                             
 
                             <span class="d-none d-md-block dropdown-toggle ps-2 text-light">{{ Auth::user()->name }}</span>
@@ -165,23 +89,15 @@
 
         </aside><!-- End Sidebar-->
 
-        <main id="main" class="main pt-0">
-            
-               
-
-   
-                    
-                    <div class="row-12 pt-0" >
-                        <smal>@yield('content')</smal>
-                    </div>
-                
-           
+        <main id="main" class="main pt-0">         
+            <div class="row-12 pt-0" >
+                <smal>@yield('content')</smal>
+            </div>
         </main>
 
         @endauth
         
-        
-
+ 
         <!-- Vendor JS Files -->
         <script src="{{ asset('assets/vendor/apexcharts/apexcharts.min.js')}}"></script>
         
@@ -201,6 +117,7 @@
         <script src="https://cdn.datatables.net/2.0.2/js/dataTables.bootstrap5.js"></script>
 
         
+
 
       
         <!-- Template Main JS File -->
@@ -280,13 +197,14 @@
                 });
 
             });
-  
 
-            
         </script>
     </body>
     
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.css"  />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.js"></script>
+
+
 </html>

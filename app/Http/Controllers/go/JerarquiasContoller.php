@@ -68,8 +68,6 @@ class JerarquiasContoller extends Controller
             $new->esperado =  $esperado;
             $new->save();
 
-           
-
             $result= DB::table('reljercomp as rel')
             ->select(
             'rel.idcomp AS idcomp',
@@ -156,8 +154,6 @@ class JerarquiasContoller extends Controller
 
     public function showcomp(Jerarquias $jerarquias)
     {
-
-        
         $result= DB::table('competencias as comp')
             ->select(
             'comp.id AS idcomp',

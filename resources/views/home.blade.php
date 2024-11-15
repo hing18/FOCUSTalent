@@ -1,4 +1,5 @@
 @extends('layouts.plantilla')
+<!-- Favicons -->
 
 @section('title','Dashboard')
 

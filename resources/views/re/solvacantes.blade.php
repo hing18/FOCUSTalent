@@ -5,8 +5,15 @@
 
 @section('content')
 
+<div class="card">
+  <div class="card-header pb-0">
+    <h4><i class="fas fa-users"></i> Control del HeadCount</h4>
+  </div>
+  <div class="card-body">
+
+
 <!-- Button trigger modal -->
-  <div class="row">
+  <div class="row mt-2">
       <div class="col-4">        
             <select class="form-select form-select-sm" name="sel_ue" id="sel_ue" aria-label="Default select example" onchange="muestra_estructura()">
                 <option value='0' selected>Seleccione Unidad Económica</option>
@@ -15,13 +22,13 @@
                 @endforeach
           </select>
       </div>
-
   </div>
 <hr>
   <small>
     <div id="tabla_estructura" class="d-flex align-items-center justify-content-center">  </div>
   </small>
-
+  </div>
+</div> 
 
 
 
@@ -69,7 +76,7 @@
   <div class="modal-dialog modal-dialog-centered modal-lg  modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header bg-light">
-        <h5 class="modal-title text-primary" id="staticBackdropLabel"><i class="fas fa-plus-circle fa-lg text-secondary"></i> Solicitud de vacante</h5>
+        <h5 class="modal-title text-primary" id="staticBackdropLabel"><i class="fas fa-plus-circle fa-lg text-secondary"></i> Solicitud de Contratación de Personal</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -180,7 +187,7 @@
       "_token":_token};
       $.ajax({
         data:  parametros, 
-        url:   "{{ route('estructura.procedimientos') }}",
+        url:   "{{ route('procedimientos.show') }}",
         type:  'POST', 
         cache: true, 
     
@@ -210,7 +217,7 @@
         "_token":_token};
         $.ajax({
           data:  parametros, 
-          url:   "{{ route('estructura.procedimientos') }}",
+          url:   "{{ route('procedimientos.show') }}",
           type:  'POST', 
           cache: true, 
           beforeSend: function () {
@@ -308,7 +315,7 @@
     var sel_ceco = document.getElementById("sel_ceco").value;
 
     if((id_motivo==3 || id_motivo==4)&&archivo.length==0)
-    { mal('Por favor adjuntar la autorización de la solicitud de la vacante.');}
+    { mal('Por favor adjuntar la autorización de la solicitud de contratación.');}
     else
     { if(id_motivo!=3 & id_motivo!=4){ archivo ='-';}}
 

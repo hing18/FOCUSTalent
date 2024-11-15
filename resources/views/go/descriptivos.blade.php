@@ -18,12 +18,8 @@
   
   <!-- Estilo -->
   <style>
-    div#iframe {
-      display: none;
-    }
-    div#preload {
-      cursor: wait;
-    }
+    div#iframe { display: none; }
+    div#preload { cursor: wait; }
   </style>
 <!-- Button trigger modal -->
       <h5> Maestro de Descriptivos de Funciones</h5>
@@ -48,14 +44,14 @@
         <button type="button" class="btn btn-primary btn-sm" onclick="modalcrud(1,0)"><i class="fas fa-plus pe-2"></i> Nuevo Descriptivo de Funciones</button>
         </div>
         <div id="iframe" style="display: none;">
-          <table id="MyTable" class="display compact table table-striped shadow table-bordered bg-white table-sm" style="width:100%">
+          <table id="MyTable" class="table table-striped table-hover shadow table-bordered bg-white table-sm" style="width:100%">
             <thead class="bg-secondary">
               <tr>
-                <th class="text-light text-center">NOMBRE DE DESCRIPTIVO</th>
-                <th class="text-light text-center">JERARQUÍA</th>
-                <th class="text-light text-center">TIPO</th>
-                <th class="text-light text-center">ESTATUS</th>
-                <th class="text-light text-center" width='6%'><i class="fas fa-cog"></i></th>
+                <th class="text-light text-center" width="38%">NOMBRE DE DESCRIPTIVO</th>
+                <th class="text-light text-center" width="38%">JERARQUÍA</th>
+                <th class="text-light text-center" width="8%">TIPO</th>
+                <th class="text-light text-center" width="6%">ESTATUS</th>
+                <th class="text-light text-center" width='10%'><i class="fas fa-cog"></i></th>
               </tr>
             </thead>
             <tbody class="text-dark" id="bodyMyTable">
@@ -63,17 +59,20 @@
                 @php if($df->status=='true'){ $status='<i class="fa-solid fa-circle-check text-success fa-lg"></i>';}else{ $status='<i class="fa-solid fa-triangle-exclamation text-warning fa-lg"></i>';}
                 @endphp
                 <tr>
-                  <td>{{$df->nombredesc}}</td>
+                  <td class="text-uppercase">{{$df->nombredesc}}</td>
                   <td>{{$df->nombrejer}}</td>
                   <td>{{$df->nombretipojer}}</td>
                   <td><div class="row d-flex align-items-center justify-content-center text-center"> <div class="col">@php echo $status; @endphp</div></div></td>
                   <td>
                     <div class="row d-flex align-items-center justify-content-center text-center">
-                      <div class="col-md-2 col-xs-6 text-secondary">
-                        <i class="fa-solid fa-pencil fa-lg edit" onclick="modalcrud(2,{{$df->id}})" data-bs-toggle="modal" data-bs-target="#Modal"></i>  
+                      <!--<div class="col-sm-1 text-secondary">
+   DESCARGR DESCRIPTIVO DE FUNCIONES EN PDF                     <i class="fas fa-file-download fa-lg edit" title="Descargar"></i>  
+                      </div>-->
+                      <div class="col-sm-1 text-secondary">
+                        <i class="fa-solid fa-pencil fa-lg edit" title="Editar" onclick="modalcrud(2,{{$df->id}})"></i>  
                       </div>
-                      <div class="col-md-2 col-xs-6 text-secondary">
-                        <i class="fa-solid fa-trash-can fa-lg dell" onclick="modalcrud(3,{{$df->id}})" ></i>
+                      <div class="col-sm-1 text-secondary">
+                        <i class="fa-solid fa-trash-can fa-lg dell" title="Eliminar" onclick="modalcrud(3,{{$df->id}})" ></i>
                       </div>
                     </div>
                   </td>
@@ -86,19 +85,18 @@
 
     <!-- TABLA PRINCIPAL -->
     <div id="div_nuevo_df" style="display: none" class="mt-2 text-secondary">
-      
-      <div  class="d-grid gap-2 d-md-flex justify-content-md-end">
+      <div class="d-grid gap-2 d-md-flex justify-content-md-end">
         <button type="button" class="btn btn-secondary btn-sm" onclick="canceladf()"><i class="fa-solid fa-arrow-left pr-2"></i> Cancelar</button>
         <button type="button" class="btn btn-primary btn-sm" onclick="su(1)"  tabindex="-1" id="bto_guarda" style="display: block"><i class="fas fa-save pr-2"></i> Guardar</button>
-        <button type="button" class="btn btn-success btn-sm" onclick="su(2)"  tabindex="-1" id="bto_actualiza" style="display: none"><i class="fa-solid fa-arrows-rotate pr-2"></i> Actualizar</button>
+        <button type="button" class="btn btn-success btn-sm" onclick="su(2)"  tabindex="-1" id="bto_actualiza" style="display: none"><i id="ico_update" class="fas fa-sync-alt pr-2"></i> Actualizar</button>
       </div>
       <small>
       <div class="accordion mt-2" id="accordionPanelsStayOpenExample">
           <!--I. INFORMACIÓN GENERAL -->
           <div class="accordion-item">
             <h2 class="accordion-header" id="panel_1-heading">
-              <button class="accordion-button collapsed text-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#panel_1" aria-expanded="true" aria-controls="panel_1">
-                <i class="fas fa-file-signature fa-lg me-2 text-primary"></i> I. Información General
+              <button class="accordion-button collapsed text-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#panel_1" aria-expanded="true" aria-controls="panel_1" id="bto_panel_1">
+                <i class="fas fa-file-signature fa-lg me-3 text-primary"></i> <span class="fw-bold me-2">I.</span> <span class="text-primary">Información General</span>
                 <span id="msg_panel_1" class="text-warning" style="display: none"> <small><small><i class="fas fa-exclamation-triangle ps-2"></i> Incompleto</small></small></span>
               </button>
             </h2>
@@ -114,7 +112,7 @@
                           </div>
                           <div class="col-4">
                               <label for="idjer" class="col-form-label col-form-label-sm">Jerarquía:</label>
-                              <select class="form-select form-select-sm" name="idjer" id="idjer" aria-label="Default select example">
+                              <select class="form-select form-select-sm" name="idjer" id="idjer" aria-label="Default select example" onchange="listcomp()">
                                   <option value='0' selected>Seleccione</option>
                                   @php
                                       $grupo='';$band=0;
@@ -168,7 +166,7 @@
           <div class="accordion-item">
             <h2 class="accordion-header" id="panel_2-heading">
               <button class="accordion-button collapsed text-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#panel_2" aria-expanded="false" aria-controls="panel_2">
-                <i class="fas fa-bullseye fa-lg me-2 text-primary"></i> II. Propósito General del Cargo 
+                <i class="fas fa-bullseye fa-lg me-3 text-primary"></i> <span class="fw-bold me-2">II.</span> <span class="text-primary">Propósito General del Cargo</span>
                 <span id="msg_panel_2" class="text-warning" style="display: none"> <small><small><i class="fas fa-exclamation-triangle ps-2"></i> Incompleto</small></small></span>
               </button>
             </h2>
@@ -187,7 +185,7 @@
           <div class="accordion-item">
             <h2 class="accordion-header" id="panel_3-heading">
               <button class="accordion-button collapsed text-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#panel_3" aria-expanded="false" aria-controls="panel_3">
-                <i class="fas fa-list-ol fa-lg me-2 text-primary"></i> III. Principales Responsablebilidades del Cargo
+                <i class="fas fa-list-ol fa-lg me-3 text-primary"></i> <span class="fw-bold me-2">III.</span> <span class="text-primary">Principales Responsablebilidades del Cargo</span>
                 <span id="msg_panel_3" class="text-warning" style="display: none"> <small><small><i class="fas fa-exclamation-triangle ps-2"></i> Incompleto</small></small></span>
               </button>
             </h2>
@@ -200,8 +198,7 @@
                   <button type="button" class="btn btn-sm btn-outline-info" onclick="modal_add_areas_respon()"> <i class="far fa-plus-square fa-lg me-2"></i>Agregar</button>
                 </span> 
                 <div class="row">
-                  <small>
-                    <table id="table_respon" class="display compact table table-striped shadow table-bordered table-sm " style="width:100%">
+                    <table id="table_respon" class="display compact table shadow table-bordered table-sm " style="width:100%">
                       <thead>
                         <tr>
                           <th class="text-light text-center align-middle bg-info">Áreas de Responsabilidad</th>
@@ -217,7 +214,6 @@
 
                       </tbody>
                     </table>
-                  </small>
                 </div>
               </div>
             </div>
@@ -227,7 +223,7 @@
           <div class="accordion-item">
             <h2 class="accordion-header" id="panel_4-heading">
               <button class="accordion-button collapsed text-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#panel_4" aria-expanded="false" aria-controls="panel_4">
-                <i class="fas fa-people-arrows fa-lg me-2 text-primary"></i> IV. Relación de Interacción
+                <i class="fas fa-people-arrows fa-lg me-3 text-primary"></i> <span class="fw-bold me-2">IV.</span> <span class="text-primary">Relación de Interacción</span>
                 <span id="msg_panel_4" class="text-warning" style="display: none"> <small><small><i class="fas fa-exclamation-triangle ps-2"></i> Incompleto</small></small></span>
               </button>
             </h2>
@@ -257,14 +253,14 @@
           <div class="accordion-item">
             <h2 class="accordion-header" id="panel_5-heading">
               <button class="accordion-button collapsed text-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#panel_5" aria-expanded="false" aria-controls="panel_5">
-                <i class="fas fa-user-shield fa-lg me-2 text-primary"></i> V. Seguridad del Puesto
+                <i class="fas fa-user-shield fa-lg me-3 text-primary"></i> <span class="fw-bold me-2">V.</span> <span class="text-primary">Seguridad del Puesto</span>
                 <span id="msg_panel_5" class="text-warning" style="display: none"> <small><small><i class="fas fa-exclamation-triangle ps-2"></i> Incompleto</small></small></span>
               </button>
             </h2>
             <div id="panel_5" class="accordion-collapse collapse" aria-labelledby="panel_5-heading">
               <div class="accordion-body">
                 <div class="text-secondary mb-3">
-                  <small>Nivel de riesgo al que esta espuesta la posición de trabajo. Ej: Media Baja (60% Oficiana / 40% Campo)</small>
+                  <small>Nivel de riesgo al que esta expuesta la posición de trabajo. Ej: Media Baja (60% Oficina / 40% Campo)</small>
                 </div>
                 <div class="row">
                   <div class="col-sm-4">
@@ -298,7 +294,7 @@
           <div class="accordion-item">
             <h2 class="accordion-header" id="panel_6-heading">
               <button class="accordion-button collapsed text-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#panel_6" aria-expanded="false" aria-controls="panel_6">
-                <i class="fas fa-tasks fa-lg me-2 text-primary"></i> VI. Requisitos del Puesto
+                <i class="fas fa-tasks fa-lg me-3 text-primary"></i> <span class="fw-bold me-2">VI.</span> <span class="text-primary">Requisitos del Puesto</span>
                 <span id="msg_panel_6" class="text-warning" style="display: none"> <small><small><i class="fas fa-exclamation-triangle ps-2"></i> Incompleto</small></small></span>
               </button>
             </h2>
@@ -309,7 +305,6 @@
                 </div>              
                 <div class="row align-items-center justify-content-center text-center">
                   <div class="col-sm-10 align-items-center justify-content-center text-center">
-                    <small>
                     <table id="table_nivel_academico" class="display compact table table-sm" style="width:100%">
                       <thead>
                         <tr>
@@ -340,7 +335,6 @@
                         
                       </tbody>
                     </table>
-                  </small>
                   </div>
                 </div>
                 <hr>
@@ -395,7 +389,7 @@
                 
                 <div class="row mb-3">
                   <div class="col">
-                    <input type="text" class="form-control form-control-sm" max="200" id="txt_anos_experiencia" placeholder="Ej: Mínimo de 1-2 años de experiencia en el sector retail.">
+                    <input type="text" class="form-control form-control-sm" max="255" id="txt_anos_experiencia" placeholder="Ej: Mínimo de 1-2 años de experiencia en el sector retail.">
                   </div>
                 </div>
 
@@ -412,10 +406,10 @@
                           </div>        
               
                           <div class="col-sm-auto text-end">
+                            <input type="hidden" id="num_programa" value="3">
                             <button type="button" class="btn btn-sm btn-outline-info" onclick="addrow('programa')"> <i class="far fa-plus-square fa-lg me-2"></i>Añadir</button>
                           </div>
                         </div>
-                        <small>
                         <table id="table_programa" class="display compact table table-sm" style="width:100%">
                           <thead>
                             <tr>
@@ -431,33 +425,9 @@
                             </tr>
                           </thead>
                           <tbody class="text-light" id="tbody_programa">
-                            <tr>
-                              <td class="text-secondary align-middle text-start ps-2">Word</td>
-                              <td class="text-center align-middle"><input class="form-check-input" type="radio" name="programas_nivel_1" style="cursor: pointer;" id="programas_nivel_na_1" checked ></td>
-                              <td class="text-center align-middle"><input class="form-check-input" type="radio" name="programas_nivel_1" style="cursor: pointer;" id="programas_nivel_b_1"></td>
-                              <td class="text-center align-middle"><input class="form-check-input" type="radio" name="programas_nivel_1" style="cursor: pointer;" id="programas_nivel_i_1"></td>
-                              <td class="text-center align-middle"><input class="form-check-input" type="radio" name="programas_nivel_1" style="cursor: pointer;" id="programas_nivel_a_1"></td>
-                              <td class="text-center align-middle"><i class="fa-solid fa-trash-can dell" onclick="delrow(this,'programa')" title="Eliminar programa"></i></td>
-                            </tr>
-                            <tr>
-                              <td class="text-secondary align-middle text-start ps-2">Excel</td>
-                              <td class="text-center align-middle"><input class="form-check-input" type="radio" name="programas_nivel_2" style="cursor: pointer;" id="programas_nivel_na_2" checked ></td>
-                              <td class="text-center align-middle"><input class="form-check-input" type="radio" name="programas_nivel_2" style="cursor: pointer;" id="programas_nivel_b_2"></td>
-                              <td class="text-center align-middle"><input class="form-check-input" type="radio" name="programas_nivel_2" style="cursor: pointer;" id="programas_nivel_i_2"  ></td>
-                              <td class="text-center align-middle"><input class="form-check-input" type="radio" name="programas_nivel_2" style="cursor: pointer;" id="programas_nivel_a_2"  ></td>
-                              <td class="text-center align-middle"><i class="fa-solid fa-trash-can dell" onclick="delrow(this,'programa')" title="Eliminar programa"></i></td>
-                            </tr>
-                            <tr>
-                              <td class="text-secondary align-middle text-start ps-2">Power Point</td>
-                              <td class="text-center align-middle"><input class="form-check-input" type="radio" name="programas_nivel_3" style="cursor: pointer;" id="programas_nivel_na_3" checked></td>
-                              <td class="text-center align-middle"><input class="form-check-input" type="radio" name="programas_nivel_3" style="cursor: pointer;" id="programas_nivel_b_3"></td>
-                              <td class="text-center align-middle"><input class="form-check-input" type="radio" name="programas_nivel_3" style="cursor: pointer;" id="programas_nivel_i_3"></td>
-                              <td class="text-center align-middle"><input class="form-check-input" type="radio" name="programas_nivel_3" style="cursor: pointer;" id="programas_nivel_a_3"></td>
-                              <td class="text-center align-middle"><i class="fa-solid fa-trash-can dell" onclick="delrow(this,'programa')" title="Eliminar programa"></i></td>
-                            </tr>
+                            
                           </tbody>
                         </table>
-                      </small>
                       </div>
                     </div>              
 
@@ -473,10 +443,10 @@
                           </div>        
               
                           <div class="col-sm-auto text-end">
+                            <input type="hidden" id="num_idioma" value="1">
                             <button type="button" class="btn btn-sm btn-outline-info" onclick="addrow('idioma')"> <i class="far fa-plus-square fa-lg me-2"></i>Añadir</button>
                           </div>
                         </div>
-                        <small>
                         <table id="table_idioma" class="display compact table table-sm" style="width:100%">
                           <thead>
                             <tr>
@@ -492,17 +462,9 @@
                             </tr>
                           </thead>
                           <tbody class="text-light" id="tbody_idioma">
-                            <tr>
-                              <td class="text-secondary align-middle text-start ps-2">Inglés</td>
-                              <td class="text-center align-middle"><input class="form-check-input" type="radio" name="idioma_nivel_1" style="cursor: pointer;" id="idioma_nivel_na_1" checked></td>
-                              <td class="text-center align-middle"><input class="form-check-input" type="radio" name="idioma_nivel_1" style="cursor: pointer;" id="idioma_nivel_b_1"></td>
-                              <td class="text-center align-middle"><input class="form-check-input" type="radio" name="idioma_nivel_1" style="cursor: pointer;" id="idioma_nivel_i_1"></td>
-                              <td class="text-center align-middle"><input class="form-check-input" type="radio" name="idioma_nivel_1" style="cursor: pointer;" id="idioma_nivel_a_1"></td>
-                              <td class="text-center align-middle"><i class="fa-solid fa-trash-can dell" onclick="delrow(this,'idioma')" title="Eliminar idioma"></i></td>
-                            </tr>
+                            
                           </tbody>
                         </table>
-                      </small>
                       </div>
                     </div>    
                     
@@ -518,7 +480,7 @@
           <div class="accordion-item">
             <h2 class="accordion-header" id="panel_7-heading">
               <button class="accordion-button collapsed text-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#panel_7" aria-expanded="false" aria-controls="panel_7">
-                <i class="fas fa-lightbulb fa-lg me-2 text-primary"></i> VII. Habilidaes y Otros Conocimientos del Puesto
+                <i class="fas fa-lightbulb me-3 fa-lg text-primary"></i> <span class="fw-bold me-2">VII.</span> <span class="text-primary">Habilidaes y Otros Conocimientos del Puesto</span>
                 <span id="msg_panel_7" class="text-warning" style="display: none"> <small><small><i class="fas fa-exclamation-triangle ps-2"></i> Incompleto</small></small></span>
               </button>
             </h2>
@@ -532,7 +494,7 @@
                     <div class="col-sm-7">          
                       <div class="mb-3 text-start">
                         <label for="txt_habilidad" class="col-form-label pb-0">Habilidad o conocimiento</label>
-                        <textarea class="form-control  form-control-sm" id="txt_habilidad" rows="2" placeholder="Detallar..."></textarea>
+                        <textarea class="form-control  form-control-sm" id="txt_habilidad" rows="1" placeholder="Detallar..."></textarea>
                       </div>
                     </div>        
         
@@ -552,8 +514,8 @@
                   </div>
 
                   <div class="col-sm-10 align-items-center justify-content-center text-center">
-                    <small>
-                    <table id="table_habilidad" class="display compact table shadow table-bordered table-sm table-hover" style="width:100%">
+                    
+                    <table id="table_habilidad" class="display compact table shadow table-sm table-hover" style="width:100%">
                       <thead>
                         <tr>
                           <th class="text-light text-center align-middle bg-info" width='4%'>#</th>
@@ -566,19 +528,72 @@
                         
                       </tbody>
                     </table>
-                  </small>
+                  
                   </div>
                 </div>
 
               </div>
             </div>
           </div>
+
+          <!--VIII.  COMPETENCIAS ORGANIZACINALES -->
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="panel_9-heading">
+              <button class="accordion-button collapsed text-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#panel_9" aria-expanded="false" aria-controls="panel_9">
+                <i class="fas fa-list-ul fa-lg me-3 text-primary"></i> <span class="fw-bold me-2">VIII. </span>  <span class="text-primary">Competencias Organizacionales</span>
+                <span id="msg_panel_9" class="text-warning" style="display: none"> <small><small><i class="fas fa-exclamation-triangle ps-2"></i> Incompleto</small></small></span>
+              </button>
+            </h2>
+            <div id="panel_9" class="accordion-collapse collapse" aria-labelledby="panel_9-heading">
+              <div class="accordion-body">
+                <div class="text-secondary mb-3">
+                  Competencias organizacionales según la jerarquía del cargo.
+                  <div class="row align-items-center justify-content-center text-center">
+                    <div class="col-sm-10 align-items-center justify-content-center text-center">
+                      <div class="row align-items-center justify-content-center">
+                        
+                          <table id="table_comp" class="display compact table table-sm table-hover small" style="width:100%">
+                            <thead>
+                              <tr>
+                                
+                                <th class="text-light text-center align-middle bg-info" rowspan="2" colspan="2" width='30%'>COMPETENCIAS</th>
+                                <th class="text-light text-center align-middle bg-info" rowspan="2" width='20%'>CRITICIDAD</th>
+                                <th class="text-light text-center align-middle bg-info" colspan="10">NIVEL MÁXIMO</th>
+                              </tr>
+                              <tr>
+                                <th class="text-secondary text-center align-middle table-secondary" width='4%'>1</th>
+                                <th class="text-secondary text-center align-middle table-secondary" width='4%'>2</th>
+                                <th class="text-secondary text-center align-middle table-secondary" width='4%'>3</th>
+                                <th class="text-secondary text-center align-middle table-secondary" width='4%'>4</th>
+                                <th class="text-secondary text-center align-middle table-secondary" width='4%'>5</th>
+                                <th class="text-secondary text-center align-middle table-secondary" width='4%'>6</th>
+                                <th class="text-secondary text-center align-middle table-secondary" width='4%'>7</th>
+                                <th class="text-secondary text-center align-middle table-secondary" width='4%'>8</th>
+                                <th class="text-secondary text-center align-middle table-secondary" width='4%'>9</th>
+                                <th class="text-secondary text-center align-middle table-secondary" width='4%'>10</th>
+                              </tr>
+                            </thead>
+                            <tbody class="text-secondary" id="tbody_comp">
+                              
+                              <!-- Listado de responsabilidades -->
+      
+                            </tbody>
+                          </table>
+                      
+
+                      </div>
+                    </div>
+                  </div>
+                </div>            
+              </div>
+            </div>
+          </div>
         
-          <!--VIII.  AUTORIDAD DEL PUESTO -->
+          <!--IX.  AUTORIDAD DEL PUESTO -->
           <div class="accordion-item">
             <h2 class="accordion-header" id="panel_8-heading">
               <button class="accordion-button collapsed text-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#panel_8" aria-expanded="false" aria-controls="panel_8">
-                <i class="fas fa-user-check fa-lg me-2 text-primary"></i> VIII.  Autoridad del Puesto
+                <i class="fas fa-user-check fa-lg me-3 text-primary"></i> <span class="fw-bold me-2">IX. </span>  <span class="text-primary">Autoridad del Puesto</span>
                 <span id="msg_panel_8" class="text-warning" style="display: none"> <small><small><i class="fas fa-exclamation-triangle ps-2"></i> Incompleto</small></small></span>
               </button>
             </h2>
@@ -590,10 +605,10 @@
                 <div class="row align-items-center justify-content-center text-center">
                   <div class="col-sm-10 align-items-center justify-content-center text-center">
                     <div class="row align-items-center justify-content-center">
-                      <div class="col-sm-9">          
+                      <div class="col-sm-10">          
                         <div class="mb-3 text-start">
                           <label for="txt_sin" class="col-form-label pb-0">Decisión que NO requiere autorización</label>
-                          <textarea class="form-control  form-control-sm" id="txt_sin" rows="2" placeholder="Detallar..."></textarea>
+                          <textarea class="form-control  form-control-sm" id="txt_sin" rows="1" placeholder="Detallar..."></textarea>
                           
                         </div>
                       </div>        
@@ -602,8 +617,7 @@
                         <button type="button" class="btn btn-sm btn-outline-info" onclick="addrow('sin')"> <i class="far fa-plus-square fa-lg me-2"></i>Añadir</button>
                       </div>
                     </div>
-                    <small>
-                      <table id="table_sin" class="display compact table shadow table-bordered table-sm table-hover" style="width:100%">
+                      <table id="table_sin" class="display compact table shadow table-sm table-hover" style="width:100%">
                         <thead>
                           <tr>
                             <th class="text-light text-center align-middle bg-info" width='4%'>#</th>
@@ -615,7 +629,6 @@
                           
                         </tbody>
                       </table>
-                    </small>
                   </div>
                 </div>
                 <hr>
@@ -625,10 +638,10 @@
                 <div class="row align-items-center justify-content-center text-center">
                   <div class="col-sm-10 align-items-center justify-content-center text-center">
                     <div class="row align-items-center justify-content-center">
-                      <div class="col-sm-9">          
+                      <div class="col-sm-10">          
                         <div class="mb-3 text-start">
                           <label for="txt_con" class="col-form-label pb-0">Decisión que SI requiere autorización</label>
-                          <textarea class="form-control  form-control-sm" id="txt_con" rows="2" placeholder="Detallar..."></textarea>
+                          <textarea class="form-control  form-control-sm" id="txt_con" rows="1" placeholder="Detallar..."></textarea>
                         </div>
                       </div>        
           
@@ -636,8 +649,7 @@
                         <button type="button" class="btn btn-sm btn-outline-info" onclick="addrow('con')"> <i class="far fa-plus-square fa-lg me-2"></i>Añadir</button>
                       </div>
                     </div>
-                    <small>
-                      <table id="table_con" class="display compact table shadow table-bordered table-sm table-hover" style="width:100%">
+                      <table id="table_con" class="display compact table shadow table-sm table-hover" style="width:100%">
                         <thead>
                           <tr>
                             <th class="text-light text-center align-middle bg-info" width='4%'>#</th>
@@ -649,7 +661,6 @@
                           
                         </tbody>
                       </table>
-                    </small>
                   </div>
                 </div>
               </div>
@@ -657,10 +668,9 @@
 
           </div>
 
-        </div>
-        </small>
+      </div>
+      </small>
     </div>
-
   </div>
 </div>
 
@@ -681,6 +691,7 @@
               <div class="mb-3">
                 <label for="txt_arearespon" class="col-form-label">Área de Responsabilidad</label>
                 <input type="text" class="form-control form-control-sm" id="txt_arearespon">
+                <input type="hidden" class="form-control form-control-sm" id="id_arearespon" value='0'>
               </div>
             </div>        
             <div class="col-md-4">
@@ -700,7 +711,7 @@
             <div class="col-sm-7">          
               <div class="mb-3">
                 <label for="txt_tarea" class="col-form-label">Tarea</label>
-                <input type="text" class="form-control form-control-sm" id="txt_tarea" placeholder="...">
+                <textarea type="text" class="form-control form-control-sm" id="txt_tarea"  rows="2" placeholder="..."></textarea>
               </div>
             </div>        
 
@@ -709,9 +720,9 @@
                 <div class="form-group">
                   <label for="sel_critricidad" class="col-form-label">Nivel de Criticidad</label>
                   <select class="form-select form-select-sm" style="width: 100%;"  id="sel_critricidad">
-                    <option value="1" selected>Bajo</option>
+                    <option value="3" selected>Alto</option>
                     <option value="2">Medio</option>
-                    <option value="3">Alto</option>
+                    <option value="1">Bajo</option>
                   </select>
                 </div>
               </div>
@@ -724,7 +735,7 @@
           </div>
           <div class="row align-items-center justify-content-center text-center">
             <div class="col-sm-10 align-items-center justify-content-center text-center">
-              <table id="table_tareas" class="display compact table table-striped shadow table-bordered table-sm " style="width:100%">
+              <table id="table_tareas" class="display compact table table-striped shadow table-sm " style="width:100%">
                 <thead>
                   <tr>
                     <th class="text-light text-center align-middle bg-info" width='3%'>#</th>
@@ -749,7 +760,8 @@
           <i class="fa-solid fa-triangle-exclamation pe-2"> </i> <span id="msg_alert"> </span>
         </div>    
         <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal"><i class="fa-solid fa-arrow-left pe-2"></i> Cancelar</button>
-        <button type="button" class="btn btn-sm btn-info" onclick="add_respon('tareas')"><i class="fas fa-save pe-2"></i>Agregar</button>
+        <button type="button" class="btn btn-sm btn-primary" onclick="add_respon('tareas')" id="bto_add_respon" style="display: block"><i class="fas fa-save pe-2"></i>Agregar</button>
+        <button type="button" class="btn btn-success btn-sm" onclick="add_respon('tareas')"  tabindex="-1" id="bto_actualiza_respon" style="display: none"><i id="ico_update_respon" class="fas fa-sync-alt pr-2"></i> Actualizar</button>
       </div>
     </div>
   </div>
@@ -776,7 +788,6 @@
     { var nrows = $("#tbody_tareas tr").length;
       var txt = document.getElementById("txt_tarea").value;
       var sel = $("#sel_critricidad  option:selected").text();
-
       if(txt.length>5)
       { 
         contendor  = $("#tbody_tareas").html();
@@ -815,45 +826,46 @@
     
     if(opt_table=='programa')
     {
-      var nrows = $("#tbody_programa tr").length;
+      var nrows = $("#num_programa").val();
       var txt = document.getElementById("txt_programa").value;
-      
       if(txt.length>2)
       { 
         contendor  = $("#tbody_programa").html();
         nuevaFila   = '<tr>'+
-          '<td class="text-secondary align-middle text-start ps-2">'+txt+'</td>'+
-          '<td class="text-center align-middle"><input class="form-check-input" type="radio" name="programas_nivel_'+(nrows+1)+'" style="cursor: pointer;" id="programas_nivel_na_'+(nrows+1)+'" checked ></td>'+
-          '<td class="text-center align-middle"><input class="form-check-input" type="radio" name="programas_nivel_'+(nrows+1)+'" style="cursor: pointer;" id="programas_nivel_b_'+(nrows+1)+'"></td>'+
-          '<td class="text-center align-middle"><input class="form-check-input" type="radio" name="programas_nivel_'+(nrows+1)+'" style="cursor: pointer;" id="programas_nivel_i_'+(nrows+1)+'"></td>'+
-          '<td class="text-center align-middle"><input class="form-check-input" type="radio" name="programas_nivel_'+(nrows+1)+'" style="cursor: pointer;" id="programas_nivel_a_'+(nrows+1)+'"></td>'+
+          '<td class="text-secondary align-middle text-start ps-2"><span id="nom_programa_'+(Number(nrows)+1)+'">'+txt+'</span></td>'+
+          '<td class="text-center align-middle"><input class="form-check-input" type="radio" name="programas_nivel_'+(Number(nrows)+1)+'" style="cursor: pointer;" id="programas_nivel_na_'+(Number(nrows)+1)+'" checked ></td>'+
+          '<td class="text-center align-middle"><input class="form-check-input" type="radio" name="programas_nivel_'+(Number(nrows)+1)+'" style="cursor: pointer;" id="programas_nivel_b_'+(Number(nrows)+1)+'"></td>'+
+          '<td class="text-center align-middle"><input class="form-check-input" type="radio" name="programas_nivel_'+(Number(nrows)+1)+'" style="cursor: pointer;" id="programas_nivel_i_'+(Number(nrows)+1)+'"></td>'+
+          '<td class="text-center align-middle"><input class="form-check-input" type="radio" name="programas_nivel_'+(Number(nrows)+1)+'" style="cursor: pointer;" id="programas_nivel_a_'+(Number(nrows)+1)+'"></td>'+
           '<td class="text-center align-middle"><i class="fa-solid fa-trash-can dell" onclick=delrow(this,"programa") title="Eliminar programa"></i></td>'+
         '</tr>';
         $("#tbody_programa").html(contendor+nuevaFila); 
-        document.getElementById("txt_programa").value="";
+        $("#num_programa").val(Number(nrows)+1);
       }
+      document.getElementById("txt_programa").value="";
       document.getElementById("txt_programa").focus();
     }
     
     if(opt_table=='idioma')
     {
-      var nrows = $("#tbody_idioma tr").length;
+      var nrows = $("#num_idioma").val();
       var txt = document.getElementById("txt_idioma").value;
       
       if(txt.length>2)
       { 
         contendor  = $("#tbody_idioma").html();
         nuevaFila   = '<tr>'+
-          '<td class="text-secondary align-middle text-start ps-2">'+txt+'</td>'+
-          '<td class="text-center align-middle"><input class="form-check-input" type="radio" name="idioma_nivel_'+(nrows+1)+'" style="cursor: pointer;" id="idioma_nivel_na_'+(nrows+1)+'" checked ></td>'+
-          '<td class="text-center align-middle"><input class="form-check-input" type="radio" name="idioma_nivel_'+(nrows+1)+'" style="cursor: pointer;" id="idioma_nivel_b_'+(nrows+1)+'"></td>'+
-          '<td class="text-center align-middle"><input class="form-check-input" type="radio" name="idioma_nivel_'+(nrows+1)+'" style="cursor: pointer;" id="idioma_nivel_i_'+(nrows+1)+'"></td>'+
-          '<td class="text-center align-middle"><input class="form-check-input" type="radio" name="idioma_nivel_'+(nrows+1)+'" style="cursor: pointer;" id="idioma_nivel_a_'+(nrows+1)+'"></td>'+
+          '<td class="text-secondary align-middle text-start ps-2"><span id="nom_idioma_'+(Number(nrows)+1)+'">'+txt+'</span></td>'+
+          '<td class="text-center align-middle"><input class="form-check-input" type="radio" name="idioma_nivel_'+(Number(nrows)+1)+'" style="cursor: pointer;" id="idioma_nivel_na_'+(Number(nrows)+1)+'" checked ></td>'+
+          '<td class="text-center align-middle"><input class="form-check-input" type="radio" name="idioma_nivel_'+(Number(nrows)+1)+'" style="cursor: pointer;" id="idioma_nivel_b_'+(Number(nrows)+1)+'"></td>'+
+          '<td class="text-center align-middle"><input class="form-check-input" type="radio" name="idioma_nivel_'+(Number(nrows)+1)+'" style="cursor: pointer;" id="idioma_nivel_i_'+(Number(nrows)+1)+'"></td>'+
+          '<td class="text-center align-middle"><input class="form-check-input" type="radio" name="idioma_nivel_'+(Number(nrows)+1)+'" style="cursor: pointer;" id="idioma_nivel_a_'+(Number(nrows)+1)+'"></td>'+
           '<td class="text-center align-middle"><i class="fa-solid fa-trash-can dell" onclick=delrow(this,"idioma") title="Eliminar idioma"></i></td>'+
         '</tr>';
         $("#tbody_idioma").html(contendor+nuevaFila); 
-        document.getElementById("txt_idioma").value="";
+        $("#num_idioma").val(Number(nrows)+1);
       }
+      document.getElementById("txt_idioma").value="";
       document.getElementById("txt_idioma").focus();
     }
 
@@ -861,7 +873,7 @@
     {
       var nrows = $("#tbody_"+opt_table+" tr").length;
       var txt = document.getElementById("txt_"+opt_table).value;      
-      if(txt.length>5)
+      if(txt.length>2)
       { 
         contendor  = $("#tbody_"+opt_table).html();
         nuevaFila   = '<tr>'+
@@ -880,7 +892,7 @@
   { var _token = $('input[name="_token"]').val();
     var iddf=$("#iddf").val();
     var ad_up=$("#ad_up").val();
-
+    var id_arearespon=$('#id_arearespon').val();
     if(opt_table=="tareas")
     { var txt_arearespon=$("#txt_arearespon").val();
       var txt_kpi=$("#txt_kpi").val();
@@ -911,6 +923,7 @@
             }
             var data = new FormData();    
             data.append("txt_arearespon",txt_arearespon); 
+            data.append("id_arearespon",id_arearespon);
             data.append("txt_kpi", txt_kpi); 
             data.append("datajson" , datajson);
             data.append("iddf",iddf);
@@ -919,7 +932,6 @@
             data.append("idjer",idjer);      
             data.append("nrows",nrows);         
             data.append("_token", _token);
-
             $.ajax({
               data:  data,
               url:   "{{ route('descriptivos.addtarea') }}",
@@ -927,35 +939,64 @@
               contentType: false,       // The content type used when sending data to the server.
               cache: false,             // To unable request pages to be cached
               processData:false,			// To send DOMDocument or non processed data file it is set to false+
-              dataType: "json",       
+              dataType: "json",     
+              beforeSend: function () { $('#ico_update_respon').addClass('fa-pulse');},  
               success:  function (data) { 
-                $("#iddf").val(data.iddf);		
-                
-                contendor  = $("#body_respon").html();	
-                var nrows = $("#body_respon tr").length;
-                nuevaFila  =""
 
+                if(id_arearespon==0)
+                { $("#iddf").val(data.iddf);		
+                  contendor  = $("#body_respon").html();	
+                  var nrows = $("#body_respon tr").length;
+                  nuevaFila  =""
+                  nuevaFila   += '<tr>';
+                  nuevaFila  += '<td class="ps-2 align-middle text-uppercase" rowspan="'+data.cant_tarea+'">'+data.area_respon+'</td>';      
+                  x=0;
+                  jQuery(data.tareas).each(function(i, item){
+                    x++;
+                    nuevaFila  += '<td class="align-middle">'+item.tarea+'</td>';
+                    nuevaFila  += '<td class="text-center  align-middle">'+item.criticidad+'</td>';
+                    if(x==1){
+                      nuevaFila  += '<td class="ps-2 align-middle" rowspan="'+data.cant_tarea+'">'+data.kpi+'</td>'; 
+                      nuevaFila  += '<td rowspan="'+data.cant_tarea+'" class="text-center align-middle"><i class="fas fa-pencil-alt edit" onclick=edit_respon('+data.id_respon+')></i><span class="p-1"> </span><i class="fas fa-trash-alt dell" onclick=delrespon(this,"respon",'+data.id_respon+')></i></td></tr>';
+                    }
+                    else
+                    { nuevaFila  += '</tr>';}
+                  });
+
+                }
+                else{
+                  $("#body_respon").html('');
+                  jQuery(data.respons).each(function(i, item){ 
+                    contendor  = $("#body_respon").html();
+                    nuevaFila  ="";
                     nuevaFila   += '<tr>';
-                    nuevaFila  += '<td class="ps-2 align-middle" rowspan="'+data.cant_tarea+'">'+data.area_respon+'</td>';      
-                      x=0;
-                    jQuery(data.tareas).each(function(i, item){
-                      x++;
-                      nuevaFila  += '<td class="align-middle">'+item.tarea+'</td>';
-                          nuevaFila  += '<td class="text-center  align-middle">'+item.criticidad+'</td>';
+                    nuevaFila  += '<td class="ps-2 align-middle text-uppercase" rowspan="'+item.cant_tarea+'">'+item.area_respon+'</td>';      
+                    x=0;
+                    jQuery(data.tareas).each(function(i, item2){
+                      if(item.id_respon===item2.idarearespon)
+                      { x++;
+                        nuevaFila  += '<td class="align-middle">'+item2.tarea+'</td>';
+                        nuevaFila  += '<td class="text-center  align-middle">'+item2.criticidad+'</td>';
                         if(x==1){
-                          nuevaFila  += '<td class="ps-2 align-middle" rowspan="'+data.cant_tarea+'">'+data.kpi+'</td>'; 
-                          nuevaFila  += '<td rowspan="'+data.cant_tarea+'" class="text-center align-middle"><i class="fas fa-search edit" onclick=edit_respon('+data.id_respon+')></i><span class="p-1"> </span><i class="fas fa-trash-alt dell" onclick=delrespon(this,"respon",'+data.id_respon+')></i></td></tr>';
+                          nuevaFila  += '<td class="ps-2 align-middle" rowspan="'+item.cant_tarea+'">'+item.kpi+'</td>'; 
+                          nuevaFila  += '<td rowspan="'+item.cant_tarea+'" class="text-center align-middle"><i class="fas fa-pencil-alt edit" onclick=edit_respon('+item.id_respon+')></i><span class="p-1"> </span><i class="fas fa-trash-alt dell" onclick=delrespon(this,"respon",'+item.id_respon+')></i></td></tr>';
                         }
                         else
                         { nuevaFila  += '</tr>';}
+                      }
                     });
-                    $("#body_respon").html(contendor+nuevaFila); 
-                    $("#tbody_tareas").html(''); 
-                    $("#txt_kpi").val('');
-                    $("#txt_arearespon").val('');
-                    $("#txt_arearespon").val('');
-                    $("#txt_tarea").val('');
-                    $("#Modal-respon").modal('toggle');
+                    $("#body_respon").html(contendor+nuevaFila);
+                  }); 
+                }
+                $("#body_respon").html(contendor+nuevaFila); 
+                  $("#txt_arearespon").val('');
+                  $("#txt_kpi").val('');
+                  $("#txt_tarea").val('');
+                  $("#tbody_tareas").html(''); 
+                  $("#Modal-respon").modal('toggle');
+                  $('#ico_update_respon').removeClass('fa-pulse');
+                  document.getElementById('bto_add_respon').style.display='block';
+                  document.getElementById('bto_actualiza_respon').style.display='none';
               }
             });
           }
@@ -974,19 +1015,62 @@
         $("#txt_arearespon").focus();
       }
     }
+  }
 
-
+  function edit_respon(id_respon)
+  { $('#id_arearespon').val(id_respon);
+    document.getElementById('bto_add_respon').style.display='none';
+    document.getElementById('bto_actualiza_respon').style.display='block';
+    $("#Modal-respon").modal('toggle');
+    var _token = $('input[name="_token"]').val();
+    var parametros = {
+    "id_respon": id_respon,
+    "_token":_token};
+    $.ajax({
+      data:  parametros, 
+      url:   "{{ route('descriptivos.edit_respon') }}",
+      type:  'POST', 
+      dataType: "json",
+      cache: true, 
+      success:  function (data) { 
+        if(data.area_respon!='-')
+        {
+          $('#txt_arearespon').val(data.area_respon);
+          $('#txt_kpi').val(data.kpi);
+          $("#tbody_tareas").html('');
+          nrows=0;
+          jQuery(data.tareas).each(function(i, item){
+            nrows++;
+            contendor  = $("#tbody_tareas").html();
+            nuevaFila   = '<tr>'+
+            '<td>'+nrows+'</td>'+
+            '<td class="ps-2 text-start">'+item.tarea.slice(3)+'</td>'+
+            '<td>'+item.criticidad+'</td>'+
+            '<td class="text-center"><i class="fa-solid fa-trash-can dell" onclick=delrow(this,"tareas") title="Eliminar tarea"></i></td>'+
+            '</tr>';
+            $("#tbody_tareas").html(contendor+nuevaFila); 
+          });
+          document.getElementById("txt_tarea").value="";
+        }
+      }
+    });
   }
 
   function modal_add_areas_respon()
-  {
+  { 
     if((document.getElementById("namedf").value.length<=2)||($("#idjer" ).val()==0)){
       mal("Colocar antes el nombre de la posición y la jerarquía")
-      var elemento = document.getElementById("panel_1");
-      elemento.className += " show";
+      $('#panel_1').addClass('show');
+      $('#bto_panel_1').removeClass('collapsed');
     }
     else{
       $("#Modal-respon").modal("show");
+      $("#txt_arearespon").val('');
+      $("#txt_kpi").val('');
+      $("#txt_tarea").val('');
+      $("#sel_critricidad").val(3);
+      $("#tbody_tareas").html(''); 
+      $("#id_arearespon").val(0);
     }
   }
 
@@ -1014,7 +1098,7 @@
         confirmButtonText: "Si, Eliminar!"
         }).then((result) => {
           if (result.isConfirmed) {
-            var parametros = {
+          var parametros = {
           "id_repon": id_repon,
           "iddf":iddf,
           "_token":_token};
@@ -1027,27 +1111,28 @@
             success:  function (data) { 
 
             if(data.resp==1)
-            {
-              const table = new DataTable('#table_opt_table');
-              table.clear().draw(); 
-              jQuery(data).each(function(i, item){ 
-                
-                table.row.add([
-                  item.nombredesc,
-                  item.nombrejer,
-                  item.nombretipojer,
-                  '<div class="row d-flex align-items-center justify-content-center text-center"> <div class="col">'+status+'</div></div>',
-                  '<div class="row d-flex align-items-center justify-content-center text-center">'+
-                  '<div class="col-md-2 col-xs-6 text-secondary">'+
-                  '<i class="fa-solid fa-pencil fa-lg edit" onclick="modalcrud(2,'+item.id+')" data-bs-toggle="modal" data-bs-target="#Modal"></i>'+  
-                  '</div>'+
-                  '<div class="col-md-2 col-xs-6 text-secondary">'+
-                  '<i class="fa-solid fa-trash-can fa-lg dell" onclick="modalcrud(3,'+item.id+')" ></i>'+
-                  '</div>'+
-                  '</div>'
-                ]).draw(false);
+            { $("#body_respon").html('');
+              jQuery(data.respons).each(function(i, item){ 
+                contendor  = $("#body_respon").html();
+                nuevaFila  ="";
+                nuevaFila   += '<tr>';
+                nuevaFila  += '<td class="ps-2 align-middle text-uppercase" rowspan="'+item.cant_tarea+'">'+item.area_respon+'</td>';      
+                x=0;
+                jQuery(data.tareas).each(function(i, item2){
+                  if(item.id_respon===item2.idarearespon)
+                  { x++;
+                    nuevaFila  += '<td class="align-middle">'+item2.tarea+'</td>';
+                    nuevaFila  += '<td class="text-center  align-middle">'+item2.criticidad+'</td>';
+                    if(x==1){
+                      nuevaFila  += '<td class="ps-2 align-middle" rowspan="'+item.cant_tarea+'">'+item.kpi+'</td>'; 
+                      nuevaFila  += '<td rowspan="'+item.cant_tarea+'" class="text-center align-middle"><i class="fas fa-pencil-alt edit" onclick=edit_respon('+item.id_respon+')></i><span class="p-1"> </span><i class="fas fa-trash-alt dell" onclick=delrespon(this,"respon",'+item.id_respon+')></i></td></tr>';
+                    }
+                    else
+                    { nuevaFila  += '</tr>';}
+                  }
+                });
+                $("#body_respon").html(contendor+nuevaFila);
               }); 
-              
               bien('Área de responsabildiad eliminada.');
             }
             else{
@@ -1068,7 +1153,6 @@
     document.getElementById('ModalLabel').innerHTML ='<i class="fas fa-plus-circle"></i> Listado de Descriptivos de Funciones';
   }
 
-  
   function modalcrud(opt,id)
   { 
     var _token = $('input[name="_token"]').val();
@@ -1079,22 +1163,15 @@
     if(opt==1)
     { document.getElementById('ModalLabel').innerHTML ='<i class="far fa-plus-square"></i> Nuevo Descriptivo de Funciones';
       document.getElementById('bto_guarda').style.display="block";
-      document.getElementById('namedf').value="";
-      document.getElementById('idjer').value=0;
-      document.getElementById('cargojefe').value="";
-      document.getElementById('nameareadf').value="";
-      document.getElementById('numreportedir').value=0;
-      document.getElementById('txtproposito').value="";
-      document.getElementById('status').checked=true;
+      claner();
       document.getElementById('div_nuevo_df').style.display="block";
       document.getElementById('div_tabla').style.display="none";
-      //var ahora = new Date().toISOString();
-      document.getElementById('iddf').value=0;
       document.getElementById('ad_up').value="ad";
     }
     //EDITA
     if(opt==2)
-    { document.getElementById('ModalLabel').innerHTML ='<i class="fa-solid fa-pen-to-square  fa-lg"></i> Edita Descriptivo de Funciones';
+    { claner();
+      document.getElementById('ModalLabel').innerHTML ='<i class="fa-solid fa-pen-to-square  fa-lg"></i> Edita Descriptivo de Funciones';
       document.getElementById('bto_actualiza').style.display="block";
       document.getElementById('div_nuevo_df').style.display="block";
       document.getElementById('div_tabla').style.display="none";
@@ -1109,18 +1186,188 @@
         type:  'POST', 
         dataType: "json",
         cache: true, 
-        success:  function (data) { 
-          jQuery(data).each(function(i, item){ 
-            document.getElementById('namedf').value=item.nombredesc; 
-            document.getElementById('idjer').value=item.idjer; 
-            document.getElementById('cargojefe').value=item.cargojefe; 
-            document.getElementById('nameareadf').value=item.area_depto; 
-            document.getElementById('numreportedir').value=item.reportes; 
-            document.getElementById('txtproposito').value=item.proposito; 
-            if(item.status!='true'){document.getElementById('status').checked=false;}else{document.getElementById('status').checked=true;}
-          });
+        success:  function (data) {             
+          //-- Información Genral
+            document.getElementById('namedf').value= data.nombredesc; 
+            document.getElementById('idjer').value= data.idjer; 
+            document.getElementById('cargojefe').value= data.cargojefe; 
+            document.getElementById('nameareadf').value= data.area_depto; 
+            document.getElementById('numreportedir').value= data.reportes; 
+            if(data.estatus!='true'){document.getElementById('status').checked=false;}else{document.getElementById('status').checked=true;}
+          //-- Proposito del cargo
+            document.getElementById('txtproposito').value=data.proposito; 
+          //-- Principales responsabildiades del cargo
+            $("#body_respon").html('');
+              jQuery(data.respons).each(function(i, item){ 
+                contendor  = $("#body_respon").html();
+                nuevaFila  ="";
+                nuevaFila   += '<tr>';
+                nuevaFila  += '<td class="ps-2 align-middle text-uppercase" rowspan="'+item.cant_tarea+'">'+item.area_respon+'</td>';      
+                x=0;
+                jQuery(data.tareas).each(function(i, item2){
+                  if(item.id_respon===item2.idarearespon)
+                  { x++;
+                    nuevaFila  += '<td class="align-middle">'+item2.tarea+'</td>';
+                    nuevaFila  += '<td class="text-center  align-middle">'+item2.criticidad+'</td>';
+                    if(x==1){
+                      nuevaFila  += '<td class="ps-2 align-middle" rowspan="'+item.cant_tarea+'">'+item.kpi+'</td>'; 
+                      nuevaFila  += '<td rowspan="'+item.cant_tarea+'" class="text-center align-middle"><i class="fas fa-pencil-alt edit" onclick=edit_respon('+item.id_respon+')></i><span class="p-1"> </span><i class="fas fa-trash-alt dell" onclick=delrespon(this,"respon",'+item.id_respon+')></i></td></tr>';
+                    }
+                    else
+                    { nuevaFila  += '</tr>';}
+                  }
+                });
+                $("#body_respon").html(contendor+nuevaFila);
+              }); 
+            
+          //-- Relación de Interacción
+            $("#txt_interno" ).val(data.relacion_interna);    
+            $("#txt_externo" ).val(data.relacion_externa);
+          //-- Seguridad del Puesto
+            $("#sel_riesgo").val(data.riesgo_ofi_cam);     
+            $("#txt_epp" ).val(data.epp);   
+        
+          //-- Requisitos del Puesto
+            $("#sel_escolaridad").val(data.nivel_academico);  
+
+            if(data.estatus_academico=='p')
+            { document.getElementById('formacion_estatus_escolaridad_p').checked=true;
+              document.getElementById('formacion_estatus_escolaridad_c').checked=false;
+            }
+            if(data.estatus_academico=='c')
+            { document.getElementById('formacion_estatus_escolaridad_p').checked=false;
+              document.getElementById('formacion_estatus_escolaridad_c').checked=true;
+            }
+            $('#txt_escolaridad').val(data.estudio_requerido);
+            document.getElementById('exper_chk_norequiere').checked=false;
+            document.getElementById('exper_chk_aux_asis').checked=false;
+            document.getElementById('exper_chk_ana_esp').checked=false;
+            document.getElementById('exper_chk_sup_coor').checked=false;
+            document.getElementById('exper_chk_jef_dep').checked=false;
+            document.getElementById('exper_chk_jef_ge_dir').checked=false;
+            if(data.experiencia_norequiere==1){ document.getElementById('exper_chk_norequiere').checked=true;}
+            if(data.experiencia_aux_asis==1){ document.getElementById('exper_chk_aux_asis').checked=true;}
+            if(data.experiencia_ana_esp==1){ document.getElementById('exper_chk_ana_esp').checked=true;}
+            if(data.experiencia_sup_coor==1){ document.getElementById('exper_chk_sup_coor').checked=true;}
+            if(data.experiencia_jef_dep==1){ document.getElementById('exper_chk_jef_dep').checked=true;}
+            if(data.experiencia_ge_dir==1){ document.getElementById('exper_chk_jef_ge_dir').checked=true;}
+            $('#txt_anos_experiencia').val(data.anos_experiencia);
+            document.getElementById("txt_programa").value="";
+            $("#tbody_programa").html('');
+            x=0;
+            jQuery(data.programa).each(function(i, item){ 
+              x++;
+              contendor  = $("#tbody_programa").html();
+              nuevaFila   = '<tr>'+
+                '<td class="text-secondary align-middle text-start ps-2"><span id="nom_programa_'+x+'">'+item.programa+'</span></td>'+
+                '<td class="text-center align-middle"><input class="form-check-input" type="radio" name="programas_nivel_'+x+'" style="cursor: pointer;" id="programas_nivel_na_'+x+'"';
+                  if(item.nivel==0){  nuevaFila+=' checked'}                  
+                nuevaFila+='></td><td class="text-center align-middle"><input class="form-check-input" type="radio" name="programas_nivel_'+x+'" style="cursor: pointer;" id="programas_nivel_b_'+x+'"';
+                  if(item.nivel==1){  nuevaFila+=' checked'}               
+                nuevaFila+='></td><td class="text-center align-middle"><input class="form-check-input" type="radio" name="programas_nivel_'+x+'" style="cursor: pointer;" id="programas_nivel_i_'+x+'"';
+                  if(item.nivel==2){  nuevaFila+=' checked'}                 
+                nuevaFila+='></td><td class="text-center align-middle"><input class="form-check-input" type="radio" name="programas_nivel_'+x+'" style="cursor: pointer;" id="programas_nivel_a_'+x+'"';
+                  if(item.nivel==3){  nuevaFila+=' checked'}                
+                nuevaFila+='></td><td class="text-center align-middle"><i class="fa-solid fa-trash-can dell" onclick=delrow(this,"programa") title="Eliminar programa"></i></td>'+
+              '</tr>';
+              $("#tbody_programa").html(contendor+nuevaFila);
+            }); 
+            $("#num_programa").val(x);
+            $("#txt_programa").val('');
+                        
+            document.getElementById("txt_idioma").value="";
+            $("#tbody_idioma").html('');
+            x=0;
+            jQuery(data.idioma).each(function(i, item){ 
+              x++;
+              nrows = $("#tbody_idioma tr").length;
+              contendor  = $("#tbody_idioma").html();
+              nuevaFila   = '<tr>'+
+                '<td class="text-secondary align-middle text-start ps-2"><span id="nom_idioma_'+x+'">'+item.idioma+'</span></td>'+
+                '<td class="text-center align-middle"><input class="form-check-input" type="radio" name="idioma_nivel_'+x+'" style="cursor: pointer;" id="idioma_nivel_na_'+x+'"';
+                  if(item.nivel==0){  nuevaFila+=' checked'}                  
+                nuevaFila+='></td><td class="text-center align-middle"><input class="form-check-input" type="radio" name="idioma_nivel_'+x+'" style="cursor: pointer;" id="idioma_nivel_b_'+x+'"';
+                  if(item.nivel==1){  nuevaFila+=' checked'}               
+                nuevaFila+='></td><td class="text-center align-middle"><input class="form-check-input" type="radio" name="idioma_nivel_'+x+'" style="cursor: pointer;" id="idioma_nivel_i_'+x+'"';
+                  if(item.nivel==2){  nuevaFila+=' checked'}                 
+                nuevaFila+='></td><td class="text-center align-middle"><input class="form-check-input" type="radio" name="idioma_nivel_'+x+'" style="cursor: pointer;" id="idioma_nivel_a_'+x+'"';
+                  if(item.nivel==3){  nuevaFila+=' checked'}                
+                nuevaFila+='></td><td class="text-center align-middle"><i class="fa-solid fa-trash-can dell" onclick=delrow(this,"idioma") title="Eliminar idioma"></i></td>'+
+              '</tr>';
+              $("#tbody_idioma").html(contendor+nuevaFila); 
+            }); 
+            $("#num_idioma").val(x);
+            $("#txt_idioma").val('');
+          //-- Habilidades y otros conocimientos del Puesto
+            document.getElementById("txt_habilidad").value="";
+            $("#tbody_habilidad").html('');
+            x=0;
+            jQuery(data.habilidades).each(function(i, item){ 
+              contendor  = $("#tbody_habilidad").html();
+              x++;
+              nuevaFila   = '<tr>'+
+              '<td>'+x+'</td>'+
+              '<td class="ps-2 text-start">'+item.habilidad.slice(3)+'</td>'+
+              '<td>'+item.nivel+'</td>'+
+              '<td class="text-center"><i class="fa-solid fa-trash-can dell" onclick=delrow(this,"habilidad") title="Eliminar habilidad"></i></td>'+
+              '</tr>';
+              $("#tbody_habilidad").html(contendor+nuevaFila); 
+            }); 
+          //-- Competencias
+          
+        nrows=0;   
+        $("#tbody_comp").html('');
+        jQuery(data.comp).each(function(i, item){ 
+          
+          nrows++;
+            contendor  = $("#tbody_comp").html();
+            nuevaFila   = '<tr>'+
+            '<th class="text-center">'+nrows+'</th><td class="text-sm-start">'+item.nomcomp+'</td><td class="text-center">'+item.nomtipocomp+'</td><td></td><td></td><td></td><td></td><td></td><td';
+            color='#fff';
+            if(item.perfil==8){color='greendf-8';}      
+            nuevaFila+=' class="'+color+'"></td><td';
+            color='#fff';
+            if(item.perfil==8){color='greendf-9';}
+            if(item.perfil==9){color='greendf-8';}         
+            nuevaFila+=' class="'+color+'"></td><td';
+            color='#fff';
+            if(item.perfil==8){color='greendf-10';}
+            if(item.perfil==9){color='greendf-9';}
+            if(item.perfil==10){color='greendf-8';}             
+            nuevaFila+=' class="'+color+'"></td><td';
+            color='#fff';
+            if(item.perfil==9){color='greendf-10';}
+            if(item.perfil==10){color='greendf-9';}             
+            nuevaFila+=' class="'+color+'"></td><td';
+            color='#fff';
+            if(item.perfil==10){color='greendf-10';}            
+            nuevaFila+=' class="'+color+'"></td></tr>';
+            $("#tbody_comp").html(contendor+nuevaFila);
+        });
+          //-- Autoridad del Puesto
+            $("#txt_con").val('');
+            $("#txt_sin").val('');
+            $("#tbody_con").html('');
+            $("#tbody_sin").html('');
+            x=0;
+            jQuery(data.decisiones).each(function(i, item){ 
+              tabla='sin';
+              if(item.tipo==1)
+              { var tabla='con';}
+
+              contendor  = $("#tbody_"+tabla).html();
+              nrows = $("#tbody_"+tabla+" tr").length;
+              nuevaFila   = '<tr>'+
+              '<td>'+(nrows+1)+'</td>'+
+              '<td class="ps-2 text-start">'+item.desicion.slice(3)+'</td>'+
+              '<td class="text-center"><i class="fa-solid fa-trash-can dell" onclick=delrow(this,"'+tabla+'") title="Eliminar habilidad"></i></td>'+
+              '</tr>';
+              $("#tbody_"+tabla).html(contendor+nuevaFila); 
+            }); 
+
         }
       });
+
     }
     if(opt==3)
     { document.getElementById('iddf').value=id;
@@ -1151,13 +1398,13 @@
               jQuery(data).each(function(i, item){ 
                 
                 table.row.add([
-                  item.nombredesc,
+                  '<span class="text-uppercase">'+item.nombredesc+'</span>',
                   item.nombrejer,
                   item.nombretipojer,
                   '<div class="row d-flex align-items-center justify-content-center text-center"> <div class="col">'+status+'</div></div>',
                   '<div class="row d-flex align-items-center justify-content-center text-center">'+
                   '<div class="col-md-2 col-xs-6 text-secondary">'+
-                  '<i class="fa-solid fa-pencil fa-lg edit" onclick="modalcrud(2,'+item.id+')" data-bs-toggle="modal" data-bs-target="#Modal"></i>'+  
+                  '<i class="fa-solid fa-pencil fa-lg edit" onclick="modalcrud(2,'+item.id+')" ></i>'+  
                   '</div>'+
                   '<div class="col-md-2 col-xs-6 text-secondary">'+
                   '<i class="fa-solid fa-trash-can fa-lg dell" onclick="modalcrud(3,'+item.id+')" ></i>'+
@@ -1174,13 +1421,13 @@
     }
   }
   
-  function su(opt)
-  { band=0;
+function su(opt)
+{ band=0;
 
-    // ------ para actualizar
-    var id = $('#iddf').val();  
+  // ------------  para actualizar
+      var id = $('#iddf').val();  
 
-    // ------------  Información General
+  // ------------  Información General
     var namedf = $("#namedf" ).val();
     var idjer = $("#idjer" ).val();
     var cargojefe = $("#cargojefe" ).val();
@@ -1188,39 +1435,40 @@
     var numreportedir = $("#numreportedir" ).val();
     var status = document.getElementById('status').checked; 
 
-    // ------------  Propósito general del cargo
+  // ------------  Propósito general del cargo
     var txtproposito = $("#txtproposito" ).val();
 
-    // ------------  Principales Responsabilidades del Cargo
+  // ------------  Principales Responsabilidades del Cargo
     var nrows = $("#body_respon tr").length;
     if(nrows<1)
     { document.getElementById('msg_panel_3').style.display='block'; band=1;}
 
-    // ------------  Relación de interacción    
+  // ------------  Relación de interacción    
     var txt_interno = $("#txt_interno" ).val();    
     var txt_externo = $("#txt_externo" ).val();
     if((txt_externo.length<1)||(txt_interno.length<1))
     { document.getElementById('msg_panel_4').style.display='block'; band=1;}
 
-    // ------------  Seguridad del puesto 
+  // ------------  Seguridad del puesto 
     var sel_riesgo = $("#sel_riesgo  option:selected").text();   
     var txt_epp = $("#txt_epp" ).val();
     
-    // ------------  Requisitos del puesto  p es parcial   c es completo
-    opt_nivel_aca=document.getElementById('sel_escolaridad').value;
+  // ------------  Requisitos del puesto  p es parcial   c es completo
+    opt_nivel_aca=$("#sel_escolaridad").val();
 
-
+    var estatus_nivel_aca='';
+    var txt_nivel_aca='';
     if(opt_nivel_aca!=0)
     { if(document.getElementById('formacion_estatus_escolaridad_p').checked) 
       { estatus_nivel_aca='p';}
       if(document.getElementById('formacion_estatus_escolaridad_c').checked) 
       { estatus_nivel_aca='c';}
-      txt_nivel_aca= document.getElementById('txt_escolaridad').value;
+      txt_nivel_aca= $("#txt_escolaridad").val();
     }
     else    
     { document.getElementById('msg_panel_6').style.display='block'; band=1;}
 
-    // ------------  Requisitos del puesto EXPERIENCIA
+  // ------------  Requisitos del puesto EXPERIENCIA
     experiencia_norequiere=0; experiencia_aux_asis=0; experiencia_ana_esp=0; experiencia_sup_coor=0; experiencia_jef_dep=0; experiencia_ge_dir=0;
     if(document.getElementById('exper_chk_norequiere').checked) { experiencia_norequiere=1;}
     if(document.getElementById('exper_chk_aux_asis').checked) { experiencia_aux_asis=1;}
@@ -1231,12 +1479,66 @@
     if(experiencia_norequiere==0 && experiencia_aux_asis==0 && experiencia_ana_esp==0 && experiencia_sup_coor==0 && experiencia_jef_dep==0 && experiencia_ge_dir==0)
     { document.getElementById('msg_panel_6').style.display='block'; band=1;}
 
-    // ------------- AÑOS DE EXPERIENCIA
-    anos_experiencia=document.getElementById('txt_anos_experiencia').value;
+  // ------------  años de experiencia
+    anos_experiencia=$('#txt_anos_experiencia').val();
     if((anos_experiencia.length<1)||(txt_interno.length<1))
     { document.getElementById('msg_panel_6').style.display='block';band=1;}
-                  
-    // ---------- HABILIDADES Y OTROS CONOCIMIENTOS DEL PUESTO
+  // ------------  Programas
+    nuevo_nrows_programa=0;
+    nuevo_nrows_idioma=0;
+    var datajson_programa='';
+    var nrows_programa = $("#num_programa").val();
+    if(nrows_programa<1)
+    { document.getElementById('msg_panel_6').style.display='block'; band=1;}
+    else
+    {     
+      var datos_programa  = [];
+      var objeto_programa = {};
+      for (var x = 1; x <= nrows_programa; x++) 
+      { if ($('#nom_programa_'+x).length) { 
+          nuevo_nrows_programa++;  
+          programa = $('#nom_programa_'+x).html();
+          if(document.getElementById('programas_nivel_na_'+x).checked) { nivel_programa =0;}
+          if(document.getElementById('programas_nivel_b_'+x).checked) { nivel_programa =1;}
+          if(document.getElementById('programas_nivel_i_'+x).checked) { nivel_programa =2;}
+          if(document.getElementById('programas_nivel_a_'+x).checked) { nivel_programa =3;}
+          datos_programa.push({ 
+            "programa" : programa,
+            "nivel_programa"  : nivel_programa
+          });
+        }
+        objeto_programa.datos_programa = datos_programa;
+        datajson_programa=JSON.stringify(objeto_programa);
+      }
+    }
+      
+  // ------------  Idiomas
+    var datajson_idioma='';
+    var nrows_idioma = $("#num_idioma").val();
+    if(nrows_idioma<1)
+    { document.getElementById('msg_panel_6').style.display='block'; band=1;}
+    else
+    {       
+      var datos_idioma  = [];
+      var objeto_idioma = {};
+      for (var x = 1; x <= nrows_idioma; x++) 
+      { if ($('#nom_idioma_'+x).length) {
+          nuevo_nrows_idioma++;  
+          idioma = $('#nom_idioma_'+x).html();    
+          if(document.getElementById('idioma_nivel_na_'+x).checked) { nivel_idioma =0;}
+          if(document.getElementById('idioma_nivel_b_'+x).checked) { nivel_idioma =1;}
+          if(document.getElementById('idioma_nivel_i_'+x).checked) { nivel_idioma =2;}
+          if(document.getElementById('idioma_nivel_a_'+x).checked) { nivel_idioma =3;}
+          datos_idioma.push({ 
+            "idioma" : idioma,
+            "nivel_idioma"  : nivel_idioma
+          });
+          objeto_idioma.datos_idioma = datos_idioma;
+          datajson_idioma=JSON.stringify(objeto_idioma);    
+        }
+      }
+    }
+  // ------------  HABILIDADES Y OTROS CONOCIMIENTOS DEL PUESTO
     var datajson_habilidades='';
     var nrows_habilidad = $("#tbody_habilidad tr").length;
     if(nrows_habilidad<1)
@@ -1258,7 +1560,7 @@
       }
     }
 
-    // ---------- Decisión que NO requiere autorización
+  // ------------  Decisión que NO requiere autorización
     var datajson_decisiones ='-';     
     var datos_decisiones  = [];
     var objeto_decisiones = {};
@@ -1278,7 +1580,7 @@
       }
     }
 
-    // ---------- Decisión que SI requiere autorización
+  // ------------  Decisión que SI requiere autorización
     var nrows_decisiones_con = $("#tbody_con tr").length;
     if(nrows_decisiones_con>0)
     { for (var x = 0; x < nrows_decisiones_con; x++) 
@@ -1299,115 +1601,126 @@
       if(band==1)
       {
         Swal.fire({
-        text: "Existen campos en blancos y que son necesarios para completar el Descriptivo de Funciones, Desea guardar y continuar en otro momento?",
+        text: "Existen campos que son necesarios completar en el Descriptivo de Funciones, Desea guardar y continuar en otro momento?",
         icon: "question",
         showCancelButton: true,              
         cancelButtonText:  '<i class="fas fa-arrow-left"></i> Cancelar',
         confirmButtonText: '<i class="fas fa-save pr-2"></i> Si, guardar',
-      }).then((result) => {
-        /* Read more about isConfirmed, isDenied below */
-        if (result.isConfirmed) {        
-          var _token = $('input[name="_token"]').val();
-      if(id==0)
-      { var urls="{{ route('descriptivos.store') }}";}
-      if(id>0)
-      { var urls="{{ route('descriptivos.update') }}";}
-      /*if(opt==3)
-      { var urls="{{ route('descriptivos.destroy') }}";tipojer=1;idjer=1;}*/
-      if(namedf.length>0)
-      { if(idjer>0)
-        { var parametros = {
-          "opt" : opt,
-          "id": id,
-          "status" : status,
-          "namedf" : namedf,
-          "idjer" : idjer,
-          "cargojefe" : cargojefe,
-          "nameareadf" : nameareadf,
-          "numreportedir" : numreportedir,
-          "txtproposito" : txtproposito,
-          "txt_interno" : txt_interno,
-          "txt_externo" : txt_externo,
-          "sel_riesgo" : sel_riesgo,
-          "txt_epp" : txt_epp,
-          "opt_nivel_aca" : opt_nivel_aca,  
-          "estatus_nivel_aca" :estatus_nivel_aca,
-          "txt_nivel_aca" : txt_nivel_aca,
-
-          "experiencia_norequiere" : experiencia_norequiere,
-          "experiencia_aux_asis" : experiencia_aux_asis,
-          "experiencia_ana_esp" : experiencia_ana_esp,
-          "experiencia_sup_coor" : experiencia_sup_coor,
-          "experiencia_jef_dep" : experiencia_jef_dep,
-          "experiencia_ge_dir" : experiencia_ge_dir,
-          "anos_experiencia" : anos_experiencia,
-
-          "nrows_habilidad" : nrows_habilidad,
-          "datajson_habilidades" : datajson_habilidades,
-          "nrows_decisiones_sin" : nrows_decisiones_sin,
-          "nrows_decisiones_con" : nrows_decisiones_con,
-          "datajson_decisiones" : datajson_decisiones,
-          "_token":_token};
-          $.ajax({
-            data:  parametros, 
-            url:   urls,
-            type:  'POST', 
-            dataType: "json",
-            cache: true, 
-            success:  function (data) { 
-              const table = new DataTable('#MyTable');
-              table.clear().draw(); 
-              jQuery(data).each(function(i, item){ 
-                var status="";
-                if(item.status=='true'){ status='<i class="fa-solid fa-circle-check text-success fa-lg"></i>';}else{ status='<i class="fa-solid fa-triangle-exclamation text-warning fa-lg"></i>';}
-                table.row.add([
-                  item.nombredesc,
-                  item.nombrejer,
-                  item.nombretipojer,
-                  '<div class="row d-flex align-items-center justify-content-center text-center"> <div class="col">'+status+'</div></div>',
-                  '<div class="row d-flex align-items-center justify-content-center text-center">'+
-                  '<div class="col-md-2 col-xs-6 text-secondary">'+
-                  '<i class="fa-solid fa-pencil fa-lg edit" onclick="modalcrud(2,'+item.id+')" data-bs-toggle="modal" data-bs-target="#Modal"></i>'+  
-                  '</div>'+
-                  '<div class="col-md-2 col-xs-6 text-secondary">'+
-                  '<i class="fa-solid fa-trash-can fa-lg dell" onclick="modalcrud(3,'+item.id+')" ></i>'+
-                  '</div>'+
-                  '</div>'
-                ]).draw(false);
-              });
-              document.getElementById('namedf').value="";
-              document.getElementById('idjer').value=0;
-              document.getElementById('cargojefe').value="";
-              document.getElementById('nameareadf').value="";
-              document.getElementById('numreportedir').value=0;
-              document.getElementById('txtproposito').value="";
-              document.getElementById('status').checked=true;
-              if(opt==1)
-              { bien('El descriptivo de funciones ha sido creado');}
-              if(opt==2)
-              { bien('El descriptivo de funciones ha sido actualizado');}
-              if(opt==3)
-              { bien('El descriptivo de funciones ha sido eliminado');}
-                $('#Modal').modal('hide');
+        }).then((result) => {
+          /* Read more about isConfirmed, isDenied below */
+          if (result.isConfirmed) 
+          {        
+            var _token = $('input[name="_token"]').val();
+            if(id==0)
+            { var urls="{{ route('descriptivos.store') }}";}
+            if(id>0)
+            { var urls="{{ route('descriptivos.update') }}";}
+  // ------------  enviando data SI ES NUEVO
+            if(namedf.length>0)
+            { if(idjer>0)
+              { var parametros = {
+                "opt" : opt,
+                "id": id,
+                "status" : status,
+                "namedf" : namedf,
+                "idjer" : idjer,
+                "cargojefe" : cargojefe,
+                "nameareadf" : nameareadf,
+                "numreportedir" : numreportedir,
+                "txtproposito" : txtproposito,
+                "txt_interno" : txt_interno,
+                "txt_externo" : txt_externo,
+                "sel_riesgo" : sel_riesgo,
+                "txt_epp" : txt_epp,
+                "opt_nivel_aca" : opt_nivel_aca,  
+                "estatus_nivel_aca" :estatus_nivel_aca,
+                "txt_nivel_aca" : txt_nivel_aca,
+                "experiencia_norequiere" : experiencia_norequiere,
+                "experiencia_aux_asis" : experiencia_aux_asis,
+                "experiencia_ana_esp" : experiencia_ana_esp,
+                "experiencia_sup_coor" : experiencia_sup_coor,
+                "experiencia_jef_dep" : experiencia_jef_dep,
+                "experiencia_ge_dir" : experiencia_ge_dir,
+                "anos_experiencia" : anos_experiencia,
+                "nrows_habilidad" : nrows_habilidad,
+                "datajson_habilidades" : datajson_habilidades,
+                "nrows_programa" : nuevo_nrows_programa,
+                "datajson_programa" : datajson_programa,
+                "nrows_idioma" : nuevo_nrows_idioma,
+                "datajson_idioma" : datajson_idioma,
+                "nrows_decisiones_sin" : nrows_decisiones_sin,
+                "nrows_decisiones_con" : nrows_decisiones_con,
+                "datajson_decisiones" : datajson_decisiones,
+                "_token":_token};
+                $.ajax({
+                  data:  parametros, 
+                  url:   urls,
+                  type:  'POST', 
+                  dataType: "json",
+                  cache: true, 
+                  beforeSend: function () {
+                    $('#ico_update').addClass('fa-pulse');
+                  }, 
+                  success:  function (data) { 
+                    const table = new DataTable('#MyTable');
+                    table.clear().draw(); 
+                    jQuery(data).each(function(i, item){ 
+                      var status="";
+                      if(item.status=='true'){ status='<i class="fa-solid fa-circle-check text-success fa-lg"></i>';}else{ status='<i class="fa-solid fa-triangle-exclamation text-warning fa-lg"></i>';}
+                      table.row.add([
+                        '<span class="text-uppercase">'+item.nombredesc+'</span>',
+                        item.nombrejer,
+                        item.nombretipojer,
+                        '<div class="row d-flex align-items-center justify-content-center text-center"> <div class="col">'+status+'</div></div>',
+                        '<div class="row d-flex align-items-center justify-content-center text-center">'+
+                        '<div class="col-md-2 col-xs-6 text-secondary">'+
+                        '<i class="fa-solid fa-pencil fa-lg edit" onclick="modalcrud(2,'+item.id+')"></i>'+  
+                        '</div>'+
+                        '<div class="col-md-2 col-xs-6 text-secondary">'+
+                        '<i class="fa-solid fa-trash-can fa-lg dell" onclick="modalcrud(3,'+item.id+')" ></i>'+
+                        '</div>'+
+                        '</div>'
+                      ]).draw(false);
+                    });
+                    document.getElementById('namedf').value="";
+                    document.getElementById('idjer').value=0;
+                    document.getElementById('cargojefe').value="";
+                    document.getElementById('nameareadf').value="";
+                    document.getElementById('numreportedir').value=0;
+                    document.getElementById('txtproposito').value="";
+                    document.getElementById('status').checked=true;
+                    if(opt==1)
+                    { bien('El descriptivo de funciones ha sido creado');}
+                    if(opt==2)
+                    { bien('El descriptivo de funciones ha sido actualizado');}
+                    if(opt==3)
+                    { bien('El descriptivo de funciones ha sido eliminado');}
+                    document.getElementById('bto_guarda').style.display="block";
+                    document.getElementById('bto_actualiza').style.display="none";
+                    document.getElementById('iddf').value=0;
+                    document.getElementById('div_nuevo_df').style.display="none";
+                    document.getElementById('div_tabla').style.display="block";
+                    
+                    $('#ico_update').removeClass('fa-pulse');
+                  }
+                });
+              }
+              else
+              { mal('Por favor seleccionar la Jerarquía');}
             }
-          });
-        }
-        else
-        { mal('Por favor seleccionar la Jerarquía');}
-      }
-      else
-      { mal('Por favor colocar el nombre de la posición del descriptivo de funciones');}
-        }
-      });
+            else
+            { mal('Por favor colocar el nombre de la posición del descriptivo de funciones');}
+          }
+        });
       }
       else{
         var _token = $('input[name="_token"]').val();
-      if(id==0)
-      { var urls="{{ route('descriptivos.store') }}";}
-      if(id>0)
-      { var urls="{{ route('descriptivos.update') }}";}
-      /*if(opt==3)
-      { var urls="{{ route('descriptivos.destroy') }}";tipojer=1;idjer=1;}*/
+        if(id==0)
+        { var urls="{{ route('descriptivos.store') }}";}
+        if(id>0)
+        { var urls="{{ route('descriptivos.update') }}";}
+    
+  // ------------  enviando data SI ES ACTUALIZAR
       if(namedf.length>0)
       { if(idjer>0)
         { var parametros = {
@@ -1427,7 +1740,6 @@
           "opt_nivel_aca" : opt_nivel_aca,  
           "estatus_nivel_aca" :estatus_nivel_aca,
           "txt_nivel_aca" : txt_nivel_aca,
-
           "experiencia_norequiere" : experiencia_norequiere,
           "experiencia_aux_asis" : experiencia_aux_asis,
           "experiencia_ana_esp" : experiencia_ana_esp,
@@ -1435,9 +1747,12 @@
           "experiencia_jef_dep" : experiencia_jef_dep,
           "experiencia_ge_dir" : experiencia_ge_dir,
           "anos_experiencia" : anos_experiencia,
-
           "nrows_habilidad" : nrows_habilidad,
           "datajson_habilidades" : datajson_habilidades,
+          "nrows_programa" : nuevo_nrows_programa,
+          "datajson_programa" : datajson_programa,
+          "nrows_idioma" : nuevo_nrows_idioma,
+          "datajson_idioma" : datajson_idioma,
           "nrows_decisiones_sin" : nrows_decisiones_sin,
           "nrows_decisiones_con" : nrows_decisiones_con,
           "datajson_decisiones" : datajson_decisiones,
@@ -1448,6 +1763,9 @@
             type:  'POST', 
             dataType: "json",
             cache: true, 
+            beforeSend: function () {
+              $('#ico_update').addClass('fa-pulse');
+            }, 
             success:  function (data) { 
               const table = new DataTable('#MyTable');
               table.clear().draw(); 
@@ -1455,13 +1773,13 @@
                 var status="";
                 if(item.status=='true'){ status='<i class="fa-solid fa-circle-check text-success fa-lg"></i>';}else{ status='<i class="fa-solid fa-triangle-exclamation text-warning fa-lg"></i>';}
                 table.row.add([
-                  item.nombredesc,
+                  '<span class="text-uppercase">'+item.nombredesc+'</span>',
                   item.nombrejer,
                   item.nombretipojer,
                   '<div class="row d-flex align-items-center justify-content-center text-center"> <div class="col">'+status+'</div></div>',
                   '<div class="row d-flex align-items-center justify-content-center text-center">'+
                   '<div class="col-md-2 col-xs-6 text-secondary">'+
-                  '<i class="fa-solid fa-pencil fa-lg edit" onclick="modalcrud(2,'+item.id+')" data-bs-toggle="modal" data-bs-target="#Modal"></i>'+  
+                  '<i class="fa-solid fa-pencil fa-lg edit" onclick="modalcrud(2,'+item.id+')"></i>'+  
                   '</div>'+
                   '<div class="col-md-2 col-xs-6 text-secondary">'+
                   '<i class="fa-solid fa-trash-can fa-lg dell" onclick="modalcrud(3,'+item.id+')" ></i>'+
@@ -1482,7 +1800,12 @@
               { bien('El descriptivo de funciones ha sido actualizado');}
               if(opt==3)
               { bien('El descriptivo de funciones ha sido eliminado');}
-                $('#Modal').modal('hide');
+              document.getElementById('bto_guarda').style.display="block";
+              document.getElementById('bto_actualiza').style.display="none";
+              document.getElementById('iddf').value=0;
+              document.getElementById('div_nuevo_df').style.display="none";
+              document.getElementById('div_tabla').style.display="block";
+              $('#ico_update').removeClass('fa-pulse');
             }
           });
         }
@@ -1492,6 +1815,151 @@
       else
       { mal('Por favor colocar el nombre de la posición del descriptivo de funciones');}
       }
+  }
+
+  function listcomp()
+  {
+    var idjer=$('#idjer').val();
+    var _token = $('input[name="_token"]').val();
+    var parametros = {
+    "id": idjer,
+    "_token":_token};
+    $.ajax({
+      data:  parametros, 
+      url:   "{{ route('jerarquias.show') }}",
+      type:  'POST', 
+      cache: true, 
+      dataType: "json",
+      success:  function (data) { 
+        nrows=0;   
+        $("#tbody_comp").html('');
+        jQuery(data).each(function(i, item){ 
+         
+          nrows++;
+            contendor  = $("#tbody_comp").html();
+            nuevaFila   = '<tr>'+
+            '<th class="text-center">'+nrows+'</th>'+
+            '<td class="text-sm-start">'+item.nomcomp+'</td>'+
+            '<td class="text-center">'+item.nomtipocomp+'</td>'+
+            '<td></td>'+
+            '<td></td>'+
+            '<td></td>'+
+            '<td></td>'+
+            '<td></td>'+
+            '<td';
+            color='#fff';
+            if(item.perfil==8){color='#D0FDD7';}      
+            nuevaFila+=' style="background-color:'+color+'"></td>'+
+            '<td';
+            color='#fff';
+            if(item.perfil==8){color='#64C27B';}
+            if(item.perfil==9){color='#D0FDD7';}         
+            nuevaFila+=' style="background-color:'+color+'"></td>'+
+            '<td';
+            color='#fff';
+            if(item.perfil==8){color='#278145';}
+            if(item.perfil==9){color='#64C27B';}
+            if(item.perfil==10){color='#D0FDD7';}             
+            nuevaFila+=' style="background-color:'+color+'"></td>'+
+            '<td';
+            color='#fff';
+            if(item.perfil==9){color='#278145';}
+            if(item.perfil==10){color='#64C27B';}             
+            nuevaFila+=' style="background-color:'+color+'"></td>'+
+            '<td';
+            color='#fff';
+            if(item.perfil==10){color='#278145';}            
+            nuevaFila+=' style="background-color:'+color+'"></td>'+
+            '</tr>';
+            $("#tbody_comp").html(contendor+nuevaFila);
+        });
+      }
+    });
+  }
+
+  function claner()
+  { 
+    document.getElementById('msg_panel_1').style.display='none';
+    document.getElementById('msg_panel_2').style.display='none';
+    document.getElementById('msg_panel_3').style.display='none';
+    document.getElementById('msg_panel_4').style.display='none';
+    document.getElementById('msg_panel_5').style.display='none';
+    document.getElementById('msg_panel_6').style.display='none';
+    document.getElementById('msg_panel_7').style.display='none';
+    document.getElementById('msg_panel_8').style.display='none';
+    $('#namedf').val('');
+    $('#idjer').val(0);
+    $('#cargojefe').val('');
+    $('#nameareadf').val('');
+    $('#numreportedir').val(0);
+    $('#txtproposito').val('');
+    document.getElementById('status').checked=true;
+    $("#body_respon").html('');
+    $("#txt_interno" ).val('');    
+    $("#txt_externo" ).val('');
+    $("#sel_riesgo").val(1); 
+    $("#txt_epp" ).val('');
+    $("#sel_escolaridad").val(0); 
+    document.getElementById('formacion_estatus_escolaridad_p').checked=false;
+    document.getElementById('formacion_estatus_escolaridad_c').checked=false;
+    $("#txt_escolaridad").val('');
+    document.getElementById('exper_chk_norequiere').checked=false;
+    document.getElementById('exper_chk_aux_asis').checked=false;
+    document.getElementById('exper_chk_ana_esp').checked=false;
+    document.getElementById('exper_chk_sup_coor').checked=false;
+    document.getElementById('exper_chk_jef_dep').checked=false;
+    document.getElementById('exper_chk_jef_ge_dir').checked=false;
+    $('#txt_anos_experiencia').val('');
+    $("#num_programa").val(3);
+    $("#tbody_programa").html('<tr>'+
+      '<td class="text-secondary align-middle text-start ps-2"><span id="nom_programa_1">Word</span></td>'+
+      '<td class="text-center align-middle"><input class="form-check-input" type="radio" name="programas_nivel_1" style="cursor: pointer;" id="programas_nivel_na_1" checked ></td>'+
+      '<td class="text-center align-middle"><input class="form-check-input" type="radio" name="programas_nivel_1" style="cursor: pointer;" id="programas_nivel_b_1"></td>'+
+      '<td class="text-center align-middle"><input class="form-check-input" type="radio" name="programas_nivel_1" style="cursor: pointer;" id="programas_nivel_i_1"></td>'+
+      '<td class="text-center align-middle"><input class="form-check-input" type="radio" name="programas_nivel_1" style="cursor: pointer;" id="programas_nivel_a_1"></td>'+
+      '<td class="text-center align-middle"><i class="fa-solid fa-trash-can dell" onclick=delrow(this,"programa") title="Eliminar programa"></i></td>'+
+      '</tr>'+
+      '<tr>'+
+      '<td class="text-secondary align-middle text-start ps-2"><span id="nom_programa_2">Excel</span></td>'+
+      '<td class="text-center align-middle"><input class="form-check-input" type="radio" name="programas_nivel_2" style="cursor: pointer;" id="programas_nivel_na_2" checked ></td>'+
+      '<td class="text-center align-middle"><input class="form-check-input" type="radio" name="programas_nivel_2" style="cursor: pointer;" id="programas_nivel_b_2"></td>'+
+      '<td class="text-center align-middle"><input class="form-check-input" type="radio" name="programas_nivel_2" style="cursor: pointer;" id="programas_nivel_i_2"  ></td>'+
+      '<td class="text-center align-middle"><input class="form-check-input" type="radio" name="programas_nivel_2" style="cursor: pointer;" id="programas_nivel_a_2"  ></td>'+
+      '<td class="text-center align-middle"><i class="fa-solid fa-trash-can dell" onclick=delrow(this,"programa") title="Eliminar programa"></i></td>'+
+      '</tr>'+
+      '<tr>'+
+      '<td class="text-secondary align-middle text-start ps-2"><span id="nom_programa_3">Power Point</span></td>'+
+      '<td class="text-center align-middle"><input class="form-check-input" type="radio" name="programas_nivel_3" style="cursor: pointer;" id="programas_nivel_na_3" checked></td>'+
+      '<td class="text-center align-middle"><input class="form-check-input" type="radio" name="programas_nivel_3" style="cursor: pointer;" id="programas_nivel_b_3"></td>'+
+      '<td class="text-center align-middle"><input class="form-check-input" type="radio" name="programas_nivel_3" style="cursor: pointer;" id="programas_nivel_i_3"></td>'+
+      '<td class="text-center align-middle"><input class="form-check-input" type="radio" name="programas_nivel_3" style="cursor: pointer;" id="programas_nivel_a_3"></td>'+
+      '<td class="text-center align-middle"><i class="fa-solid fa-trash-can dell" onclick=delrow(this,"programa") title="Eliminar programa"></i></td>'+
+      '</tr>');
+    $("#num_idioma").val(1);
+    $("#tbody_idioma").html('<tr>'+
+      '<td class="text-secondary align-middle text-start ps-2"><span id="nom_idioma_1">Inglés</span></td>'+
+      '<td class="text-center align-middle"><input class="form-check-input" type="radio" name="idioma_nivel_1" style="cursor: pointer;" id="idioma_nivel_na_1" checked></td>'+
+      '<td class="text-center align-middle"><input class="form-check-input" type="radio" name="idioma_nivel_1" style="cursor: pointer;" id="idioma_nivel_b_1"></td>'+
+      '<td class="text-center align-middle"><input class="form-check-input" type="radio" name="idioma_nivel_1" style="cursor: pointer;" id="idioma_nivel_i_1"></td>'+
+      '<td class="text-center align-middle"><input class="form-check-input" type="radio" name="idioma_nivel_1" style="cursor: pointer;" id="idioma_nivel_a_1"></td>'+
+      '<td class="text-center align-middle"><i class="fa-solid fa-trash-can dell" onclick=delrow(this,"idioma") title="Eliminar idioma"></i></td>'+
+      '</tr>');
+    $("#tbody_comp").html('');
+    $("#tbody_habilidad").html('');
+    $("#txt_habilidad").val('');
+    $("#tbody_con").html('');
+    $("#txt_con").val('');
+    $("#tbody_sin").html('');
+    $("#txt_sin").val('');
+    var collapseElementList = Array.prototype.slice.call(document.querySelectorAll('.collapse.show'))
+    var collapseList = collapseElementList.map(function (collapseEl) {
+    return new bootstrap.Collapse(collapseEl)
+    })
+    $('#panel_1').addClass('show');
+    $('#bto_panel_1').removeClass('collapsed');
+    $('#id_arearespon').val(0);
+    document.getElementById('bto_add_respon').style.display='block';
+    document.getElementById('bto_actualiza_respon').style.display='none';
   }
 
   function mal(msn)
@@ -1528,5 +1996,4 @@
     }, 4000);
   }
 
-  
 </script>
