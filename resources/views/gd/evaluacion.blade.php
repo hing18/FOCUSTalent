@@ -232,7 +232,6 @@
                             }
                           }
                         }
-                        
                       }
                     @endphp
                       <tr>
@@ -1406,8 +1405,8 @@
               $('#bto_continuar').addClass('visually-hidden');
               $('#bto_print').removeClass('visually-hidden');
               $('#bto_guarda').addClass('visually-hidden');
-              $('#lb_resultado').html(data.resultado+"%"); 
-              $('#lb_f_evaluacion').html(data.feval);        
+              $('#lb_resultado').html(data.resultado+"%");
+              $('#lb_f_evaluacion').html(data.feval);
  
               //-------------- RESP TABLA GAB
                 $("#tbody_resp_gap").html('');contendor  ="";nuevaFila   = "";

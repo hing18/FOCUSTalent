@@ -21,7 +21,7 @@ class ConfevalController extends Controller
             foreach ($query as $r)
             {   $data=$r->id_menu;}
             if($data!=0)
-            {   $query_evaluaciones = Db::select("SELECT desde, hasta, observacion, status, activo, proceso, finalizado, rechazado, total FROM vw_evaluaciones order by id desc");
+            {   $query_evaluaciones = Db::select("SELECT id,desde, hasta, observacion, status, activo, proceso, finalizado, rechazado, total FROM vw_evaluaciones order by id desc");
 
                 return view('gd.confeval')
                 ->with('id_menu',$id_menu)
@@ -34,4 +34,116 @@ class ConfevalController extends Controller
             return view('auth.login');
         }
     }
+
+    public function levaldos(Request $request)
+    {
+        if (isset(Auth::user()->id)) 
+        {   $data= request()->except('_token');
+            $id= $data['id_eval'];
+            $query_evaluacion = Db::select("SELECT id,desde, hasta, observacion, status, activo, proceso, finalizado, rechazado, total FROM vw_evaluaciones where id=$id");
+            $query_evaluados = DB::table('eval_evaluado_evaluador as eval')
+            ->select('eval.id_evaluado',               
+                'emp.prinombre',      
+                'emp.priapellido',           
+                'eval.id_posicion_evaluado',   
+                'pos.descpue',
+                'pos.iduni',
+                'est.nameund',
+                'pos.iddf',
+                'eval.status',
+                'eval.resultado',
+                'eval.id_evaluador',               
+                'emp_evaldor.prinombre as nom_evaldor',      
+                'emp_evaldor.priapellido as ape_evaldor')
+            ->leftjoin('posiciones as pos','pos.id','=','eval.id_posicion_evaluado') 
+            ->leftjoin('m_empleados as emp','emp.id','=','eval.id_evaluado') 
+            ->leftjoin('estructuras as est','est.id','=','pos.iduni')        
+            ->leftjoin('m_empleados as emp_evaldor','emp_evaldor.id','=','eval.id_evaluador') 
+            ->where('eval.id_evaluacion','=',$id)    
+            ->get();
+
+            $salidaJson=array(
+                "evaluacion"=>$query_evaluacion,
+                "evaluados"=>$query_evaluados,               
+            );
+    
+            echo(json_encode($salidaJson));
+        }
+        else
+        {   return view('auth.login');}
+    }
+
+    public function editstatus(Request $request)
+    {
+        if (isset(Auth::user()->id)) 
+        {   $data= request()->except('_token');
+     
+            $st= $data['st'];      
+            if($st==1)
+            {   DB::table('eval_evaluado_evaluador')
+                ->where('id_evaluacion','=', $data['eval_id'])
+                ->where('id_evaluado','=', $data['cod_evaluado'])
+                ->where('id_evaluador','=', $data['cod_evaluador'])
+                ->update(['status' =>  $st,'logros' => null,'comentarios_evaldor' => null,'resultado'=>0,'carrera' => 2]);
+                      
+                DB::table('eval_res_comp')->where('id_eval','=', $data['eval_id'])->where('id_evaluado','=', $data['cod_evaluado'])->where('id_evaluador','=', $data['cod_evaluador'])->delete();
+                DB::table('eval_res_tar')->where('id_eval','=', $data['eval_id'])->where('id_evaluado','=', $data['cod_evaluado'])->where('id_evaluador','=', $data['cod_evaluador'])->delete();
+                DB::table('eval_res_hab')->where('id_eval','=', $data['eval_id'])->where('id_evaluado','=', $data['cod_evaluado'])->where('id_evaluador','=', $data['cod_evaluador'])->delete();      
+                DB::table('eval_res_cursos_cumpli')->where('id_eval','=', $data['eval_id'])->where('id_evaluado','=', $data['cod_evaluado'])->where('id_evaluador','=', $data['cod_evaluador'])->delete();  
+                DB::table('eval_res_cursos_pid_comp')->where('id_eval','=', $data['eval_id'])->where('id_evaluado','=', $data['cod_evaluado'])->where('id_evaluador','=', $data['cod_evaluador'])->delete();     
+                DB::table('eval_res_cursos_pid_hab')->where('id_eval','=', $data['eval_id'])->where('id_evaluado','=', $data['cod_evaluado'])->where('id_evaluador','=', $data['cod_evaluador'])->delete();        
+                DB::table('eval_res_cursos_pid_adic')->where('id_eval','=', $data['eval_id'])->where('id_evaluado','=', $data['cod_evaluado'])->where('id_evaluador','=', $data['cod_evaluador'])->delete();    
+                DB::table('eval_res_gap')->where('id_eval','=', $data['eval_id'])->where('id_evaluado','=', $data['cod_evaluado'])->delete(); 
+            }
+            if($st>1)
+            {   DB::table('eval_evaluado_evaluador')
+                ->where('id_evaluacion','=', $data['eval_id'])
+                ->where('id_evaluado','=', $data['cod_evaluado'])
+                ->where('id_evaluador','=', $data['cod_evaluador'])
+                ->update(['status' =>  $st]); 
+            }
+            if($st==1){ $respons='<span class="badge bg-secondary">Pendiente</span>';}
+            if($st==2){ $respons='<span class="badge bg-warning">En Proceso</span>';}
+            if($st==3){ $respons='<span class="badge bg-primary">Evaluado</span>';}
+            if($st==4){ $respons='<span class="badge bg-danger">Rechazado</span>';}
+            echo $respons;
+        }
+        else
+        {   return view('auth.login');}
+    }
+    
+    public function evaluadores(Request $request)
+    {
+        if (isset(Auth::user()->id)) 
+        {   $data= request()->except('_token');
+            $eval_id=$data['eval_id'];
+            $query_evaluadores= DB::select("SELECT edor.id_evaluador, mae.prinombre,mae.priapellido, mae.id_posicion, pos.descpue FROM eval_evaluado_evaluador edor 
+                left join m_empleados mae on (mae.id = edor.id_evaluador)
+                left join posiciones pos on (mae.id_posicion = pos.id)
+                where edor.id_evaluacion=$eval_id group by edor.id_evaluador order by mae.prinombre,mae.priapellido");
+            echo(json_encode($query_evaluadores));
+        }
+        else
+        {   return view('auth.login');}
+    }
+
+    public function updateevaldor(Request $request)
+    {
+        if (isset(Auth::user()->id)) 
+        {   $data= request()->except('_token');
+            $new_cod_evaluador=$data['new_cod_evaluador'];
+            DB::table('eval_evaluado_evaluador')
+                ->where('id_evaluacion','=', $data['eval_id'])
+                ->where('id_evaluado','=', $data['cod_evaluado'])
+                ->where('id_evaluador','=', $data['cod_evaluador'])
+                ->update(['id_evaluador' =>  $new_cod_evaluador]);
+
+            $query_new_evaluador= DB::select("SELECT  mae.id, mae.prinombre, mae.priapellido FROM m_empleados mae             
+                where mae.id=$new_cod_evaluador");
+            echo(json_encode($query_new_evaluador));
+        }
+        else
+        {   return view('auth.login');}
+    }   
 }
+

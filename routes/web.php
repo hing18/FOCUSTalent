@@ -158,8 +158,6 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
         Route::get('contratos','index')->name('contwork');
         Route::post('contratos/show','show')->name('rl.show');
         Route::post('contratos/showfoto','showfoto')->name('rl.showfoto');
-        
-    
 });
     Route::controller(EntrevistasContoller::class)->group(function(){
         Route::get('entrevistas','index')->name('entrevistas');
@@ -187,7 +185,6 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
         Route::post('evaluacion/compcursos','compcursos')->name('evaluacion.compcursos');
         Route::post('evaluacion/save','save')->name('evaluacion.save');
         Route::post('evaluacion/print','print')->name('evaluacion.print');        
-        
     });
     // ADMINISTRACIÓN DE PERSONAL
     Route::controller(EmpleadosController::class)->group(function(){
@@ -195,7 +192,11 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
     });
 
     Route::controller(ConfevalController::class)->group(function(){
-        Route::get('config_eval','index')->name('confeval');
+        Route::get('config','index')->name('confeval');
+         Route::post('evaluados/levaldos','levaldos')->name('evaluacion.levaldos');
+         Route::post('evaluados/evaluadores','evaluadores')->name('evaluacion.evaluadores');
+         Route::post('evaluados/updateevaldor','updateevaldor')->name('evaluacion.updateevaldor');
+         Route::post('evaluados','editstatus')->name('evaluacion.editstatus');
     });
 // ENVIO DE EMAIL
 
