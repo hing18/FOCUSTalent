@@ -24,7 +24,10 @@ class ProcedimientosController extends Controller
             $result= DB::table('vestructuraspos')
                 ->select( 'COD_GRUPO','CODIGO_GRP','NOM_GRUPO','COD_UNI','CODIGO_UNI','NOM_UNI','COD_DEPTO_SUC','CODIGO_DEPTO_SUC','NOM_DEPTO_SUC','COD_SECC','CODIGO_SECC','NOM_SECC','COD_PUE','CODIGO_PUE','DESC_PUE','CONT_UNI','CONT_DEPTO_SUC','CONT_SECC')
                 ->where('COD_UNI', '=', $sel_ue)
-                ->orderBy('NOM_UNI', 'asc')
+                ->orderBy('COD_GRUPO', 'asc')
+                ->orderBy('COD_UNI', 'asc')
+                ->orderBy('COD_DEPTO_SUC', 'asc')
+                ->orderBy('COD_SECC', 'asc')
                 ->get();
 
             echo '<table class="table table-sm table-hover table-bordered">
@@ -249,6 +252,10 @@ class ProcedimientosController extends Controller
             ->select( 'COD_GRUPO','NOM_GRUPO','COD_UNI','NOM_UNI','COD_DEPTO_SUC','NOM_DEPTO_SUC','COD_SECC','NOM_SECC','CONT_UNI','CONT_DEPTO_SUC','CONT_SECC')
             ->where('COD_UNI', '=', $sel_ue)
             ->orderBy('NOM_UNI', 'asc')
+            ->orderBy('COD_GRUPO', 'asc')
+            ->orderBy('COD_UNI', 'asc')
+            ->orderBy('COD_DEPTO_SUC', 'asc')
+            ->orderBy('COD_SECC', 'asc')
             ->get();
 
         echo '<table class="table table-sm table-bordered" id="MyTable_unidad">
@@ -325,6 +332,10 @@ class ProcedimientosController extends Controller
             ->select( 'est.COD_GRUPO','est.NOM_GRUPO','est.COD_UNI','est.NOM_UNI','est.COD_DEPTO_SUC','est.NOM_DEPTO_SUC','est.COD_SECC','est.NOM_SECC','est.COD_PUE','est.DESC_PUE','est.CONT_UNI','est.CONT_DEPTO_SUC','est.CONT_SECC')
             ->where('est.COD_UNI', '=', $sel_ue)
             ->orderBy('est.NOM_UNI', 'asc')
+            ->orderBy('COD_GRUPO', 'asc')
+            ->orderBy('COD_UNI', 'asc')
+            ->orderBy('COD_DEPTO_SUC', 'asc')
+            ->orderBy('COD_SECC', 'asc')
             ->get();
 
         echo '<table class="table table-sm table-bordered" id="MyTable_jefe">

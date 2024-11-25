@@ -49,7 +49,11 @@ class EstructuraContoller extends Controller
             Estructura::insert($data);
             $data_tipos= DB::table('tipoestructuras')->get();
             $data_sups= DB::table('estructuras')->where('id_sup','=','0')->get();
-            $data_vestruc= DB::table('vestructuras')->get();
+            $data_vestruc= DB::table('vestructuras')
+            ->orderBy('COD_GRUPO', 'asc')
+            ->orderBy('COD_UNI', 'asc')
+            ->orderBy('COD_DEPTO_SUC', 'asc')
+            ->orderBy('COD_SECC', 'asc')->get();
             return view('go.estructura')
                 ->with('data_tipos',$data_tipos)
                 ->with('data_sups',$data_sups)
