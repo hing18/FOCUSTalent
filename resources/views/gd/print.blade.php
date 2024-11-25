@@ -563,7 +563,7 @@
                   <div class="col pl-4 small">
       
                     @if(strlen($logros)>0)
-                      {{ $logros }}
+                      @php echo nl2br(e($logros)) @endphp
                     @endif
                       
                   </div>
@@ -576,7 +576,7 @@
                   <div class="col pl-4 small">
       
                     @if(strlen($comentarios)>0)
-                      {{ $comentarios }}
+                      @php echo nl2br(e($comentarios)) @endphp
                     @endif
                       
                   </div>
@@ -591,6 +591,7 @@
                     @if(strlen($carrera)==0)  @php $cad="Promoverlo de forma inmediata";@endphp @endif
                     @if(strlen($carrera)==1)  @php $cad="Promoverlo a mediano plazo (1 a 2 años)";@endphp @endif
                     @if(strlen($carrera)==2)  @php $cad="Promoverlo a largo plazo (3 a 5 años)";@endphp @endif
+                    @if(strlen($carrera)==3)  @php $cad="No se contempla actualmente";@endphp @endif
                       {{ $cad }}
                   </div>
                 </div>

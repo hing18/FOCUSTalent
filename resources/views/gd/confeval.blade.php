@@ -61,7 +61,7 @@
                               <ul class="dropdown-menu p-0" aria-labelledby="dropdownMenu2">
                                 <li><button class="dropdown-item pb-0 edit" type="button" onclick="mod_prospectos('+id_ofl_txt+')" data-bs-toggle="modal" data-bs-target="#modalprooectos"><i class="fas fa-cogs pe-1"></i> Configuración</button></li>
                                 <li><button class="dropdown-item pb-0 edit" type="button" onclick="mod_prospectos('+id_ofl_txt+')" data-bs-toggle="modal" data-bs-target="#modalprooectos"><i class="fas fa-tachometer-alt pe-1"></i> Avances</button></li>
-                                <li><button class="dropdown-item pb-0 edit" type="button" onclick="newpart()" ><i class="fas fa-user-tie pe-1"></i> Evaluadores</button></li>
+                                <li><button class="dropdown-item pb-0 edit" type="button" onclick="levaldores({{ $pos->id }})" ><i class="fas fa-user-tie pe-1"></i> Evaluadores</button></li>
                                 <li><button class="dropdown-item pb-0 edit" type="button" onclick="levaldos({{ $pos->id }})"><i class="fas fa-user-check pe-1"></i> Evaluados</button></li>
                               </ul>
                             </div>
@@ -74,7 +74,7 @@
               </div>
             </div>
 
-            <!-- NUEVA EVALUACIÓN-->
+            <!-- LISTADO DE EVALUADOS -->
             <div id="div_evaluados" class="visually-hidden mt-4">
               <div class="row mb-2 ms-4">
 
@@ -104,6 +104,34 @@
               </div>
             </div>
 
+
+            <!-- LISTADO DE EVALUADORES -->
+            <div id="div_evaluadores" class="visually-hidden mt-4">
+              <div class="row mb-2 ms-4">
+
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end pt-2">
+                  <div class="col text-start h5 text-primary"><i class="fa-solid fa-user-tie pe-2"></i> Listado de Evaluadores - <span class="text-secondary" id="nom_eval_evaldores"></span></div>
+                    <a href="#" class="btn btn-sm btn-secondary" onclick="back()"><i class="fas fa-arrow-left pe-2 fa-lg"></i>Volver</a>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col">
+                  <table  id="MyTable2" class="display MyTable compact table table-sm table-striped table-hover" style="width:100%">
+                    <thead>
+                      <tr>
+                        <th class="text-light text-center bg-primary" width="25%" >EVALUADOR</th>
+                        <th class="text-light text-center bg-primary" width="25%" >PUESTO</th>
+                        <th class="text-light text-center bg-primary" width="40%" >UNIDAD</th>
+                        <th class="text-light text-center bg-primary" width="10%" ><i class="fas fa-cogs fa-lg"></i></th>
+                      </tr>
+                    </thead>
+                    <tbody class="text-dark" id="tbody_list_evaluadores">
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
           </div>
     </div>
 </div>
@@ -114,11 +142,11 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header py-2 bg-light">
-        <h5 class="modal-title fs-5 text-secondary" id="staticBackdropLabel"><i class="fas fa-sync fa-lg pe-2"></i> Cambiar Estado</h5>
+        <h6 class="modal-title fs-5 text-secondary" id="staticBackdropLabel"><i class="fas fa-sync fa-lg pe-2"></i>  <span class="text-primary">Cambiar Estado</span></h6>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body">
-        <span class="fw-bold" id="lb_nombre_estatus"></span>
+      <div class="modal-body small">
+        <span id="lb_nombre_estatus"></span>
         <input type="hidden" value="0" id="fil">
         <input type="hidden" value="0" id="ideval">
         <div class="form-group row text-center mt-4">
@@ -142,17 +170,58 @@
   </div>
 </div>
 
+<!-- Modal -->
+<div class="modal fade" id="cambia-pass" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header py-2 bg-light">
+        <h6 class="modal-title fs-5 text-secondary" id="staticBackdropLabel"><i class="fas fa-sync fa-lg pe-2"></i> <span class="text-primary">Cambiar contraseña de evaluador</span> </h6>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body small">
+        <form>
+        <input type="hidden" value="0" id="filr">
+        <input type="hidden" value="0" id="idevalr">
+        
+          <div class="form-group py-2">
+            @csrf
+              <label id="lb_nombre_estatusr" class="form-label pb-2"></label>
+              <br>
+              <label id="passEmail" class="form-label pb-2 ">Correo</label>
+              <br>
+              <label for="password" class="form-label">Nueva contraseña</label>
+              <div class="input-group  pb-2">
+                <span class="input-group-text" id="inputGroupPrepend"><i class="fas fa-lock text-secondary"></i></span>
+                <input type="text" id="password" name="password" class="form-control">
+              </div>
+
+              <div class="form-check py-2">
+                <input type="checkbox" class="form-check-input" id="resetpass" name="resetpass">
+                <label class="form-check-label" for="resetpass">Restablecer cuando ingresa</label>
+              </div>
+          </div>     
+        </form>
+      </div>
+
+      <div class="modal-footer py-2 bg-light">
+        <span id="lb_msn" class="text-danger small visually-hidden"><i class="fas fa-unlock-alt"></i> Colocar la nueva contraseña.</span>
+        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal"><i class="fa-solid fa-arrow-left pr-2"></i> Cancelar</button>
+        <button type="button" class="btn btn-primary btn-sm" onclick="restpass()"  tabindex="-1" id="bto_guarda" style="display: block"><i id="ico_refresh" class="fas fa-sync"></i> Cambiar</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- Modal -->
 <div class="modal fade" id="cambiaevaldor" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg  modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header py-2 bg-light">
-        <h5 class="modal-title fs-5 text-secondary" id="staticBackdropLabel"><i class="fas fa-people-arrows fa-lg pe-2"></i> Cambiar Evaluador</h5>
+        <h6 class="modal-title fs-5 text-secondary" id="staticBackdropLabel"><i class="fas fa-people-arrows fa-lg pe-2"></i>  <span class="text-primary">Cambiar Evaluador</span></h6>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body">
-        <span class="fw-bold" id="lb_nombre_evaluado"></span>
+      <div class="modal-body small">
+        <span id="lb_nombre_evaluado"></span>
         <input type="hidden" value="0" id="fil_evaldor">
         <input type="hidden" value="0" id="ideval_evaldor">
         <div class="row">
@@ -243,6 +312,49 @@
           }
         });
   }
+  
+  function levaldores(cod)
+  { $('#div_evaluadores').removeClass('visually-hidden');
+    $('#nom_eval_evaldores').html($('#eval_sel_'+cod).html());
+    $('#lista_eval').addClass('visually-hidden');
+      var parametros = {
+        "id_eval":cod,
+        "_token": $('input[name="_token"]').val()};
+        $.ajax({
+          data:  parametros,
+          url:   "{{ route('evaluacion.levaldores') }}",
+          type:  'POST',
+          cache: false,
+          dataType: "json",
+          beforeSend: function () {
+            $('#tbody_list_evaluadores').html('<tr><td colspan="4"><div class="text-center  text-primary"><div class="spinner-border spinner-border-sm" role="status"></div><span class="ps-2">Cargando...</span></div></td></tr>');
+          },
+          success:  function (data) {
+              const table = new DataTable('#MyTable2');
+              table.clear().draw();
+              x=0;
+              jQuery(data.evaluadores).each(function(i, item){
+
+                x++;
+
+                var nombre=item.prinombre + " " + item.priapellido;  
+
+                table.row.add([
+                  '<span id="code_evaldor_'+x+'">'+item.id_evaluador+ '</span> - <span id="nom_evaldor_'+x+'">'+nombre+ "</span>",
+                  item.descpue,
+                  '<div id="res_'+x+'">'+item.nameund+'</div>',
+                  '<div class="dropdown py-0">'+
+                    '<button class="btn btn-sm btn-sm dropdown-toggle btn-outline-primary" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">Acciones</button>'+
+                      '<ul class="dropdown-menu p-0" aria-labelledby="dropdownMenu2">'+
+
+                        '<li><button class="dropdown-item pb-0 edit" data-bs-toggle="modal" data-bs-target="#cambia-pass" type="button" onclick="cambiapass('+cod+','+x+')"><i class="fas fa-sync pe-1"></i> Cambiar Contraseña</button></li>'+
+                      '</ul>'+
+                  '</div>'
+                ]).draw(false);
+              });
+          }
+        });
+  }
 
   function cambiaestado(eval,st,x)
   {
@@ -251,6 +363,67 @@
     $('#ideval').val(eval);
     $('#sel_estatus').val(st);
   }
+
+  function cambiapass(eval,x)
+  { $('#passEmail').html('');
+    $("#resetpass").prop("checked", true);
+    $('#lb_nombre_estatusr').html("Evaluador: "+$('#code_evaldor_'+x).html()+ ' - '+$('#nom_evaldor_'+x).html());
+    $('#filr').val(x);
+    $('#idevalr').val(eval);
+    var parametros = {
+    "id_evaldor": $('#code_evaldor_'+x).html(),
+    "_token" : $('input[name="_token"]').val()}
+    $.ajax({
+      data:  parametros,
+      url:   "{{ route('evaluacion.mailevaluador') }}",
+      type:  'POST',
+          cache: true,
+          dataType: "json",
+      
+      success:  function (data) {
+        jQuery(data).each(function(i, item){ 
+        $('#passEmail').html("Correo: <span id='mail'>"+item.mail+"</span>");
+      });
+      }
+    });
+  }
+
+  function restpass()
+  { $('#lb_msn').addClass('visually-hidden');
+    chk=0;
+    if ($("input[name='resetpass']").is(':checked')) 
+    { chk=1;}
+    pass=$('#password').val();
+    if(pass.length < 3) {
+      $('#lb_msn').removeClass('visually-hidden');
+      setTimeout(function(){ $('#lb_msn').addClass('visually-hidden')}, 2000);
+      $('#password').focus();
+    }
+    else{
+      var parametros = {
+    "id_evaldor" : $('#code_evaldor_'+$('#filr').val()).html(),
+    "mail" : $('#mail').html(),
+    "newpass":pass,
+    "chk": chk,
+    "_token" : $('input[name="_token"]').val()}
+    $.ajax({
+      data:  parametros,
+      url:   "{{ route('evaluacion.resetpass') }}",
+      type:  'POST',
+      beforeSend: function () { $('#ico_refresh').addClass('fa-pulse'); },
+      cache: true,      
+      success:  function (data) {
+        if(data==0)
+        { mal("Contraseña no restablecida, por favor validar los datos del usuario");}
+        else
+        { bien("Contraseña restablecida.");}
+        $('#ico_refresh').removeClass('fa-pulse');
+        $('#cambia-pass').modal('hide');
+      }
+    });
+    }
+  }
+
 
   function cambiaevaldor(eval,x)
   { $('#lb_nombre_evaluado').html($('#code_evaldo_'+x).html()+ ' - '+$('#nom_evaldo_'+x).html());
@@ -347,6 +520,7 @@
 
   function back()
   { $('#div_evaluados').addClass('visually-hidden');
+    $('#div_evaluadores').addClass('visually-hidden');
     $('#lista_eval').removeClass('visually-hidden');
   }
 

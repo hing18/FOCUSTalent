@@ -21,7 +21,7 @@ class ProcedimientosController extends Controller
         if($opt==2)
         {
             $sel_ue=$data['sel_ue'];
-            $result= DB::table('db_headcontrol.vestructuraspos')
+            $result= DB::table('vestructuraspos')
                 ->select( 'COD_GRUPO','CODIGO_GRP','NOM_GRUPO','COD_UNI','CODIGO_UNI','NOM_UNI','COD_DEPTO_SUC','CODIGO_DEPTO_SUC','NOM_DEPTO_SUC','COD_SECC','CODIGO_SECC','NOM_SECC','COD_PUE','CODIGO_PUE','DESC_PUE','CONT_UNI','CONT_DEPTO_SUC','CONT_SECC')
                 ->where('COD_UNI', '=', $sel_ue)
                 ->orderBy('NOM_UNI', 'asc')
@@ -107,7 +107,7 @@ class ProcedimientosController extends Controller
         #### CONSULTA UNIDAD
         if($opt==3)
         {   $id_uni=$data['id_uni'];
-            $result= DB::table('db_headcontrol.estructuras')
+            $result= DB::table('estructuras')
                 ->select( 'id','codigo','nameund','id_sup','id_tipo','status')
                 ->where('id', '=', $id_uni)
                 ->orderby('nameund')
@@ -245,7 +245,7 @@ class ProcedimientosController extends Controller
         $id_unisecc=$data['id_unisecc'];
         $data_vestruc= DB::table('vestructuras')->get();
 
-        $result= DB::table('db_headcontrol.vestructuras')
+        $result= DB::table('vestructuras')
             ->select( 'COD_GRUPO','NOM_GRUPO','COD_UNI','NOM_UNI','COD_DEPTO_SUC','NOM_DEPTO_SUC','COD_SECC','NOM_SECC','CONT_UNI','CONT_DEPTO_SUC','CONT_SECC')
             ->where('COD_UNI', '=', $sel_ue)
             ->orderBy('NOM_UNI', 'asc')
@@ -321,7 +321,7 @@ class ProcedimientosController extends Controller
         $id_unisecc=$data['id_unisecc'];
         //$data_vestruc= DB::table('vestructuras')->get();
 
-        $result= DB::table('db_headcontrol.vestructuraspos as est' )
+        $result= DB::table('vestructuraspos as est' )
             ->select( 'est.COD_GRUPO','est.NOM_GRUPO','est.COD_UNI','est.NOM_UNI','est.COD_DEPTO_SUC','est.NOM_DEPTO_SUC','est.COD_SECC','est.NOM_SECC','est.COD_PUE','est.DESC_PUE','est.CONT_UNI','est.CONT_DEPTO_SUC','est.CONT_SECC')
             ->where('est.COD_UNI', '=', $sel_ue)
             ->orderBy('est.NOM_UNI', 'asc')
@@ -330,7 +330,6 @@ class ProcedimientosController extends Controller
         echo '<table class="table table-sm table-bordered" id="MyTable_jefe">
             <thead class="bg-primary">
                 <tr>
-
                 <th scope="col" class="text-center text-light bg-primary">DEPARTAMENTO</th>
                 <th scope="col" class="text-center text-light bg-primary">SECCIÓN</th>
                 <th scope="col" class="text-center text-light bg-primary">POSICIÓN DEL JEFE</th>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\gd;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -72,7 +73,30 @@ class ConfevalController extends Controller
         else
         {   return view('auth.login');}
     }
+    public function levaldores(Request $request)
+    {
+        if (isset(Auth::user()->id)) 
+        {   $data= request()->except('_token');
+            $id= $data['id_eval'];
+            $query_evaluacion = Db::select("SELECT id,desde, hasta, observacion, status, activo, proceso, finalizado, rechazado, total FROM vw_evaluaciones where id=$id");
+            $query_evaluadores = DB::select("WITH evaluadores as (Select DISTINCT id_evaluador 
+            from eval_evaluado_evaluador where id_evaluacion=$id) 
+            SELECT eval.id_evaluador, emp.prinombre, emp.priapellido, pos.descpue, pos.iduni, est.nameund 
+            from evaluadores eval 
+            left join m_empleados as emp on (emp.id=eval.id_evaluador) 
+            left join posiciones as pos on (pos.id=emp.id_posicion) 
+            left join estructuras as est on (est.id=pos.iduni)");
 
+            $salidaJson=array(
+                "evaluacion"=>$query_evaluacion,
+                "evaluadores"=>$query_evaluadores,               
+            );
+    
+            echo(json_encode($salidaJson));
+        }
+        else
+        {   return view('auth.login');}
+    }
     public function editstatus(Request $request)
     {
         if (isset(Auth::user()->id)) 
@@ -117,10 +141,10 @@ class ConfevalController extends Controller
         if (isset(Auth::user()->id)) 
         {   $data= request()->except('_token');
             $eval_id=$data['eval_id'];
-            $query_evaluadores= DB::select("SELECT edor.id_evaluador, mae.prinombre,mae.priapellido, mae.id_posicion, pos.descpue FROM eval_evaluado_evaluador edor 
+            $query_evaluadores= DB::select("SELECT distinct edor.id_evaluador, mae.prinombre, mae.priapellido, mae.id_posicion, pos.descpue FROM eval_evaluado_evaluador edor 
                 left join m_empleados mae on (mae.id = edor.id_evaluador)
                 left join posiciones pos on (mae.id_posicion = pos.id)
-                where edor.id_evaluacion=$eval_id group by edor.id_evaluador order by mae.prinombre,mae.priapellido");
+                where edor.id_evaluacion=$eval_id  order by mae.prinombre and mae.priapellido");
             echo(json_encode($query_evaluadores));
         }
         else
@@ -145,5 +169,39 @@ class ConfevalController extends Controller
         else
         {   return view('auth.login');}
     }   
+
+    public function mailevaluador(Request $request)
+    {   if (isset(Auth::user()->id)) 
+        { 
+            $data= request()->except('_token');
+            $id_evaldor=$data['id_evaldor'];
+            $query_mail_evaluador= DB::select("SELECT email as mail FROM users where codigo=$id_evaldor");
+            echo(json_encode($query_mail_evaluador));
+        }
+        else
+        {   return view('auth.login');}
+    }
+    public function resetpass(Request $request)
+    {   if (isset(Auth::user()->id)) 
+        {   $data= request()->except('_token');
+            $codigo=$data['id_evaldor'];
+            $mail=$data['mail'];
+            $query = DB::table('users')
+            ->select('id')
+            ->where('codigo', $codigo)
+            ->where('email', $mail)
+            ->first();
+            $band=0;
+            foreach ($query as $r)
+            {   $band=1; }
+            if($band==1)
+            {   DB::table('users')
+                ->where('codigo','=', $data['id_evaldor'])->where('email','=', $data['mail'])
+                ->update(['password' => Hash::make($data['newpass']),'reset_pass'=>$data['chk']]);}
+            echo $band;        
+        }
+        else
+        {   return view('auth.login');}
+    }
 }
 

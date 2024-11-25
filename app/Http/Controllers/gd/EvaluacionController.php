@@ -19,85 +19,98 @@ use Illuminate\Support\Facades\Auth;
 class EvaluacionController extends Controller
 {
     public function index()
-    {
+    {               
         $id_menu=20;
         $id_menu_sup=19;
         if (isset(Auth::user()->id)) 
         {   $id_user = Auth::user()->id;
-            $id_codigo_evaluador = Auth::user()->codigo;
-            $data=0;
-            $query = DB::select("SELECT rm.id_menu 
-            FROM usr_rol ur INNER JOIN rol_menu rm ON (rm.id_rol=ur.id_rol AND rm.id_menu=$id_menu) 
-            WHERE ur.id_usr=$id_user ");
-            foreach ($query as $r)
-            {   $data=$r->id_menu;}
-            if($data!=0)
-            {   $eval_id=0;$eval_desde="";$eval_hasta="";
-                $query_evaluaciones = DB::select("SELECT 
-                eval.id, eval.desde, eval.hasta
-                FROM evaluaciones eval  
-                WHERE eval.status=1 ");//0 pausada, 1 abierta, 2 cerrada
-                foreach ($query_evaluaciones as $r)
-                {   $eval_id=$r->id;
-                    $eval_desde= \Carbon\Carbon::parse($r->desde)->isoFormat('DD \d\e MMM  Y');
-                    $eval_hasta= \Carbon\Carbon::parse($r->hasta)->isoFormat('DD \d\e MMM  Y'); }
-                
-                $nom_pue_evaluador="-";$nom_evaluador="-";
-                $query_evaluador = DB::select("SELECT 
-                emp.prinombre,
-                emp.segnombre,
-                emp.priapellido,
-                pos.descpue
-                FROM m_empleados emp  
-                LEFT JOIN posiciones pos on (pos.id=emp.id_posicion)
-                WHERE emp.id=$id_codigo_evaluador ");
-                
-                foreach ($query_evaluador as $r)
-                {   $nom_evaluador=$r->prinombre;
-                    if(($r->segnombre!=null)&&($r->segnombre!=NULL))
-                    {   $nom_evaluador.=" ".$r->segnombre;}
-                    $nom_evaluador.=" ".$r->priapellido;
-                    $nom_pue_evaluador=$r->descpue;
-                }
+            $reset_pass=0;
+            $email='-';
+            $query_reset = DB::select("SELECT reset_pass, email FROM users where id=$id_user");     
+         
+            foreach ($query_reset as $r)
+            {   $reset_pass=$r->reset_pass;$email=$r->email; }
+            if($reset_pass==0)
+            { 
+                $id_codigo_evaluador = Auth::user()->codigo;
+                $data=0;
+                $query = DB::select("SELECT rm.id_menu 
+                FROM usr_rol ur INNER JOIN rol_menu rm ON (rm.id_rol=ur.id_rol AND rm.id_menu=$id_menu) 
+                WHERE ur.id_usr=$id_user ");
+                foreach ($query as $r)
+                {   $data=$r->id_menu;}
+                if($data!=0)
+                {   $eval_id=0;$eval_desde="";$eval_hasta="";
+                    $query_evaluaciones = DB::select("SELECT 
+                    eval.id, eval.desde, eval.hasta
+                    FROM evaluaciones eval  
+                    WHERE eval.status=1 ");//0 pausada, 1 abierta, 2 cerrada
+                    foreach ($query_evaluaciones as $r)
+                    {   $eval_id=$r->id;
+                        $eval_desde= \Carbon\Carbon::parse($r->desde)->isoFormat('DD \d\e MMM  Y');
+                        $eval_hasta= \Carbon\Carbon::parse($r->hasta)->isoFormat('DD \d\e MMM  Y'); }
+                    
+                    $nom_pue_evaluador="-";$nom_evaluador="-";
+                    $query_evaluador = DB::select("SELECT 
+                    emp.prinombre,
+                    emp.segnombre,
+                    emp.priapellido,
+                    pos.descpue
+                    FROM m_empleados emp  
+                    LEFT JOIN posiciones pos on (pos.id=emp.id_posicion)
+                    WHERE emp.id=$id_codigo_evaluador ");
+                    
+                    foreach ($query_evaluador as $r)
+                    {   $nom_evaluador=$r->prinombre;
+                        if(($r->segnombre!=null)&&($r->segnombre!=NULL))
+                        {   $nom_evaluador.=" ".$r->segnombre;}
+                        $nom_evaluador.=" ".$r->priapellido;
+                        $nom_pue_evaluador=$r->descpue;
+                    }
 
-                $query_evaluados = DB::table('eval_evaluado_evaluador as eval')
-                ->select('eval.id_evaluado',               
-                    'emp.prinombre',         
-                    'emp.segnombre',     
-                    'emp.priapellido',           
-                    'eval.id_posicion_evaluado',   
-                    'pos.descpue',
-                    'pos.iduni',
-                    'est.nameund',
-                    'pos.iddf',
-                    'eval.status',
-                    'eval.resultado')
-                ->leftjoin('posiciones as pos','pos.id','=','eval.id_posicion_evaluado') 
-                ->leftjoin('m_empleados as emp','emp.id','=','eval.id_evaluado') 
-                ->leftjoin('estructuras as est','est.id','=','pos.iduni')    
-                ->where('eval.id_evaluador','=',$id_codigo_evaluador)     
-                ->where('eval.id_evaluacion','=',$eval_id)    
-                ->get();
-               
-                return view('gd.evaluacion')
-                ->with('id_menu',$id_menu)
-                ->with('id_menu_sup',$id_menu_sup)
-                ->with('eval_id',$eval_id)
-                ->with('eval_desde',$eval_desde)
-                ->with('eval_hasta',$eval_hasta)
-                ->with('evaluados',$query_evaluados)
-                ->with('codigo_evaluador',$id_codigo_evaluador)
-                ->with('nom_evaluador',$nom_evaluador)
-                ->with('nom_pue_evaluador',$nom_pue_evaluador);
+                    $query_evaluados = DB::table('eval_evaluado_evaluador as eval')
+                    ->select('eval.id_evaluado',               
+                        'emp.prinombre',         
+                        'emp.segnombre',     
+                        'emp.priapellido',           
+                        'eval.id_posicion_evaluado',   
+                        'pos.descpue',
+                        'pos.iduni',
+                        'est.nameund',
+                        'pos.iddf',
+                        'eval.status',
+                        'eval.resultado')
+                    ->leftjoin('posiciones as pos','pos.id','=','eval.id_posicion_evaluado') 
+                    ->leftjoin('m_empleados as emp','emp.id','=','eval.id_evaluado') 
+                    ->leftjoin('estructuras as est','est.id','=','pos.iduni')    
+                    ->where('eval.id_evaluador','=',$id_codigo_evaluador)     
+                    ->where('eval.id_evaluacion','=',$eval_id)    
+                    ->get();
+                
+                    return view('gd.evaluacion')
+                    ->with('id_menu',$id_menu)
+                    ->with('id_menu_sup',$id_menu_sup)
+                    ->with('eval_id',$eval_id)
+                    ->with('eval_desde',$eval_desde)
+                    ->with('eval_hasta',$eval_hasta)
+                    ->with('evaluados',$query_evaluados)
+                    ->with('codigo_evaluador',$id_codigo_evaluador)
+                    ->with('nom_evaluador',$nom_evaluador)
+                    ->with('nom_pue_evaluador',$nom_pue_evaluador);
+                }
+                else{   return redirect()->route('login');}
+            }else{
+                return view('conf.reset')
+                ->with('email',$email)
+                ->with('pag','evaluacion');
             }
-            else{   return view('auth.login');}
+
         }
-        else{   return view('auth.login');}
+        else{   return redirect()->route('login');}
     }
 
     public function evaluado(Request $request)
-    {   $id_evaluador = Auth::user()->codigo;
-        
+    {   $id_evaluador = Auth::user()->codigo;        
         $data= request()->except('_token');
         $id_evdo= $data['id_evdo'];
         $eval_id=0;
@@ -115,34 +128,29 @@ class EvaluacionController extends Controller
             $logros=$r->logros;
             $comentarios=$r->comentarios_evaldor;
             $carrera=$r->carrera;
-            $feval= \Carbon\Carbon::parse($r->updated_at)->isoFormat('DD \d\e MMM  Y');}
-        
+            $feval= \Carbon\Carbon::parse($r->updated_at)->isoFormat('DD \d\e MMM  Y');}        
 
             $data_evaluado=DB::select("SELECT 
             emp.id,
-            emp.prinombre,         
-            emp.segnombre,     
+            emp.prinombre,
+            emp.segnombre,   
             emp.priapellido,
             emp.genero,
-            emp.finicio,            
+            emp.finicio,
             emp.id_posicion,
             pos.descpue,
             est.nameund,
             pos.iddf
-
             FROM m_empleados AS emp 
             LEFT JOIN posiciones as pos ON (pos.id=emp.id_posicion)
             LEFT JOIN estructuras as est ON (est.id=pos.iduni)
             WHERE emp.id=$id_evdo");
             foreach ($data_evaluado as $r)
-            {   $nom_evaluado=$r->prinombre;
-                if(($r->segnombre!=null)&&($r->segnombre!=NULL))
-                {   $nom_evaluado.=" ".$r->segnombre;}
-                $nom_evaluado.=" ".$r->priapellido;
+            {   $nom_evaluado=$r->prinombre." ".$r->priapellido;
+                
                 $code_evaluado=$r->id;
                 $finicio= \Carbon\Carbon::parse($r->finicio)->isoFormat('DD \d\e MMM  Y');
                 $iddf=$r->iddf;
-                
             }
             $id_escala="";$query_habilidades="";$query_res_cursos="";$query_tareas="";$query_respon = "";$data_competencias="";$query_resp_comp="";$query_resp_gap="";$query_resp_curcomp="";$query_resp_curhab="";$query_resp_curadic="";$query_resp_respon="";$query_resp_tar="";
             $query_resp_hab="";$query_resp_cursos="";
@@ -504,7 +512,6 @@ class EvaluacionController extends Controller
                     }
                 }
 
-                
                 if(count($data['pid_adic_cursos'])>0)
                 {    foreach ($data['pid_adic_cursos'] as $res)
                     {   if($res['area']!='-')
@@ -578,10 +585,7 @@ class EvaluacionController extends Controller
             ->where('id_evaluador','=', $data['cod_evaluador'])
             ->update(['status' => $data['estatus'],'logros' => trim($data['logros']),'comentarios_evaldor' => trim($data['comentarios']),'resultado'=>$total,'carrera' => $data['desarrollo']]);
 
-
-            $salidaJson=array(
-                "resultado"=>$total,
-            );
+            $salidaJson=array("resultado"=>$total, );
     
             echo(json_encode($salidaJson));
 

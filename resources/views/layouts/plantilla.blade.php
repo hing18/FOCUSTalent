@@ -190,10 +190,7 @@
                         //document.getElementById('img_photo').setAttribute("src", data);
                         
                         $('#insert_image').val('');
-                        $('#space_photo').html(data);
-
-
-                        
+                        $('#space_photo').html(data);                       
                         
                         }
                     })
@@ -206,6 +203,67 @@
 
             });
 
+
+
+            $(document).ready(function() {
+        $image_crop = $('#image_demo_emplo').croppie({
+                    enableExif: true,
+                    viewport: {
+                    width:200,
+                    height:200,
+                    type:'square' //circle
+                    },
+                    boundary:{
+                    width:300,
+                    height:300
+                    }    
+                });
+
+                $('#insert_image_emplo').on('change', function(){
+                       var reader = new FileReader();
+                        reader.onload = function (event) {
+                            $image_crop.croppie('bind', {
+                                url: event.target.result
+                            }).then(function(){
+                                console.log('jQuery bind complete');
+                            });
+                        }
+                        reader.readAsDataURL(this.files[0]);
+                        $('#insertimageModal').modal('show');
+                    
+                });          
+
+
+
+                $('.crop_image_emplo').click(function(event){                    
+                    $image_crop.croppie('result', {
+                    type: 'canvas',
+                    size: 'viewport'
+                    }).then(function(response){
+
+                    $.ajax({
+                        url:"{{ route('empleados.subirfoto') }}",
+                        type:'POST',
+                        data:{"image":response,"cod":$('#lb_codigo').html(),"_token":$('input[name="_token"]').val()},
+                        success:function(data){
+                            $('#insertimageModal').modal('hide');
+                   // load_images();
+                   
+                        //document.getElementById('img_photo').setAttribute("src", data);
+                        
+                        $('#insert_image_emplo').val('');
+                        $('#space_photo').html(data);                       
+                        
+                        }
+                    })
+                    });
+                });
+
+                $('.corp_back').click(function(event){
+                    $('#insert_image_emplo').val('');
+                });
+
+            });
         </script>
     </body>
     

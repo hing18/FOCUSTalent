@@ -7,6 +7,7 @@ use App\Models\conf\Users;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class UsersContoller extends Controller
 {
@@ -29,12 +30,22 @@ class UsersContoller extends Controller
                 ->with('id_menu',$id_menu)
                 ->with('id_menu_sup',$id_menu_sup);
             }else{
-                return view('auth.login');
+                return redirect()->route('login');
             }
         }else{
-            return view('auth.login');
+            return redirect()->route('login');
         }
     }
+
+ 
+   public function reset_pass(Users $users)
+   {
+        $data= request()->except('_token');
+        DB::table('users')
+        ->where('id','=', Auth::user()->id)
+        ->update(['password' => Hash::make($data['pass1']),'reset_pass'=>0]);
+        return redirect()->route($data['pag']);
+   }
 
     /**
      * Show the form for creating a new resource.
@@ -83,4 +94,5 @@ class UsersContoller extends Controller
     {
         //
     }
+
 }

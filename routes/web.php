@@ -167,6 +167,7 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
 
     Route::controller(UsersContoller::class)->group(function(){
         Route::get('users','index')->name('users');
+        Route::post('users/reset_pass','reset_pass')->name('users.reset_pass');
     });
 
     Route::controller(RolesContoller::class)->group(function(){
@@ -189,11 +190,17 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
     // ADMINISTRACIÓN DE PERSONAL
     Route::controller(EmpleadosController::class)->group(function(){
         Route::get('empleados','index')->name('empleados');
+        Route::post('empleados/employee','employee')->name('empleados.employee');
+        Route::post('empleados/subirfoto','subirfoto')->name('empleados.subirfoto');
     });
 
     Route::controller(ConfevalController::class)->group(function(){
         Route::get('config','index')->name('confeval');
          Route::post('evaluados/levaldos','levaldos')->name('evaluacion.levaldos');
+         Route::post('evaluados/levaldores','levaldores')->name('evaluacion.levaldores');
+         Route::post('evaluados/mailevaluador','mailevaluador')->name('evaluacion.mailevaluador');
+         Route::post('evaluados/resetpass','resetpass')->name('evaluacion.resetpass');
+         
          Route::post('evaluados/evaluadores','evaluadores')->name('evaluacion.evaluadores');
          Route::post('evaluados/updateevaldor','updateevaldor')->name('evaluacion.updateevaldor');
          Route::post('evaluados','editstatus')->name('evaluacion.editstatus');

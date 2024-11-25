@@ -30,7 +30,7 @@ class DashboardContoller extends Controller
                 ->with('id_menu',$id_menu)
                 ->with('id_menu_sup',$id_menu_sup);
             }else{
-                return view('auth.login');
+                return redirect()->route('login');
             }
         }else{
             return view('auth.login');

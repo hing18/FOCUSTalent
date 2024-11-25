@@ -62,7 +62,7 @@ if (! function_exists('menu_id')) {
         inner join menu m on (rm.id_menu=m.id and m.tipo in ('S','P','M') )
         where 
         ur.id_usr=$id_user 
-        order by m.orden asc");
+        order by m.orden");
         foreach ($query as $r)
         {$activo="";
             if($r->id!=null){ 

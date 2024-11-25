@@ -11,13 +11,13 @@
    function preloader(){
       document.getElementById("preload").style.display = "none";
       document.getElementById("iframe").style.display = "block";
-  // <!    document.getElementById("div_2").style.display = "block";
-   }
-   
-   //preloader
-   window.onload = preloader;
-  // ]]>
-  
+    // <!    document.getElementById("div_2").style.display = "block";
+    }
+    
+    //preloader
+    window.onload = preloader;
+    // ]]>
+
   </script>
   
 
@@ -161,7 +161,6 @@
   </div>
 </div>
 
-
   <div class="card mb-3">
     <div class="card-header pb-0">
       <h4><i class="fas fa-tasks"></i> Evaluación de Desempeño</h4>
@@ -171,7 +170,6 @@
         <div id="preload" class="align-items-center justify-content-center text-center p-4 mt-4"><div class=" mt-4 spinner-border text-primary" role="status"></div></div>
       </small>        
           <div id="iframe" style="display: none;">
-            
 
             <!-- TABLA PRINCIPAL -->
             <div id="div_tabla"  style="display: block"> 
@@ -236,7 +234,7 @@
                     @endphp
                       <tr>
                         <td class=" text-center">{{$evaluado->id_evaluado}}</td>
-                        <td class="text-uppercase">{{$evaluado->prinombre}} {{$evaluado->segnombre}} {{$evaluado->priapellido}}</td>
+                        <td class="text-uppercase">{{$evaluado->prinombre}} {{$evaluado->priapellido}}</td>
                         <td class="text-uppercase">{{$evaluado->descpue}}</td>
                         <td class="text-uppercase">{{$evaluado->nameund}}</td>
                         <td class="text-uppercase fw-bold text-center"><span id="div_res_{{$evaluado->id_evaluado}}">{{$resultado}}</span></td>
@@ -904,6 +902,10 @@
               <input class="form-check-input" type="radio" name="promo" id="promo3" checked>
               <label class="form-check-label" for="promo3"> Promoverlo a largo plazo (3 a 5 años) </label>
             </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="promo" id="promo4" checked>
+              <label class="form-check-label" for="promo4"> No se contempla actualmente </label>
+            </div>
           </div>
       </div>
     </div>
@@ -1084,6 +1086,7 @@
           if(document.getElementById('promo1').checked) { desarrollo=0;}
           if(document.getElementById('promo2').checked) { desarrollo=1;}
           if(document.getElementById('promo3').checked) { desarrollo=2;}
+          if(document.getElementById('promo4').checked) { desarrollo=3;}
 
           // GUARDANDO EVALUACIÓN
           if( band_comp==0 && band_tar==0 && band_hab==0 && asig_curso_comp==0)
@@ -1314,6 +1317,7 @@
               { if(data.carrera==0){ document.getElementById('promo1').checked='checked';}
                 if(data.carrera==1){ document.getElementById('promo2').checked='checked';}
                 if(data.carrera==2){ document.getElementById('promo3').checked='checked';}
+                if(data.carrera==3){ document.getElementById('promo4').checked='checked';}
               }
 
               if(data.res_cursos.length>0)
@@ -1445,7 +1449,6 @@
                     $("#tbody_resp_curcomp").html(contendor+nuevaFila); 
                 }); 
 
-
                 $("#tbody_resp_curhab").html('');contendor  ="";nuevaFila   = "";
                 if(data.resp_resp_curhab.length>0){ $('#div_pid_cursos_hab').removeClass('visually-hidden'); $('#div_pid_titulo').removeClass('visually-hidden');}
                 jQuery(data.resp_resp_curhab).each(function(i, item){
@@ -1455,7 +1458,6 @@
                     $("#tbody_resp_curhab").html(contendor+nuevaFila); 
                 }); 
 
-                
                 $("#tbody_resp_curadic").html('');contendor  ="";nuevaFila   = "";
                 if(data.resp_curadic.length>0){ $('#div_pid_cursos_adi').removeClass('visually-hidden'); $('#div_pid_titulo').removeClass('visually-hidden');}
                 jQuery(data.resp_curadic).each(function(i, item){
@@ -1681,19 +1683,21 @@
                     '<td style="vertical-align: middle; text-center">'+tot_peso_cumpli_pid.toFixed(0)+'%'+
                     '<td style="vertical-align: middle; text-center">'+tot_obtenido_cumpli_pid.toFixed(1)+'%'+
                     '</td><td style="vertical-align: middle; text-center">'+tot_gap_cumpli_pid.toFixed(1)+'%</td></tr>');
-                      
-                    $('#resp_txtlogros').html(data.logros);
-                    $('#resp_txtcoment').html(data.comentarios);
+                     
+
+                    $('#resp_txtlogros').html(data.logros.replace(/\n/g, "<br>"));
+                    $('#resp_txtcoment').html(data.comentarios.replace(/\n/g, "<br>"));
                     if(data.carrera==0){  $('#resp_promo').html('Promoverlo de forma inmediata');}
                     if(data.carrera==1){  $('#resp_promo').html('Promoverlo a mediano plazo (1 a 2 años)');}
                     if(data.carrera==2){  $('#resp_promo').html('Promoverlo a largo plazo (3 a 5 años)');}
+                    if(data.carrera==3){  $('#resp_promo').html('No se contempla actualmente');}
 
 
                     $('#total_valor_eval').html((tot_peso_comp + tot_peso_respon + tot_peso_hab + tot_peso_cumpli_pid).toFixed(0)+'%');
                     $('#total_cumpli_eval').html((tot_pts_comp + tot_obtenido_respon + tot_obtenido_hab + tot_obtenido_cumpli_pid).toFixed(1)+'%');
                     $('#total_gap_eval').html((tot_gap_comp + tot_gap_respon + tot_gap_habi + tot_gap_cumpli_pid).toFixed(1)+'%');
 
-                      
+
                   Highcharts.chart('container-graf', {
                   chart: {
                       type: 'pie',
@@ -1736,6 +1740,7 @@
                       point: {
                           valueSuffix: '%'
                       }
+                      
                   },
                   title: false,
                   subtitle: false,
