@@ -3,28 +3,58 @@
 
 @section('title','Consulta Estructuras')
 
-@section('content')
 
-<!-- Button trigger modal -->
-  <div class="row">
-      <div class="col-4">        
+<!-- JavaScript -->
+<script type="text/javascript">
+  // <![CDATA[
+   function preloader(){
+      document.getElementById("preload").style.display = "none";
+      document.getElementById("iframe").style.display = "block";
+ // <!     document.getElementById("div_2").style.display = "block";
+   }
+   //preloader
+   window.onload = preloader;
+  // ]]>
+  </script>
+  
+  <!-- Estilo -->
+  <style>
+    div#iframe {  display: none; }
+    div#preload {  cursor: wait; }
+  </style>
+@section('content')
+<div class="card">
+  <div class="card-header pb-0">
+    <h4><i class="fa-solid fa-sitemap"></i> Estructuras</h4>
+  </div>
+  <div class="card-body">
+    <small>
+      <div id="preload" class="align-items-center justify-content-center text-center"><div class="spinner-border spinner-border-sm text-primary" role="status"></div></div>
+    </small>
+    <div id="iframe" style="display: none;">
+      <!-- Button trigger modal -->
+      <div class="row mt-4">
+        <div class="col-4">        
           <select class="form-select form-select-sm" name="sel_grp" id="sel_grp" aria-label="Default select example" onchange="muestra_estructura(1)">
             <option value='0' selected>Seleccione Grupo</option>
-              @foreach( $data_sups as $sup )
-                <option value="{{ $sup->id }}">{{ $sup->nameund }}</option>
-              @endforeach
+            @foreach( $data_sups as $sup )
+            <option value="{{ $sup->id }}">{{ $sup->nameund }}</option>
+            @endforeach
           </select>
+        </div>
+        <div class="col-4" id="div_ue" >        
+          <select class="form-select form-select-sm" name="sel_ue" id="sel_ue" aria-label="Default select example" onchange="muestra_estructura(2)" style="display:none">
+            <option value='0' selected>Seleccione Unidad</option>
+          </select>
+        </div>
       </div>
-      <div class="col-4" id="div_ue" >        
-        <select class="form-select form-select-sm" name="sel_ue" id="sel_ue" aria-label="Default select example" onchange="muestra_estructura(2)" style="display:none">
-          <option value='0' selected>Seleccione Unidad</option>
-        </select>
+      <hr>
+      <small>
+        <div id="tabla_estructura" class="d-flex align-items-center justify-content-center">  </div>
+      </small>
     </div>
   </div>
-<hr>
-  <small>
-    <div id="tabla_estructura" class="d-flex align-items-center justify-content-center">  </div>
-  </small>
+      </div>
 @endsection
 
 <script type='text/javascript'>

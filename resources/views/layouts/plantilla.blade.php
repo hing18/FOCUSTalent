@@ -28,7 +28,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"></script>
         <link href="https://cdn.datatables.net/buttons/3.0.1/css/buttons.dataTables.css"rel="stylesheet">
 
-       
+
 
     </head>
     <body>        
@@ -91,9 +91,36 @@
 
         <main id="main" class="main pt-0">         
             <div class="row-12 pt-0" >
-                <smal>@yield('content')</smal>
+                @yield('content')
             </div>
         </main>
+
+
+        
+<!-- Modal de advertencia por inactividad -->
+<div class="modal fade" id="sessionWarningModal" tabindex="-1" aria-labelledby="sessionWarningModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header bg-light">
+          <h5 class="modal-title" id="sessionWarningModalLabel">Tu sesión está a punto de finalizar</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Estás por ser redirigido al inicio de sesión debido a la inactividad. Si deseas continuar, haz clic en el botón para permanecer en la página.
+        </div>
+        <div class="modal-footer bg-light">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Permanecer conectado</button>
+          <button type="button" class="btn btn-primary" onclick="redirectToLogin()">Redirigir al Login</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+
 
         @endauth
         
@@ -121,6 +148,7 @@
 
       
         <!-- Template Main JS File -->
+        
         <script src="{{ asset('assets/js/main.js')}}"></script>
         <script> 
             $(document).ready(function() {
@@ -206,7 +234,7 @@
 
 
             $(document).ready(function() {
-        $image_crop = $('#image_demo_emplo').croppie({
+            $image_crop = $('#image_demo_emplo').croppie({
                     enableExif: true,
                     viewport: {
                     width:200,
@@ -265,7 +293,60 @@
 
             });
         </script>
-    </body>
+    
+
+
+
+
+    <!-- SCRIPT DE REDIRECCIONAMIENTO POR TIMEPO DE INACTIVIDAD -->
+
+    <script>
+        // Definir la duración de la sesión en milisegundos
+        var sessionTimeout = @json(config('session.lifetime') * 60 * 1000); // 1 minuto (1000 ms * 60 * 1)
+    
+        // Definir el tiempo antes de que aparezca el modal (30 segundos)
+        var warningTime = 30 * 1000; // 30 segundos
+    
+        var timer;
+    
+        // Función para mostrar el modal de advertencia
+        function showWarningModal() {
+            // Mostrar modal con un mensaje
+            $('#sessionWarningModal').modal('show');
+        }
+    
+        // Función para redirigir al usuario a la página de login
+        function redirectToLogin() {
+            window.location.href = "{{ route('login') }}";  // Redirigir al login
+        }
+    
+        // Temporizador para comprobar la inactividad
+        function startInactivityTimer() {
+            timer = setTimeout(function () {
+                showWarningModal();
+    
+                // Configurar la redirección después de 30 segundos
+                setTimeout(function () {
+                    redirectToLogin();
+                }, warningTime);
+            }, sessionTimeout - warningTime);
+        }
+    
+        // Reiniciar el temporizador de inactividad cada vez que el usuario haga una acción
+        $(document).on('mousemove keydown click scroll', function() {
+            clearTimeout(timer);
+            startInactivityTimer();
+        });
+    
+        // Iniciar el temporizador cuando la página carga
+        $(document).ready(function () {
+            startInactivityTimer();
+        });
+    </script>
+
+
+
+</body>
     
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.css"  />

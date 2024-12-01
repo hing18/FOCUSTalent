@@ -6,6 +6,43 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+        <script>
+          // Paso 1: Calcular el tiempo total de la sesión y el tiempo de expiración
+          const sessionLifetimeInSeconds = {{ config('session.lifetime') * 60 }};  // Duración total de la sesión en segundos
+          const sessionStartTime = {{ time() }};  // Hora actual del servidor (timestamp)
+  
+          // Paso 2: Calcular el tiempo de expiración de la sesión
+          const sessionExpiryTime = sessionStartTime + sessionLifetimeInSeconds; // Tiempo en que la sesión expira
+          const warningTime = 30;  // 30 segundos antes de la expiración para recargar
+  
+          let lastActivityTime = Date.now(); // Guardamos el tiempo de la última actividad del usuario
+  
+          // Función para manejar la inactividad
+          function handleInactivity() {
+              // Comprobamos el tiempo de inactividad
+              const currentTime = Date.now();
+              const inactivityTime = currentTime - lastActivityTime;
+  
+              // Si la inactividad es mayor que el tiempo de advertencia, recargamos la página
+              if (inactivityTime >= (sessionLifetimeInSeconds * 1000 - warningTime * 1000)) {
+                  location.reload(); // Recargar la página
+              }
+          }
+  
+          // Función para resetear el temporizador de inactividad cada vez que haya actividad
+          function resetInactivityTimer() {
+              lastActivityTime = Date.now();  // Actualizamos el tiempo de la última actividad
+          }
+  
+          // Detectar actividad del usuario (clic, movimiento del ratón, teclas presionadas, etc.)
+          window.addEventListener('mousemove', resetInactivityTimer);
+          window.addEventListener('keydown', resetInactivityTimer);
+          window.addEventListener('click', resetInactivityTimer);
+  
+          // Paso 3: Comprobar la inactividad cada segundo
+          setInterval(handleInactivity, 1000); // Verificamos la inactividad cada segundo
+  
+      </script>
         <!-- Bootstrap CSS v5.2.1 -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
         <!-- Favicons -->
@@ -22,6 +59,7 @@
 
         <!-- Template Main CSS File -->
         <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet">
+
     </head>
 
     <style>

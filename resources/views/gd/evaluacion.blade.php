@@ -1824,7 +1824,9 @@
             if(item.length>=20)
             {  $('#space_photo').html(item);}              
             else
-            { if(gen=='F'){ document.getElementById('img_photo').setAttribute("src", "/storage/profiles/photo/ella.png");}
+            { if(gen=='F'){ 
+              
+              document.getElementById('img_photo').setAttribute("src", "/storage/profiles/photo/ella.png");}
               else { document.getElementById('img_photo').setAttribute("src", "/storage/profiles/photo/el.png");}}
           }
         });

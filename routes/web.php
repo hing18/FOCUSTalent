@@ -2,27 +2,27 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\go\EstructuraContoller;
-use App\Http\Controllers\go\PosicionesContoller;
-use App\Http\Controllers\go\CompetenciasContoller;
-use App\Http\Controllers\go\JerarquiasContoller;
-use App\Http\Controllers\go\DescriptivosContoller;
+use App\Http\Controllers\go\EstructuraController;
+use App\Http\Controllers\go\PosicionesController;
+use App\Http\Controllers\go\CompetenciasController;
+use App\Http\Controllers\go\JerarquiasController;
+use App\Http\Controllers\go\DescriptivosController;
 use App\Http\Controllers\auth\RegisterController;
-use App\Http\Controllers\re\SolvacantesContoller;
-use App\Http\Controllers\re\OfertasContoller;
-use App\Http\Controllers\re\EntrevistasContoller;
+use App\Http\Controllers\re\SolvacantesController;
+use App\Http\Controllers\re\OfertasController;
+use App\Http\Controllers\re\EntrevistasController;
 use App\Http\Controllers\gd\EvaluacionController;
 use App\Http\Controllers\gd\ConfevalController;
 
 
 use App\Http\Controllers\me\EmpleadosController;
-use App\Http\Controllers\re\CurriculumContoller;
+use App\Http\Controllers\re\CurriculumController;
 use App\Http\Controllers\rl\ContworkController;
-use App\Http\Controllers\conf\UsersContoller;
-use App\Http\Controllers\conf\RolesContoller;
+use App\Http\Controllers\conf\UsersController;
+use App\Http\Controllers\conf\RolesController;
 use App\Http\Controllers\emails\ContactanosController;
 
-use App\Http\Controllers\DashboardContoller;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\go\ProcedimientosController;
 use App\Http\Controllers\re\CartapdfController;
 use App\Mail\ContactanosMailable;
@@ -44,37 +44,51 @@ use Illuminate\Support\Facades\Mail;
 
 Route::get('/', function () { return view('auth.login');});
 
+
+
 Auth::routes();
 
-Route::get('/home', [HomeController::class, 'index'])->name('home');
+//Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 
 //GESTIÓN ORGANIZATIVA
 
-    Route::controller(EstructuraContoller::class)->group(function(){
-        Route::get('estructura','index')->name('estructura');
-        Route::get('unidades/create','create')->name('estructura.create');
-        Route::get('unidades','unidades')->name('estructura.unidades');
-        Route::put('unidades/update','update')->name('estructura.update');
+    Route::controller(EstructuraController::class)
+    ->middleware(['auth', 'session.expired'])
+    ->group(function(){
+        Route::get('estructura', 'index')->name('estructura');
+        Route::get('unidades/create', 'create')->name('estructura.create');
+        Route::get('unidades', 'unidades')->name('estructura.unidades');
+        Route::put('unidades/update', 'update')->name('estructura.update');
     });
+ 
 
-    Route::controller(ProcedimientosController::class)->group(function(){
+    
+    Route::controller(ProcedimientosController::class)
+    ->middleware(['auth', 'session.expired'])    
+    ->group(function(){
         Route::post('procedimientos/show','show')->name('procedimientos.show');
     });
 
-    Route::controller(CompetenciasContoller::class)->group(function(){
+    Route::controller(CompetenciasController::class)
+    ->middleware(['auth', 'session.expired'])    
+    ->group(function(){
         Route::get('competencias','index')->name('competencias');
-        Route::post('competencias/store','store')->name('competencias.store');
+        Route::post('competencias/store','store')->middleware(['auth', 'check.session.expiration'])->name('competencias.store');
         Route::post('competencias/edit','edit')->name('competencias.edit');
         Route::post('competencias/update','update')->name('competencias.update');
         Route::post('competencias/destroy','destroy')->name('competencias.destroy');
     });
 
-    Route::controller(JerarquiasContoller::class)->group(function(){
+    Route::controller(JerarquiasController::class)
+    ->middleware(['auth', 'session.expired'])
+    ->group(function(){
         Route::get('jerarquias','index')->name('jerarquias');
     });
 
-    Route::controller(JerarquiasContoller::class)->group(function(){
+    Route::controller(JerarquiasController::class)
+    ->middleware(['auth', 'session.expired'])
+    ->group(function(){
         Route::get('jerarquias','index')->name('jerarquias');
         Route::post('jerarquias/store','store')->name('jerarquias.store');
         Route::post('jerarquias/edit','edit')->name('jerarquias.edit');
@@ -86,7 +100,9 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
         Route::post('jerarquias/create','create')->name('jerarquias.create');
     });
 
-    Route::controller(DescriptivosContoller::class)->group(function(){
+    Route::controller(DescriptivosController::class)
+    ->middleware(['auth', 'session.expired'])
+    ->group(function(){
         Route::get('descriptivos','index')->name('descriptivos');
         Route::post('descriptivos/store','store')->name('descriptivos.store');
         Route::post('descriptivos/update','update')->name('descriptivos.update');
@@ -99,7 +115,9 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
         
     });
 
-    Route::controller(PosicionesContoller::class)->group(function(){
+    Route::controller(PosicionesController::class)
+    ->middleware(['auth', 'session.expired'])
+    ->group(function(){
         Route::get('posiciones','index')->name('posiciones');
         Route::post('posiciones/store','store')->name('posiciones.store');
         Route::post('posiciones/edit','edit')->name('posiciones.edit');
@@ -107,13 +125,17 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
         Route::post('posiciones/destroy','destroy')->name('posiciones.destroy');
     });
 
-    Route::controller(RegisterController::class)->group(function(){
+    Route::controller(RegisterController::class)
+    ->middleware(['auth', 'session.expired'])
+    ->group(function(){
         Route::get('registro','index')->name('registro');
     });
 
 //RECLUTAMIENTO
 
-    Route::controller(SolvacantesContoller::class)->group(function(){
+    Route::controller(SolvacantesController::class)
+    ->middleware(['auth', 'session.expired'])
+    ->group(function(){
         Route::get('vacantes','index')->name('solvacantes');
         Route::post('vacantes/show','show')->name('solvacantes.show');
         Route::post('vacantes/viewmotivo','viewmotivo')->name('solvacantes.viewmotivo');
@@ -121,7 +143,9 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
         Route::post('vacantes/ceco','ceco')->name('solvacantes.ceco');
     });
     
-    Route::controller(OfertasContoller::class)->group(function(){
+    Route::controller(OfertasController::class)
+    ->middleware(['auth', 'session.expired'])
+    ->group(function(){
         Route::get('ofertas','index')->name('ofertas');
         Route::post('ofertas/show','show')->name('ofertas.show');        
         Route::post('ofertas/update','update')->name('ofertas.update');
@@ -154,32 +178,44 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
         
     });
 
-    Route::controller(ContworkController::class)->group(function(){
+    Route::controller(ContworkController::class)
+    ->middleware(['auth', 'session.expired'])
+    ->group(function(){
         Route::get('contratos','index')->name('contwork');
         Route::post('contratos/show','show')->name('rl.show');
         Route::post('contratos/showfoto','showfoto')->name('rl.showfoto');
 });
-    Route::controller(EntrevistasContoller::class)->group(function(){
+    Route::controller(EntrevistasController::class)
+    ->middleware(['auth', 'session.expired'])
+    ->group(function(){
         Route::get('entrevistas','index')->name('entrevistas');
     });
 
 //ADMINISTRACIÓN
 
-    Route::controller(UsersContoller::class)->group(function(){
+    Route::controller(UsersController::class)
+    ->middleware(['auth', 'session.expired'])
+    ->group(function(){
         Route::get('users','index')->name('users');
         Route::post('users/reset_pass','reset_pass')->name('users.reset_pass');
     });
 
-    Route::controller(RolesContoller::class)->group(function(){
+    Route::controller(RolesController::class)
+    ->middleware(['auth', 'session.expired'])
+    ->group(function(){
         Route::get('roles','index')->name('roles');
     });
 
-    Route::controller(DashboardContoller::class)->group(function(){
+    Route::controller(DashboardController::class)
+    ->middleware(['auth', 'session.expired'])
+    ->group(function(){
         Route::get('dashboard','index')->name('dashboard');
     });
 
     // EVALUACIÓN Y DESARROLLO
-    Route::controller(EvaluacionController::class)->group(function(){
+    Route::controller(EvaluacionController::class)
+    ->middleware(['auth', 'session.expired'])
+    ->group(function(){
         Route::get('evaluacion','index')->name('evaluacion');
         Route::post('evaluacion/evaluado','evaluado')->name('evaluacion.evaluado');
         Route::post('evaluacion/showfoto','showfoto')->name('evaluacion.showfoto');
@@ -188,13 +224,17 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
         Route::post('evaluacion/print','print')->name('evaluacion.print');        
     });
     // ADMINISTRACIÓN DE PERSONAL
-    Route::controller(EmpleadosController::class)->group(function(){
+    Route::controller(EmpleadosController::class)
+    ->middleware(['auth', 'session.expired'])
+    ->group(function(){
         Route::get('empleados','index')->name('empleados');
         Route::post('empleados/employee','employee')->name('empleados.employee');
         Route::post('empleados/subirfoto','subirfoto')->name('empleados.subirfoto');
     });
 
-    Route::controller(ConfevalController::class)->group(function(){
+    Route::controller(ConfevalController::class)
+    ->middleware(['auth', 'session.expired'])
+    ->group(function(){
         Route::get('config','index')->name('confeval');
          Route::post('evaluados/levaldos','levaldos')->name('evaluacion.levaldos');
          Route::post('evaluados/levaldores','levaldores')->name('evaluacion.levaldores');
