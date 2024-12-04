@@ -75,7 +75,7 @@
                     <div class="col-xl-4">
                       <div class="card">
                         <div class="card-body profile-card pt-4 d-flex flex-column align-items-center mb-0">
-                          <span class="align-items-center justify-content-center text-center" id="space_photo"><img src="/storage/profiles/photo/el.png" alt="Profile" class="rounded-circle" id="img_photo"></span>
+                          <span class="align-items-center justify-content-center text-center" id="space_photo"><img src="/FOCUSTalent/public/storage/profiles/photo/el.png" alt="Profile" class="rounded-circle" id="img_photo"></span>
                           <h5 id="lb_nombre"></h5>
                           <span class="text-secondary mt-1" style="font-size: xx-small">CANDIDATO</span>
                           <button type="button" class="btn btn-sm btn-warning text-white"  onclick="document.getElementById('insert_image').click()" ><i class="far fa-id-badge fa-xl"></i> Cambiar Foto de Perfil</button>
@@ -302,8 +302,8 @@
               if(item.length>=20)
               {  $('#space_photo').html(item);}              
               else
-              { if(item.masc_fem=='femenino'){ document.getElementById('img_photo').setAttribute("src", "/storage/profiles/photo/ella.png");}
-                else { document.getElementById('img_photo').setAttribute("src", "/storage/profiles/photo/el.png");}}
+              { if(item.masc_fem=='femenino'){ document.getElementById('img_photo').setAttribute("src", "/FOCUSTalent/public/storage/profiles/photo/ella.png");}
+                else { document.getElementById('img_photo').setAttribute("src", "/FOCUSTalent/public/storage/profiles/photo/el.png");}}
             }
           });
     }
@@ -410,7 +410,7 @@
     {   document.getElementById('div_tabla').style.display='block';
         document.getElementById('div_detalle').style.display='none';
         document.getElementById('div_permiso_trab').style.display='none';
-        document.getElementById('img_photo').setAttribute("src", "/storage/profiles/photo/el.png");
+        document.getElementById('img_photo').setAttribute("src", "/FOCUSTalent/public/storage/profiles/photo/el.png");
     }
 
     function gererapdfcontrato()

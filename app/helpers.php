@@ -17,8 +17,8 @@ if (! function_exists('photo_user')) {
             {   echo '<img src="data:image/png;base64,'.base64_encode($s->photo).'" alt="Profile" class="rounded-circle"/>';}
             else
             {
-                if($s->genero=='F'){ echo'<img src="/storage/profiles/photo/ella.png" alt="Profile" class="rounded-circle">';}
-                else { echo'<img src="/storage/profiles/photo/el.png" alt="Profile" class="rounded-circle">';}}
+                if($s->genero=='F'){ echo'<img src="/FOCUSTalent/public/storage/profiles/photo/ella.png" alt="Profile" class="rounded-circle">';}
+                else { echo'<img src="/FOCUSTalent/public/storage/profiles/photo/el.png" alt="Profile" class="rounded-circle">';}}
         }
     }
 }

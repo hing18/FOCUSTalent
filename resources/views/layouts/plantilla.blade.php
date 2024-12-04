@@ -32,6 +32,7 @@
 
     </head>
     <body>        
+        <link href="https://cdn.jsdelivr.net/npm/trix@1.3.1/dist/trix.css" rel="stylesheet">
         <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
         @auth
         <!-- ======= Header ======= -->
@@ -344,6 +345,7 @@
         });
     </script>
 
+<script src="https://cdn.jsdelivr.net/npm/trix@1.3.1/dist/trix.js"></script>
 
 
 </body>
@@ -352,6 +354,5 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.css"  />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.js"></script>
-
 
 </html>

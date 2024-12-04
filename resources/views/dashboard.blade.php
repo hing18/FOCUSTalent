@@ -44,7 +44,7 @@
                       <div class="card-body py-2">
                         <div class="row align-items-center">
                           <div class="col p-0">
-                            <div class="m-0 text-secondary text-center"><span class="h4 fw-bold" id="tot_gap_coef">650</span></div>
+                            <div class="m-0 text-secondary text-center"><span class="h4 fw-bold" id="tot_gap_coef"></span></div>
                             <div class="text-info fw-bold mb-1 text-center"><small><small>Personal Activo</small></small></div>                
                           </div>
                           <div class="col-auto m-0 pe-1">
@@ -60,7 +60,7 @@
                       <div class="card-body py-2">
                         <div class="row align-items-center">
                           <div class="col p-0">
-                            <div class="m-0 text-secondary text-center"><span class="h4 fw-bold" id="tot_gap_coef">425</span></div>
+                            <div class="m-0 text-secondary text-center"><span class="h4 fw-bold" id="tot_gap_coef"></span></div>
                             <div class="text-primary fw-bold mb-1 text-center"><small><small>Hombres</small></small></div>                
                           </div>
                           <div class="col-auto m-0 pe-1">
@@ -76,7 +76,7 @@
                       <div class="card-body py-2">
                         <div class="row align-items-center">
                           <div class="col p-0">
-                            <div class="m-0 text-secondary text-center"><span class="h4 fw-bold" id="tot_gap_coef">225</span></div>
+                            <div class="m-0 text-secondary text-center"><span class="h4 fw-bold" id="tot_gap_coef"></span></div>
                             <div class="text-danger fw-bold mb-1 text-center"><small><small>Mujeres</small></small></div>                
                           </div>
                           <div class="col-auto m-0 pe-1">
@@ -92,7 +92,7 @@
                       <div class="card-body py-2">
                         <div class="row align-items-center">
                           <div class="col p-0">
-                            <div class="m-0 text-secondary text-center"><span class="h4 fw-bold" id="tot_gap_coef">57</span></div>
+                            <div class="m-0 text-secondary text-center"><span class="h4 fw-bold" id="tot_gap_coef"></span></div>
                             <div class="text-warning fw-bold mb-1 text-center"><small><small>Jubilados</small></small></div>                
                           </div>
                           <div class="col-auto m-0 pe-1">

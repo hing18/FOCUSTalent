@@ -162,6 +162,7 @@ class EvaluacionController extends Controller
                 rel.idcomp AS idcomp,
                 comp.nombre AS nomcomp,
                 comp.definicion AS definicion,
+                comp.definicion_resumen AS definicion_resumen,
                 tipo.nombretipocompetencia AS nomtipocomp,
                 rel.esperado AS perfil,
                 resp.opt
@@ -216,8 +217,8 @@ class EvaluacionController extends Controller
                 foreach( $query_escala as $escala )
                 { $id_escala= $escala->id;}
                 
-                $query_resp_curcomp= DB::select("SELECT  id_comp, comp,id_curso, curso  FROM eval_res_cursos_pid_comp WHERE id_eval=$eval_id and id_evaluado=$id_evdo and id_evaluador=$id_evaluador ");
-                $query_resp_curhab= DB::select("SELECT  id_curso, curso  FROM eval_res_cursos_pid_hab WHERE id_eval=$eval_id and id_evaluado=$id_evdo and id_evaluador=$id_evaluador ");
+                $query_resp_curcomp= DB::select("SELECT  id_comp, comp,id_curso, curso, fecha  FROM eval_res_cursos_pid_comp WHERE id_eval=$eval_id and id_evaluado=$id_evdo and id_evaluador=$id_evaluador ");
+                $query_resp_curhab= DB::select("SELECT  id_curso, curso, fecha  FROM eval_res_cursos_pid_hab WHERE id_eval=$eval_id and id_evaluado=$id_evdo and id_evaluador=$id_evaluador ");
                 $query_resp_curadic= DB::select("SELECT area, curso, accion  FROM eval_res_cursos_pid_adic WHERE id_eval=$eval_id and id_evaluado=$id_evdo and id_evaluador=$id_evaluador ");
                 $query_resp_hab= DB::select("SELECT hab, opt, peso, obtenido, gap FROM eval_res_hab WHERE id_eval=$eval_id and id_evaluado=$id_evdo and id_evaluador=$id_evaluador ");
                 $query_resp_cursos= DB::select("SELECT curso, opt, peso, obtenido, (peso-obtenido) as gap FROM eval_res_cursos_cumpli WHERE id_eval=$eval_id and id_evaluado=$id_evdo and id_evaluador=$id_evaluador ");
@@ -233,8 +234,8 @@ class EvaluacionController extends Controller
             $query_resp_cursos= DB::select("SELECT curso, opt, peso, obtenido, (peso-obtenido) as gap FROM eval_res_cursos_cumpli WHERE id_eval=$eval_id and id_evaluado=$id_evdo and id_evaluador=$id_evaluador ");
 
             $query_resp_gap= DB::select("SELECT gap_ci, gap_na, gap_comp, gap_conhab, gap  FROM eval_res_gap WHERE id_eval=$eval_id and id_evaluado=$id_evdo ");
-            $query_resp_curcomp= DB::select("SELECT id_comp, comp, curso  FROM eval_res_cursos_pid_comp WHERE id_eval=$eval_id and id_evaluado=$id_evdo and id_evaluador=$id_evaluador ");
-            $query_resp_curhab= DB::select("SELECT  id_curso, curso  FROM eval_res_cursos_pid_hab WHERE id_eval=$eval_id and id_evaluado=$id_evdo and id_evaluador=$id_evaluador ");
+            $query_resp_curcomp= DB::select("SELECT id_comp, comp, curso, fecha  FROM eval_res_cursos_pid_comp WHERE id_eval=$eval_id and id_evaluado=$id_evdo and id_evaluador=$id_evaluador ");
+            $query_resp_curhab= DB::select("SELECT  id_curso, curso, fecha  FROM eval_res_cursos_pid_hab WHERE id_eval=$eval_id and id_evaluado=$id_evdo and id_evaluador=$id_evaluador ");
             $query_resp_curadic= DB::select("SELECT area, curso, accion  FROM eval_res_cursos_pid_adic WHERE id_eval=$eval_id and id_evaluado=$id_evdo and id_evaluador=$id_evaluador ");
         }
         $salidaJson=array(
@@ -481,6 +482,7 @@ class EvaluacionController extends Controller
                         { 
                             $pid_id_comp= $res['pid_id_comp'];
                             $pid_comp= $res['pid_comp'];
+                            $pid_comp_fecha= $res['fecha'];
             
                             $new = new eval_res_cursos_pid_comp();
                             $new->id_eval = $data['eval_id'];
@@ -490,7 +492,9 @@ class EvaluacionController extends Controller
                             $new->comp = $pid_comp;
                             if($res['id_curso_com']>0)
                             {   $new->id_curso = $res['id_curso_com'];
-                                $new->curso = $res['nom_curso_com'];}
+                                $new->curso = $res['nom_curso_com'];
+                                $new->fecha = $pid_comp_fecha;
+                            }
                             $new->save();
                         }
                     }
@@ -500,13 +504,15 @@ class EvaluacionController extends Controller
                 {    foreach ($data['pid_hab_cursos'] as $res)
                     {   if($res['id_curso_hab']>0)
                         {   $id_curso_hab= $res['id_curso_hab'];
-                            $nom_curso_hab= $res['nom_curso_hab'];                 
+                            $nom_curso_hab= $res['nom_curso_hab'];    
+                            $fecha_curso_hab= $res['fecha'];                 
                             $new = new eval_res_cursos_pid_hab();
                             $new->id_eval = $data['eval_id'];
                             $new->id_evaluado = $data['cod_evaluado'];
                             $new->id_evaluador = $data['cod_evaluador'];
                             $new->id_curso = $id_curso_hab;
                             $new->curso = $nom_curso_hab;
+                            $new->fecha = $fecha_curso_hab;
                             $new->save();
                         }
                     }
@@ -654,8 +660,8 @@ class EvaluacionController extends Controller
                 $query_resp_cursos= DB::select("SELECT curso, opt, peso, obtenido, (peso-obtenido) as gap FROM eval_res_cursos_cumpli WHERE id_eval=$eval_id and id_evaluado=$id_evdo and id_evaluador=$id_evaluador ");
     
                 $query_resp_gap= DB::select("SELECT gap_ci, gap_na, gap_comp, gap_conhab, gap  FROM eval_res_gap WHERE id_eval=$eval_id and id_evaluado=$id_evdo ");
-                $query_resp_curcomp= DB::select("SELECT id_comp, comp, curso  FROM eval_res_cursos_pid_comp WHERE id_eval=$eval_id and id_evaluado=$id_evdo and id_evaluador=$id_evaluador ");
-                $query_resp_curhab= DB::select("SELECT  id_curso, curso  FROM eval_res_cursos_pid_hab WHERE id_eval=$eval_id and id_evaluado=$id_evdo and id_evaluador=$id_evaluador ");
+                $query_resp_curcomp= DB::select("SELECT id_comp, comp, curso, fecha  FROM eval_res_cursos_pid_comp WHERE id_eval=$eval_id and id_evaluado=$id_evdo and id_evaluador=$id_evaluador ");
+                $query_resp_curhab= DB::select("SELECT  id_curso, curso, fecha  FROM eval_res_cursos_pid_hab WHERE id_eval=$eval_id and id_evaluado=$id_evdo and id_evaluador=$id_evaluador ");
                 $query_resp_curadic= DB::select("SELECT area, curso, accion  FROM eval_res_cursos_pid_adic WHERE id_eval=$eval_id and id_evaluado=$id_evdo and id_evaluador=$id_evaluador ");
 
                 // Eliminar el prefijo de base64
@@ -709,5 +715,15 @@ class EvaluacionController extends Controller
 
         }
         else{   return view('auth.login');}
+    }
+
+    public function leermas(Request $request)
+    {
+        $data= request()->except('_token');
+        $idcomp= $data['idcomp'];
+        $query = DB::select("SELECT nombre,definicion,nivel_alto,nivel_bajo FROM competencias WHERE id=$idcomp");
+       
+        echo(json_encode($query));
+        
     }
 }

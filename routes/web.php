@@ -221,7 +221,8 @@ Auth::routes();
         Route::post('evaluacion/showfoto','showfoto')->name('evaluacion.showfoto');
         Route::post('evaluacion/compcursos','compcursos')->name('evaluacion.compcursos');
         Route::post('evaluacion/save','save')->name('evaluacion.save');
-        Route::post('evaluacion/print','print')->name('evaluacion.print');        
+        Route::post('evaluacion/print','print')->name('evaluacion.print');    
+        Route::post('evaluacion/leermas','leermas')->name('evaluacion.leermas');    
     });
     // ADMINISTRACIÓN DE PERSONAL
     Route::controller(EmpleadosController::class)

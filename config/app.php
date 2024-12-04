@@ -55,7 +55,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => env('APP_URL', 'http://intranet.itregency.com'),
 
     'asset_url' => env('ASSET_URL'),
 

@@ -264,8 +264,9 @@
                     <table id="table_resp_curcomp" class="table table-sm small table-borderless pl-2 pt-0" >
                       <thead>
                         <tr>
-                          <td class="text-primary text-sm" style="text-align: left; background-color: #F3F8FF;"width="40%">COMPETENCIAS DE MAYOR GAP</td>
-                          <td class="text-primary text-sm" style="text-align: left; background-color: #F3F8FF;"width="60%">CURSOS ASIGNADOS</td>
+                          <td class="text-primary text-sm" style="text-align: left; background-color: #F3F8FF;"width="30%">COMPETENCIAS DE MAYOR GAP</td>
+                          <td class="text-primary text-sm" style="text-align: left; background-color: #F3F8FF;"width="40%">CURSOS ASIGNADOS</td>
+                          <td class="text-primary text-sm" style="text-align: left; background-color: #F3F8FF;"width="20%">FECHA</td>
                         </tr>
                       </thead>
                       <tbody class="text-dark" id="tbody_resp_curcomp">
@@ -273,6 +274,7 @@
                         <tr>
                           <td class="pl-4"><li>{{ $array3->comp }}</li></td>
                           <td class="pl-4"><li>{{ $array3->curso }}</li></td>
+                          <td class="pl-4"><li>{{ $array3->fecha }}</li></td>
                         </tr>
                         @endforeach  
                       </tbody>            
@@ -284,13 +286,15 @@
                     <table id="table_resp_curhab" class="table table-sm small table-borderless pl-2 pt-0" >
                       <thead>
                         <tr>
-                          <td class="text-primary text-sm" style="text-align: left; background-color: #F3F8FF;">CURSOS ASIGNADOS PARA HABILIDADES FUNCIONALES</td>               
+                          <td class="text-primary text-sm" style="text-align: left; background-color: #F3F8FF;">CURSOS ASIGNADOS PARA HABILIDADES FUNCIONALES</td>  
+                          <td class="text-primary text-sm" style="text-align: left; background-color: #F3F8FF;"width="40%">FECHA</td>              
                         </tr>
                       </thead>
                       <tbody class="text-dark" id="tbody_resp_curhab">
                         @foreach ($resp_curhab as $array3 )
                           <tr>
                             <td class="pl-4"><li>{{ $array3->curso }}</li></td>
+                            <td class="pl-4"><li>{{ $array3->fecha }}</li></td>
                           </tr>
                         @endforeach 
                       </tbody>        
@@ -568,20 +572,7 @@
                       
                   </div>
                 </div>
-      
-                <hr>      
-                
-                <div class="mb-3">
-                  <label class="card-title pl-2 text-info"><i class="fas fa-comment-dots pe-2"></i> Comentarios del Evaluador</label>
-                  <div class="col pl-4 small">
-      
-                    @if(strlen($comentarios)>0)
-                      @php echo nl2br(e($comentarios)) @endphp
-                    @endif
-                      
-                  </div>
-                </div>
-                
+
                 <hr>
       
                 <div>
@@ -595,6 +586,22 @@
                       {{ $cad }}
                   </div>
                 </div>
+
+
+                <hr>      
+                
+                <div class="mb-3">
+                  <label class="card-title pl-2 text-info"><i class="fas fa-comment-dots pe-2"></i> Comentarios del Evaluador</label>
+                  <div class="col pl-4 small">
+      
+                    @if(strlen($comentarios)>0)
+                      @php echo nl2br(e($comentarios)) @endphp
+                    @endif
+                      
+                  </div>
+                </div>
+                
+
               </div>
             </div>
           </small>

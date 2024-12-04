@@ -75,8 +75,8 @@ class EmpleadosController extends Controller
             {   if($r->photo!=null)
                 {   $photo= '<img src="data:image/png;base64,'.base64_encode($r->photo).'" alt="Profile" width="100" class="rounded-circle" id="img_photo" title="Cambiar foto"/>';}
                 else
-                { if($r->genero=='F'){ $photo='<img src="/storage/profiles/photo/ella.png" alt="Profile"  height="100" class="rounded-circle" id="img_photo" title="Cambiar foto"/>';}
-                else { $photo='<img src="/storage/profiles/photo/el.png" alt="Profile" width="100" class="rounded-circle" id="img_photo" title="Cambiar foto"/>';}}
+                { if($r->genero=='F'){ $photo='<img src="/FOCUSTalent/public/storage/profiles/photo/ella.png" alt="Profile"  height="100" class="rounded-circle" id="img_photo" title="Cambiar foto"/>';}
+                else { $photo='<img src="/FOCUSTalent/public/storage/profiles/photo/el.png" alt="Profile" width="100" class="rounded-circle" id="img_photo" title="Cambiar foto"/>';}}
                 $id_employee = $r->id_employee;
                 $prinombre = $r->prinombre;
                 $segnombre = $r->segnombre; 

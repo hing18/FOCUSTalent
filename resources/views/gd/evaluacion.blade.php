@@ -268,7 +268,7 @@
                   <div class="row">
                     <div class="col-3">
                       <div class="card-body profile-card d-flex flex-column align-items-center mb-0">
-                        <span class="align-items-center justify-content-center text-center" id="space_photo"><img src="/storage/profiles/photo/el.png" alt="Profile" class="rounded-circle" id="img_photo"></span>
+                        <span class="align-items-center justify-content-center text-center" id="space_photo"><img src="/FOCUSTalent/public/storage/profiles/photo/el.png" alt="Profile" class="rounded-circle" id="img_photo"></span>
                         <h6 id="lb_nombre" class="text-primary fw-bold pt-2"></h6>
                       </div>
                     </div>
@@ -366,7 +366,8 @@
                         <thead>
                           <tr>
                             <th class="text-primary text-sm" style="text-align: left; vertical-align: middle;background-color: #F3F8FF;"width="40%">COMPETENCIAS DE MAYOR GAP</th>
-                            <th class="text-primary text-sm" style="text-align: left; vertical-align: middle;background-color: #F3F8FF;"width="60%">CURSOS ASIGNADOS</th>
+                            <th class="text-primary text-sm" style="text-align: left; vertical-align: middle;background-color: #F3F8FF;"width="40%">CURSOS ASIGNADOS</th>
+                            <th class="text-primary text-sm" style="text-align: left; vertical-align: middle;background-color: #F3F8FF;"width="20%">FECHA</th>
                           </tr>
                         </thead>
                         <tbody class="text-dark" id="tbody_resp_curcomp"></tbody>            
@@ -382,7 +383,8 @@
                       <table id="table_resp_curhab" class="table table-sm small pt-4 table-borderless" style="width:80%">
                         <thead>
                           <tr>
-                            <th class="text-primary text-sm" style="text-align: left; vertical-align: middle;background-color: #F3F8FF;">CURSOS ASIGNADOS PARA HABILIDADES FUNCIONALES</th>               
+                            <th class="text-primary text-sm" style="text-align: left; vertical-align: middle;background-color: #F3F8FF;">CURSOS ASIGNADOS PARA HABILIDADES FUNCIONALES</th>       
+                            <th class="text-primary text-sm" style="text-align: left; vertical-align: middle;background-color: #F3F8FF;">FECHA</th>        
                           </tr>
                         </thead>
                         <tbody class="text-dark" id="tbody_resp_curhab"></tbody>            
@@ -584,6 +586,16 @@
             </div>
           </div>
 
+          <hr>
+
+          <div class="my-3">
+            <label class="card-title py-0 text-info"><i class="fas fa-user-tie pe-2"></i> Proyección de Desarrollo de Carrera</label>
+            <div class="col ps-4 small">
+
+              <span id="resp_promo">  </span>
+                
+            </div>
+          </div>
           <hr>      
           
           <div class="my-3">
@@ -595,16 +607,6 @@
             </div>
           </div>
           
-          <hr>
-
-          <div class="my-3">
-            <label class="card-title py-0 text-info"><i class="fas fa-user-tie pe-2"></i> Proyección de Desarrollo de Carrera</label>
-            <div class="col ps-4 small">
-
-              <span id="resp_promo">  </span>
-                
-            </div>
-          </div>
         </div>
       </div>
     
@@ -793,7 +795,8 @@
                   <thead>
                     <tr>
                       <th class="text-primary text-center" width="30%">COMPETENCIAS DE MAYOR GAP<input type="hidden" id="cant_curso_asig_comp" value="0"></th>
-                      <th class="text-primary text-center" width="70%" >CURSO RELACIONADO</th>
+                      <th class="text-primary text-center" width="50%" >CURSO RELACIONADO</th>
+                      <th class="text-primary text-center" width="10%" >FECHA</th>
                     </tr>
                   </thead>
                   <tbody class="text-dark" id="tbody_pid_comp">
@@ -818,12 +821,14 @@
             <table id="table_habilidadespid" class="table table-hover table-sm" style="width:100%">
               <thead>
                 <tr>
-                  <th colspan="2" class="text-primary text-center" >ASIGNACIÓN DE CURSOS PARA HABILIDADES FUNCIONALES<input type="hidden" id="cant_curso_asig_hab" value="0"></th>
+                  <th class="text-primary text-center" >ASIGNACIÓN DE CURSOS PARA HABILIDADES FUNCIONALES<input type="hidden" id="cant_curso_asig_hab" value="0"></th>
+                  <th class="text-primary text-center" width="10%" >FECHA</th>
+                  <th width="5%"></th>
                 </tr>
                 
               </thead>
               <tbody class="text-dark" id="tbody_pid_hab">
-                <tr><td  colspan="2" class="text-center"><span class="editlink_naranja fw-bold small"  onclick="selcoursehab()"><i class="far fa-edit fa-lg"></i> Seleccionar cursos</span></td></tr>
+                <tr><td  colspan="3" class="text-center"><span class="editlink_naranja fw-bold small"  onclick="selcoursehab()"><i class="far fa-edit fa-lg"></i> Seleccionar cursos</span></td></tr>
               </tbody>
             </table>
           </div>
@@ -880,12 +885,8 @@
         <label for="txtlogros" class="form-label card-title py-0 text-primary"><i class="fas fa-user-tag pe-2"></i> LOGROS DEL COLABORADOR</label>
         <textarea class="form-control  form-control-sm" id="txtlogros" rows="3"></textarea>
       </div>
-      <hr>      
-      
-      <div class="my-3">
-        <label for="txtcoment" class="form-label card-title py-0 text-primary"><i class="fas fa-comment-dots pe-2"></i> COMENTARIOS DEL EVALUADOR</label>
-        <textarea class="form-control  form-control-sm" id="txtcoment" rows="3"></textarea>
-      </div>
+
+
       <hr>
       <div class="my-3">
           <label class="form-label card-title py-0 text-primary"><i class="fas fa-user-tie pe-2"></i> PROYECCIÓN DE DESARROLLO DE CARRERA</label>
@@ -908,6 +909,14 @@
             </div>
           </div>
       </div>
+
+      <hr>      
+      
+      <div class="my-3">
+        <label for="txtcoment" class="form-label card-title py-0 text-primary"><i class="fas fa-comment-dots pe-2"></i> COMENTARIOS DEL EVALUADOR</label>
+        <textarea class="form-control  form-control-sm" id="txtcoment" rows="3"></textarea>
+      </div>
+
     </div>
   </div>
 
@@ -944,6 +953,39 @@
   </form>
   <div id="rpt"></div>
   
+
+<!-- Modal -->
+
+
+ 
+
+    <div class="modal fade" id="leermas" tabindex="-1" aria-labelledby="leermas_competencia" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header bg-light text-primary py-1">
+            <h5 class="modal-title" id="leermas_competencia"></h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="mb-3 small">
+                <span class="fw-bold">Definición:</span>
+                <p id="leermas_definicion"></p>
+                <span class="fw-bold">Niveles Altos:</span>
+                <p id="leermas_nivel_alto"></p>
+                <span class="fw-bold">Niveles Bajos:</span>
+                <p id="leermas_nivel_bajo"></p>
+              </div>
+              
+            </form>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 @endsection
 <script type='text/javascript'>
@@ -1033,12 +1075,14 @@
           { if ($("#id_curso_com_"+p).length) 
             {  pid_id_curso_comp=$("#id_curso_com_"+p).val();
               pid_nom_curso_comp=$("#nom_curso_com_"+p).html();
+              pid_fecha_curso_comp=$("#fecha_curso_"+p).val();
             } 
             else {  
               pid_id_curso_comp=0; 
               pid_nom_curso_comp='-';
+              pid_fecha_curso_comp='-';
             }
-            pid_comp_cursos.push({"pid_id_comp": $("#pid_id_comp_"+p).val(), "pid_comp": $("#pid_comp_"+p).html(), "id_curso_com": pid_id_curso_comp, "nom_curso_com": pid_nom_curso_comp})
+            pid_comp_cursos.push({"pid_id_comp": $("#pid_id_comp_"+p).val(), "pid_comp": $("#pid_comp_"+p).html(), "id_curso_com": pid_id_curso_comp, "nom_curso_com": pid_nom_curso_comp,"fecha":pid_fecha_curso_comp})
           }
 
           if(countpid_comp==0){pid_comp_cursos.push({"pid_id_comp": 0, "pid_comp": '-', "id_curso_com": 0, "nom_curso_com": '-'})}
@@ -1056,12 +1100,14 @@
             if ( $("#id_curso_hab_"+p).length) 
             { pid_id_curso_hab= $("#id_curso_hab_"+p).val();
               pid_nom_curso_hab= $("#nom_curso_hab_"+p).html();
+              pid_fecha_curso_hab= $("#fecha_curso_hb_"+p).val();
             } 
             else {  
               pid_id_curso_hab=0; 
               pid_nom_curso_hab='-';
+              pid_fecha_curso_hab='-';
             }
-            pid_hab_cursos.push({ "id_curso_hab": pid_id_curso_hab, "nom_curso_hab": pid_nom_curso_hab })
+            pid_hab_cursos.push({ "id_curso_hab": pid_id_curso_hab, "nom_curso_hab": pid_nom_curso_hab, "fecha": pid_fecha_curso_hab })
           }
 
           if(countpid_hab<=1){pid_hab_cursos.push({ "id_curso_hab": 0, "nom_curso_hab": '-' })}
@@ -1145,7 +1191,7 @@
           }
           else
           { if( asig_curso_comp==1)
-            { mal('Por favor, asignar un curso a cada competencia en el Nuevo Plan Individual de Desarrollo.');}
+            { mal('Por favor, asignar un curso y fecha a cada competencia en el Nuevo Plan Individual de Desarrollo.');}
             else
             { mal('Por favor evaluar cada una de las opciones del formulario.');
               if(band_comp==1)
@@ -1213,7 +1259,7 @@
                   nrows++;
                   contendor  = $("#tbody_competencias").html();
                   nuevaFila   = '<tr>'+
-                  '<td style="text-align: justify; vertical-align: middle;"><small><span class="fw-bold text-primary">'+nrows+'- </span><span class="fw-bold text-primary" id="nomcomp_'+nrows+'">'+item.nomcomp+'</span>: '+item.definicion+'  </small><input type="hidden" id="p_'+nrows+'" value="'+item.idcomp+'"></td>'+
+                  '<td style="text-align: justify; vertical-align: middle;"><span class="fw-bold text-primary">'+nrows+'- </span><span class="fw-bold text-primary" id="nomcomp_'+nrows+'">'+item.nomcomp+'</span> '+item.definicion_resumen+'        <small><span class="text-primary" style="cursor:pointer" onclick="leermas('+item.idcomp+')")><u>Leer más</u></span></small><input type="hidden" id="p_'+nrows+'" value="'+item.idcomp+'"></td>'+
                   '<td class="align-middle"><small>'+
                     '<div class="likertt-scale align-items-center justify-content-center text-center my-1">';
                   for (var i = 1; i <= 10; i++) {                
@@ -1353,6 +1399,7 @@
                     const nuevaFila = '<tr>' +
                     '<td class="ps-4"><span id="pid_comp_'+fila+'">'+item.comp+ '</span><input type="hidden" id="pid_id_comp_'+fila+'" value="'+ item.id_comp +'"></td>' +
                     '<td class="text-center"><span id="curso_comp_'+fila+'">'+curso+'</span></td>' +
+                    '<td class="text-center"><input class="form-control form-control-sm" type="date" id="fecha_curso_'+fila+'" value="'+ item.fecha +'"/></td>' +
                     '</tr>';
                     $("#tbody_pid_comp").html(contendor+nuevaFila); 
                     
@@ -1363,13 +1410,15 @@
                   $('#instrucc_compe').removeClass('visually-hidden');
                 }
 
-                $("#tbody_pid_hab").html('<tr><td colspan="2" class="text-center"><span class="editlink_naranja fw-bold small"  onclick="selcoursehab()"><i class="far fa-edit fa-lg"></i> Seleccionar cursos</span></td></tr>');contendor  ="";nuevaFila   = "";
+                $("#tbody_pid_hab").html('<tr><td colspan="3" class="text-center"><span class="editlink_naranja fw-bold small"  onclick="selcoursehab()"><i class="far fa-edit fa-lg"></i> Seleccionar cursos</span></td></tr>');contendor  ="";nuevaFila   = "";
                 x=0;
                 jQuery(data.resp_resp_curhab).each(function(i, item){
                   x++;
                   contendor  = $("#tbody_pid_hab").html();
                   nuevaFila   = '<tr>'+
                     '<td  class="ps-4" style=" vertical-align: middle;"><span id="nom_curso_hab_'+x+'">'+item.curso+' </span><input type="hidden" id="id_curso_hab_'+x+'" value="'+item.id_curso+'"></td>'+
+                    
+                    '<td class="text-center"><input class="form-control form-control-sm" type="date" id="fecha_curso_hb_'+x+'" value="'+ item.fecha +'"/></td>' +
                     '<td class="text-center align-middle"><i class="fa-solid fa-trash-can dell" onclick=delrow(this,"programa") title="Eliminar Curso"></i></td></tr>';
                     $("#tbody_pid_hab").html(contendor+nuevaFila); 
                     $("#cant_curso_asig_hab").val(x);
@@ -1445,7 +1494,8 @@
                   contendor  = $("#tbody_resp_curcomp").html();
                   nuevaFila   = '<tr>'+
                     '<td class="ps-4 text-secondary" style=" vertical-align: middle;background-color: #F3F8FF;"><i class="fas fa-caret-right fa-xs pe-2"></i>'+item.comp+' </td>'+
-                    '<td class="ps-4 text-secondary" style=" vertical-align: middle;background-color: #F3F8FF;"><i class="fas fa-caret-right fa-xs pe-2"></i>'+item.curso+' </td></tr>';
+                    '<td class="ps-4 text-secondary" style=" vertical-align: middle;background-color: #F3F8FF;"><i class="fas fa-caret-right fa-xs pe-2"></i>'+item.curso+' </td>'+
+                    '<td class="ps-4 text-secondary" style=" vertical-align: middle;background-color: #F3F8FF;"><i class="fas fa-caret-right fa-xs pe-2"></i>'+item.fecha+' </td></tr>';
                     $("#tbody_resp_curcomp").html(contendor+nuevaFila); 
                 }); 
 
@@ -1454,7 +1504,9 @@
                 jQuery(data.resp_resp_curhab).each(function(i, item){
                   contendor  = $("#tbody_resp_curhab").html();
                   nuevaFila   = '<tr>'+
-                    '<td class="ps-4 text-secondary" style=" vertical-align: middle;background-color: #F3F8FF;"><i class="fas fa-caret-right fa-xs pe-2"></i>'+item.curso+' </td></tr>';
+                    '<td class="ps-4 text-secondary" style=" vertical-align: middle;background-color: #F3F8FF;"><i class="fas fa-caret-right fa-xs pe-2"></i>'+item.curso+' </td>'+
+                    '<td class="ps-4 text-secondary" style=" vertical-align: middle;background-color: #F3F8FF;"><i class="fas fa-caret-right fa-xs pe-2"></i>'+item.fecha+' </td>'+
+                    '</tr>';
                     $("#tbody_resp_curhab").html(contendor+nuevaFila); 
                 }); 
 
@@ -1826,8 +1878,8 @@
             else
             { if(gen=='F'){ 
               
-              document.getElementById('img_photo').setAttribute("src", "/storage/profiles/photo/ella.png");}
-              else { document.getElementById('img_photo').setAttribute("src", "/storage/profiles/photo/el.png");}}
+              document.getElementById('img_photo').setAttribute("src", "/FOCUSTalent/public/storage/profiles/photo/ella.png");}
+              else { document.getElementById('img_photo').setAttribute("src", "/FOCUSTalent/public/storage/profiles/photo/el.png");}}
           }
         });
     }
@@ -1921,6 +1973,8 @@
         '<td class="text-center">' +
           '<span id="curso_comp_'+fila+'">' +
           '<span class="editlink_naranja fw-bold small ps-4" onclick="selcourse('+ dato.id +','+fila+')"> <i class="far fa-edit fa-lg"></i> Seleccionar curso </span></span>' +
+          
+          '<td class="text-center"><input class="form-control form-control-sm" type="date" id="fecha_curso_'+fila+'"/></td>' +
         '</td>' +
         '</tr>';
         $("#tbody_pid_comp").append(nuevaFila); // Agregar nueva fila        
@@ -2016,6 +2070,7 @@
       {  if($("#tipo_curso").val()=='hab')
         { nuevaFila   = '<tr>'+
           '<td class="ps-4" style="text-align: justify; vertical-align: middle;"><span id="nom_curso_hab_'+fila+'">'+$('select[id="sel_curso_pid"] option:selected').text()+'</span><input type="hidden" id="id_curso_hab_'+fila+'" value="'+$("#sel_curso_pid").val()+'"></td>'+
+          '<td class="text-center"><input class="form-control form-control-sm" type="date" id="fecha_curso_hb_'+fila+'"/></td>' +
           '<td class="text-center align-middle"><i class="fa-solid fa-trash-can dell" onclick=delrow(this) title="Eliminar Curso"></i></td></tr>';
           $('#tbody_pid_'+$("#tipo_curso").val()+' tr:last').after(nuevaFila);
           $("#cant_curso_asig_hab").val(fila);
@@ -2066,7 +2121,7 @@
 
     function clean()
     {
-      document.getElementById('img_photo').setAttribute("src", "/storage/profiles/photo/el.png");
+      document.getElementById('img_photo').setAttribute("src", "/FOCUSTalent/public/storage/profiles/photo/el.png");
       document.getElementById('alert_noasignado').style.display="none";
       document.getElementById('div_desarrollo').style.display="none";
       document.getElementById('div_cumplimiento_pid').style.display="none";
@@ -2094,8 +2149,8 @@
       $("#tbody_respon").html('');
       $("#tbody_habilidad").html('');
       $("#tbody_cumplimiento_pid").html('');
-      $("#tbody_pid_comp").html('<tr><td colspan="2" class="text-center text-secondary">No mantiene GAP en las competencias organizacionales</td></td></tr>');
-      $("#tbody_pid_hab").html('<tr><td colspan="2" class="text-center"><span class="editlink_naranja fw-bold small"  onclick="selcoursehab()"><i class="far fa-edit fa-lg"></i> Seleccionar cursos</span></td></tr>');
+      $("#tbody_pid_comp").html('<tr><td colspan="3" class="text-center text-secondary">No mantiene GAP en las competencias organizacionales</td></td></tr>');
+      $("#tbody_pid_hab").html('<tr><td colspan="3" class="text-center"><span class="editlink_naranja fw-bold small"  onclick="selcoursehab()"><i class="far fa-edit fa-lg"></i> Seleccionar cursos</span></td></tr>');
       $("#txtlogros").val('');
       $("#txtcoment").val('');
       $('#instrucc_compe').addClass('visually-hidden');
@@ -2182,6 +2237,32 @@
                 });
             });
         }*/
+  function leermas(idcomp)
+  { $('#leermas_competencia').html('');
+    $('#leermas_definicion').html('');
+    $('#leermas_nivel_alto').html('');
+    $('#leermas_nivel_bajo').html('');
+    var _token = $('input[name="_token"]').val();
+    var parametros = {
+    "idcomp":idcomp,
+    "_token": _token};
+        $.ajax({
+          data:  parametros, 
+          url:   "{{ route('evaluacion.leermas') }}",
+          type:  'POST', 
+          cache: false,    
+          dataType: "json",      
+          success:  function (data) { 
+            jQuery(data).each(function(i, item){
+              $('#leermas_competencia').html(item.nombre);
+              $('#leermas_definicion').html(item.definicion);
+              $('#leermas_nivel_alto').html(item.nivel_alto);
+              $('#leermas_nivel_bajo').html(item.nivel_bajo);
+             }); 
+          }
+        });
+        $("#leermas").modal('toggle');
+    }
 
     function nuevoAjax(xmlhttp){
  
