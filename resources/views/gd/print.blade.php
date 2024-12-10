@@ -61,6 +61,8 @@
         $photo= $item->photo;
         $finicio= $item->finicio;
         $resultado= $item->resultado;
+        $categoria= $item->categoria;
+        $color= $item->color;
         $evaluado= $item->evaluado;   
         $logros= $item->logros;
         $comentarios= $item->comentarios;
@@ -115,7 +117,8 @@
                       <div class="col text-secondary small ml-2"><b>Posición:</b><span class="text-uppercase ml-2">{{ $despue }}</span></div>
                       <div class="col text-secondary small ml-2"><b>Departamento:</b><span class="text-uppercase ml-2">{{ $nameund }}</span></div>
                       <div class="col text-secondary small ml-2"><b>Fecha de Ingreso:</b><span class="text-uppercase ml-2"> {{ $finicio }}</span></div>
-                      <div class="col text-secondary small ml-2"><b>Resultado:</b><span class="text-uppercase ml-2 text-primary h6"> {{ $resultado }}%</span></div>
+                      <div class="col text-secondary small ml-2"><b>Resultado:</b><span class="text-uppercase ml-2 text-primary"> {{ $resultado }}%</span></div>
+                      <div class="col text-secondary small ml-2"><b>Categoría:</b><span style="color:{{ $color }}" class="ml-2"> {{ $categoria }}</span></div>
                     </div>
                   </td>
                 </tr>
@@ -271,10 +274,18 @@
                       </thead>
                       <tbody class="text-dark" id="tbody_resp_curcomp">
                         @foreach ($resp_curcomp as $array3 )  
+                        @php 
+                        $fecha='';
+                        if($array3->fecha!=null)
+                        {
+                          $fecha=explode("-", $array3->fecha);
+                          $fecha=$fecha[2].'-'.$fecha[1].'-'.$fecha[0];
+                        }
+                        @endphp
                         <tr>
                           <td class="pl-4"><li>{{ $array3->comp }}</li></td>
                           <td class="pl-4"><li>{{ $array3->curso }}</li></td>
-                          <td class="pl-4"><li>{{ $array3->fecha }}</li></td>
+                          <td class="pl-4"><li>{{ $fecha }}</li></td>
                         </tr>
                         @endforeach  
                       </tbody>            
@@ -291,10 +302,18 @@
                         </tr>
                       </thead>
                       <tbody class="text-dark" id="tbody_resp_curhab">
-                        @foreach ($resp_curhab as $array3 )
+                        @foreach ($resp_curhab as $array3 )                        
+                        @php 
+                        $fecha='';
+                        if($array3->fecha!=null)
+                        {
+                          $fecha=explode("-", $array3->fecha);
+                          $fecha=$fecha[2].'-'.$fecha[1].'-'.$fecha[0];
+                        }
+                        @endphp
                           <tr>
                             <td class="pl-4"><li>{{ $array3->curso }}</li></td>
-                            <td class="pl-4"><li>{{ $array3->fecha }}</li></td>
+                            <td class="pl-4"><li>{{ $fecha }}</li></td>
                           </tr>
                         @endforeach 
                       </tbody>        

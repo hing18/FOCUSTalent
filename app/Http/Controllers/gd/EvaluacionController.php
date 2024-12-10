@@ -121,10 +121,12 @@ class EvaluacionController extends Controller
         foreach ($query_evaluaciones as $r)
         {   $eval_id=$r->id; }
 
-        $data_evaluado=DB::select("SELECT eval.status, eval.resultado, eval.logros, eval.comentarios_evaldor, eval.carrera, eval.updated_at  FROM eval_evaluado_evaluador eval WHERE eval.id_evaluado=$id_evdo and eval.id_evaluador=$id_evaluador and eval.id_evaluacion=$eval_id");
+        $data_evaluado=DB::select("SELECT eval.status, eval.resultado, eval.categoria, eval.color, eval.logros, eval.comentarios_evaldor, eval.carrera, eval.updated_at  FROM eval_evaluado_evaluador eval WHERE eval.id_evaluado=$id_evdo and eval.id_evaluador=$id_evaluador and eval.id_evaluacion=$eval_id");
         foreach ($data_evaluado as $r)
         {   $status=$r->status;
             $resultado=$r->resultado;
+            $categoria=$r->categoria;
+            $color=$r->color;
             $logros=$r->logros;
             $comentarios=$r->comentarios_evaldor;
             $carrera=$r->carrera;
@@ -251,6 +253,8 @@ class EvaluacionController extends Controller
             "res_cursos"=>$query_res_cursos,
             "escala"=>$id_escala,
             "resultado"=>round($resultado,1),
+            "categoria"=>$categoria,
+            "color"=>$color,
             "logros"=>$logros,
             "comentarios"=>$comentarios,
             "carrera"=>$carrera,
@@ -323,9 +327,7 @@ class EvaluacionController extends Controller
         {  $data= request()->except('_token');
            $competencias= $data['competencias'];
            $tareas=  $data['tareas'];
-           $hab=  $data['hab'];
-
-           
+           $hab=  $data['hab'];           
 
             DB::table('eval_res_comp')->where('id_eval','=', $data['eval_id'])->where('id_evaluado','=', $data['cod_evaluado'])->where('id_evaluador','=', $data['cod_evaluador'])->delete();
             DB::table('eval_res_tar')->where('id_eval','=', $data['eval_id'])->where('id_evaluado','=', $data['cod_evaluado'])->where('id_evaluador','=', $data['cod_evaluador'])->delete();
@@ -342,7 +344,6 @@ class EvaluacionController extends Controller
             WHERE id_escala=$id_escala");
             $cumplimiento_comp=0;
             $cumplimiento_tar=0;
-
             $cumplimiento_hab=0;
 
             foreach ($query_escala_peso as $escala_peso)
@@ -585,13 +586,20 @@ class EvaluacionController extends Controller
 
             $total=round(($obtenido_comp + $obtenido_tar + $obtenido_hab + $obtenido_cumpli),7);
 
+            $categoria='-';$color='';
+            $query= DB::select("SELECT categoria, color FROM eval_res_escala WHERE id_eval = $id_eval and $total >= minimo and $total<= maximo");
+            foreach( $query as $res )
+            {   $categoria=$res->categoria;
+                $color=$res->color; }
+
+
             DB::table('eval_evaluado_evaluador')
             ->where('id_evaluacion','=', $data['eval_id'])
             ->where('id_evaluado','=', $data['cod_evaluado'])
             ->where('id_evaluador','=', $data['cod_evaluador'])
-            ->update(['status' => $data['estatus'],'logros' => trim($data['logros']),'comentarios_evaldor' => trim($data['comentarios']),'resultado'=>$total,'carrera' => $data['desarrollo']]);
+            ->update(['status' => $data['estatus'],'logros' => trim($data['logros']),'comentarios_evaldor' => trim($data['comentarios']),'resultado'=>$total,'categoria'=>$categoria, 'color'=>$color,'carrera' => $data['desarrollo']]);
 
-            $salidaJson=array("resultado"=>$total, );
+            $salidaJson=array("resultado"=>$total,"categoria"=>$categoria,"color"=>$color, );
     
             echo(json_encode($salidaJson));
 
@@ -609,10 +617,12 @@ class EvaluacionController extends Controller
             $status= $data['estatus_rpt'];
             $imgData =  $data['image'];
 
-            $data_evaluado=DB::select("SELECT eval.status, eval.resultado, eval.logros, eval.comentarios_evaldor, eval.carrera, eval.updated_at  FROM eval_evaluado_evaluador eval WHERE eval.id_evaluado=$id_evdo and eval.id_evaluador=$id_evaluador and eval.id_evaluacion=$eval_id");
+            $data_evaluado=DB::select("SELECT eval.status, eval.resultado, eval.categoria, eval.color, eval.logros, eval.comentarios_evaldor, eval.carrera, eval.updated_at  FROM eval_evaluado_evaluador eval WHERE eval.id_evaluado=$id_evdo and eval.id_evaluador=$id_evaluador and eval.id_evaluacion=$eval_id");
             foreach ($data_evaluado as $r)
             {   $status=$r->status;
                 $resultado=$r->resultado;
+                $categoria=$r->categoria;
+                $color=$r->color;
                 $logros=$r->logros;
                 $comentarios=$r->comentarios_evaldor;
                 $carrera=$r->carrera;
@@ -682,6 +692,8 @@ class EvaluacionController extends Controller
                 "finicio"=>$finicio,
                 "evaluado"=>$data_evaluado,
                 "resultado"=>round($resultado,1),
+                "categoria"=>$categoria,
+                "color"=>$color,
                 "logros"=>$logros,
                 "comentarios"=>$comentarios,
                 "carrera"=>$carrera,

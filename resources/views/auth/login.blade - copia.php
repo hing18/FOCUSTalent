@@ -64,7 +64,7 @@
                             <p class="text-center small"><b>Iniciar Sesión</b></p>
                           </div>
         
-                          <form class="row g-3" action="{{route('login')}}" method="post">
+                          <form class="row g-3" action="{{route('/login')}}" method="post">
                             @csrf
                             <div class="col-12">
                               <label for="email" class="form-label">Correo</label>

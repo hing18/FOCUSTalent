@@ -61,7 +61,7 @@
             @php if($pos->status=='true'){ $status='<i class="fa-solid fa-circle-check text-success fa-lg"></i>';}else{ $status='<i class="fa-solid fa-triangle-exclamation text-warning fa-lg"></i>';}
             @endphp
             <tr>
-              <td>{{$pos->descpue}}</td>
+              <td>{{$pos->id}} - {{$pos->descpue}}</td>
               <td>{{$pos->descrip}}</td>
               <td>{{$pos->nomue}}</td>
               <td>{{$pos->descpuej}}</td>

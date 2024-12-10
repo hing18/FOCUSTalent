@@ -55,7 +55,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://intranet.itregency.com'),
+    'url' => env('APP_URL', 'https://intranet.itregency.com/FOCUSTalent'),
 
     'asset_url' => env('ASSET_URL'),
 

@@ -301,8 +301,13 @@
 
                           <div class="row mb-2 visually-hidden" id="div_resultado">
                             <div class="col-auto label fw-bold text-secondary">Resultado:</div>
-                            <div id="lb_resultado" class="col-lg-9 col-md-8 text-primary text-uppercase fw-bold h5"> </div>
+                            <div id="lb_resultado" class="col-lg-9 col-md-8 text-primary text-uppercase fw-bold"> </div>
                             <input type="hidden" id="estatus" value="">
+                          </div>
+
+                          <div class="row mb-2 visually-hidden" id="div_calificacion">
+                            <div class="col-auto label fw-bold text-secondary">Categoría:</div>
+                            <div id="lb_calificacion" class="col-lg-9 col-md-8 text-primary fw-bold"> </div>
                           </div>
 
                         </div>
@@ -1167,7 +1172,7 @@
               success:  function (data) { 
                 if(estatus==3)
                 {  resultado=Number(data.resultado);
-                  $('#div_res_'+cod_evaluado).html(resultado.toFixed(1)+"%");
+                  $('#div_res_'+cod_evaluado).html(resultado.toFixed(1)+"% ");
                   $('#link_eval_'+cod_evaluado).html('<div class="edit"  onclick="eval('+cod_evaluado+','+estatus+')">'+
                   '<span class="text-primary fw-bold"><i class="fas fa-search fa-lg pe-2"></i>Evaluado</span></div>'); }
                 if(estatus==2)
@@ -1285,8 +1290,8 @@
 
               if(data.respons.length>0)
               { 
-                document.getElementById('div_respon').style.display="block";   
-                x=0;cont_respon=0;
+                  document.getElementById('div_respon').style.display="block";   
+                  x=0;cont_respon=0;
                   jQuery(data.respons).each(function(i, item){ 
                     contendor  = $("#tbody_respon").html();
                     cont_respon++;
@@ -1326,7 +1331,6 @@
                 jQuery(data.habilidades).each(function(i, item){ 
                   contendor  = $("#tbody_habilidad").html();
                   x++;
-                  
                   habilitado0="";habilitado3="";habilitado5="";
                   if(item.opt==0) { habilitado0='checked';}  
                   if(item.opt==3) { habilitado3='checked';}  
@@ -1368,11 +1372,11 @@
 
               if(data.res_cursos.length>0)
               {
-                 document.getElementById('div_cumplimiento_pid').style.display="block";  
-                tbody_cumplimiento_pid
-                $("#tbody_cumplimiento_pid").html('');
-                x=0;
-                jQuery(data.res_cursos).each(function(i, item){ 
+                  document.getElementById('div_cumplimiento_pid').style.display="block";  
+                  tbody_cumplimiento_pid
+                  $("#tbody_cumplimiento_pid").html('');
+                  x=0;
+                  jQuery(data.res_cursos).each(function(i, item){ 
                   contendor  = $("#tbody_cumplimiento_pid").html();
                   x++;
                   nuevaFila   = '<tr><td class="ps-4 text-secondary text-start align-middle"><span id="nom_curso_cumpli_'+x+'">'+item.nom_curso+'</span><input type="hidden" id="id_curso_cumpli_'+x+'" value="'+item.id_curso+'"></td><td class="align-middle text-center"><span id="nota_curso_cumpli_'+x+'">'+item.nota+'</span></td></tr>';
@@ -1381,18 +1385,14 @@
                   $("#countcursos").val(x);
               }
               
-
                 $("#tbody_pid_comp").html('');
                 // Iterar sobre los resultados para agregar filas a la tabla de los PID de  las competencias
                 if(data.resp_curcomp.length>0)
                 { $("#cant_curso_asig_comp").val(0);
 
-  
                   jQuery(data.resp_curcomp).each(function(i, item){
                     contendor  = $("#tbody_pid_comp").html();
-                  
                     fila=$("#tbody_pid_comp tr").length+1;
-
                     curso='<span class="editlink_naranja fw-bold small ps-4" onclick="selcourse('+ item.id_comp +','+fila+')"><i class="far fa-edit fa-lg"></i> Seleccionar Curso ';
                     if(item.curso!=null)
                     { curso='<span id="nom_curso_com_'+fila+'">'+item.curso+ '</span><span class="editlink_naranja fw-bold small ps-4" onclick="selcourse('+ item.id_comp +','+fila+')"><i class="far fa-edit fa-lg"></i> Cambiar </span><input type="hidden" id="id_curso_com_'+fila+'" value="'+item.id_curso+'">';}
@@ -1402,7 +1402,6 @@
                     '<td class="text-center"><input class="form-control form-control-sm" type="date" id="fecha_curso_'+fila+'" value="'+ item.fecha +'"/></td>' +
                     '</tr>';
                     $("#tbody_pid_comp").html(contendor+nuevaFila); 
-                    
                     if(item.curso!=null)
                     { $("#cant_curso_asig_comp").val(parseInt($("#cant_curso_asig_comp").val())+1);}
                   }); 
@@ -1454,11 +1453,13 @@
               $('#resp_desarrollo').removeClass('visually-hidden');
               $('#resp_resumen').removeClass('visually-hidden');
               $('#div_resultado').removeClass('visually-hidden');
+              $('#div_calificacion').removeClass('visually-hidden');
               $('#div_f_evaluacion').removeClass('visually-hidden');
               $('#bto_continuar').addClass('visually-hidden');
               $('#bto_print').removeClass('visually-hidden');
               $('#bto_guarda').addClass('visually-hidden');
               $('#lb_resultado').html(data.resultado+"%");
+              $('#lb_calificacion').html("<div style=color:"+data.color+">"+data.categoria+"</div>");
               $('#lb_f_evaluacion').html(data.feval);
  
               //-------------- RESP TABLA GAB
@@ -1491,21 +1492,34 @@
                 $("#tbody_resp_curcomp").html('');contendor  ="";nuevaFila   = "";
                 if(data.resp_curcomp.length>0){ $('#div_pid_cursos_com').removeClass('visually-hidden'); $('#div_pid_titulo').removeClass('visually-hidden');}
                 jQuery(data.resp_curcomp).each(function(i, item){
+                  nueva_fecha='';
+                  if(item.fecha!=null)
+                  {
+                    fecha= item.fecha.split('-');
+                    nueva_fecha='<i class="fas fa-caret-right fa-xs pe-2"></i>'+fecha[2]+'-'+fecha[1]+'-'+fecha[0];
+                  }
                   contendor  = $("#tbody_resp_curcomp").html();
                   nuevaFila   = '<tr>'+
                     '<td class="ps-4 text-secondary" style=" vertical-align: middle;background-color: #F3F8FF;"><i class="fas fa-caret-right fa-xs pe-2"></i>'+item.comp+' </td>'+
                     '<td class="ps-4 text-secondary" style=" vertical-align: middle;background-color: #F3F8FF;"><i class="fas fa-caret-right fa-xs pe-2"></i>'+item.curso+' </td>'+
-                    '<td class="ps-4 text-secondary" style=" vertical-align: middle;background-color: #F3F8FF;"><i class="fas fa-caret-right fa-xs pe-2"></i>'+item.fecha+' </td></tr>';
+                    '<td class="ps-4 text-secondary" style=" vertical-align: middle;background-color: #F3F8FF;">'+nueva_fecha+'</td></tr>';
                     $("#tbody_resp_curcomp").html(contendor+nuevaFila); 
                 }); 
 
                 $("#tbody_resp_curhab").html('');contendor  ="";nuevaFila   = "";
                 if(data.resp_resp_curhab.length>0){ $('#div_pid_cursos_hab').removeClass('visually-hidden'); $('#div_pid_titulo').removeClass('visually-hidden');}
                 jQuery(data.resp_resp_curhab).each(function(i, item){
+                  nueva_fecha='';
+                  if(item.fecha!=null)
+                  {
+                    fecha= item.fecha.split('-');
+                    nueva_fecha='<i class="fas fa-caret-right fa-xs pe-2"></i>'+fecha[2]+'-'+fecha[1]+'-'+fecha[0];
+                  }
+                  
                   contendor  = $("#tbody_resp_curhab").html();
                   nuevaFila   = '<tr>'+
                     '<td class="ps-4 text-secondary" style=" vertical-align: middle;background-color: #F3F8FF;"><i class="fas fa-caret-right fa-xs pe-2"></i>'+item.curso+' </td>'+
-                    '<td class="ps-4 text-secondary" style=" vertical-align: middle;background-color: #F3F8FF;"><i class="fas fa-caret-right fa-xs pe-2"></i>'+item.fecha+' </td>'+
+                    '<td class="ps-4 text-secondary" style=" vertical-align: middle;background-color: #F3F8FF;">'+nueva_fecha+'</td>'+
                     '</tr>';
                     $("#tbody_resp_curhab").html(contendor+nuevaFila); 
                 }); 
@@ -1765,8 +1779,8 @@
                               if (!customLabel) {
                                   customLabel = chart.options.chart.custom.label =
                                       chart.renderer.label(
-                                          'Resultado<br/>' +
-                                          '<strong>'+$('#lb_resultado').html()+'</strong>')
+                                          
+                                          '<strong>'+$('#lb_resultado').html()+'</strong><br>'+$('#lb_calificacion').html())
                                           .css({
                                               color: '#000',
                                               textAnchor: 'middle' })
@@ -2125,7 +2139,8 @@
       document.getElementById('alert_noasignado').style.display="none";
       document.getElementById('div_desarrollo').style.display="none";
       document.getElementById('div_cumplimiento_pid').style.display="none";
-      $('#div_resultado').addClass('visually-hidden');      
+      $('#div_resultado').addClass('visually-hidden');    
+      $('#div_calificacion').addClass('visually-hidden');  
       $('#div_f_evaluacion').addClass('visually-hidden');
       $('#alert_noasignado').addClass('visually-hidden');
       $('#bto_guarda').removeClass('visually-hidden');

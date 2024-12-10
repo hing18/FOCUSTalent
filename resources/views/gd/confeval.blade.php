@@ -170,7 +170,7 @@
   </div>
 </div>
 
-<!-- Modal -->
+<!-- Modal CAMBIA PASS-->
 <div class="modal fade" id="cambia-pass" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
@@ -212,7 +212,7 @@
   </div>
 </div>
 
-<!-- Modal -->
+<!-- Modal  CAMBIA EVALUADOR-->
 <div class="modal fade" id="cambiaevaldor" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg  modal-dialog-scrollable">
     <div class="modal-content">
@@ -251,6 +251,45 @@
       <div class="modal-footer py-2 bg-light">
         <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal"><i class="fa-solid fa-arrow-left pr-2"></i> Cancelar</button>
         <button type="button" class="btn btn-primary btn-sm" onclick="guardaevaldor()"  tabindex="-1" id="bto_guarda" style="display: block"><i class="fas fa-save pr-2"></i> Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal CAMBIA PUESTO-->
+<div class="modal fade" id="cambiarpuesto" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header py-2 bg-light">
+        <h6 class="modal-title fs-5 text-secondary" id="staticBackdropLabel"><i class="fa-solid fa-person-circle-check fa-lg pe-2"></i>  <span class="text-primary">Cambiar Puesto a Evaluar</span></h6>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body small">
+        <span id="lb_nombre_puesto"></span>
+        <input type="hidden" value="0" id="fil_puesto">
+        <input type="hidden" value="0" id="ideval_puesto">
+        <div class="form-group row text-center mt-4">
+          <label for="sel_unidad" class="col-sm-auto col-form-label">Unidad: </label>
+          <div class="col-sm-8">
+            <select class="form-select form-select-sm" id="sel_unidad">
+>
+            </select>
+          </div>
+        </div>
+        <div class="form-group row text-center mt-4">
+          <label for="sel_puesto" class="col-sm-auto col-form-label">Puesto Evaluado: </label>
+          <div class="col-sm">
+            <select class="form-select form-select-sm" id="sel_puesto">
+>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer py-2 bg-light">
+        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal"><i class="fa-solid fa-arrow-left pr-2"></i> Cancelar</button>
+        <button type="button" class="btn btn-primary btn-sm" onclick="cambiapuesto()"  tabindex="-1" id="bto_guarda" style="display: block"><i class="fas fa-save pr-2"></i> Guardar</button>
       </div>
     </div>
   </div>
@@ -302,7 +341,7 @@
                   '<div class="dropdown py-0">'+
                     '<button class="btn btn-sm btn-sm dropdown-toggle btn-outline-primary" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">Acciones</button>'+
                       '<ul class="dropdown-menu p-0" aria-labelledby="dropdownMenu2">'+
-
+                        '<li><button class="dropdown-item pb-0 edit" data-bs-toggle="modal" data-bs-target="#cambiarpuesto" type="button" onclick="cambiapuesto('+cod+','+x+')"><i class="fa-solid fa-person-circle-check pe-1"></i> Cambiar Puesto</button></li>'+
                         '<li><button class="dropdown-item pb-0 edit" data-bs-toggle="modal" data-bs-target="#staticBackdrop" type="button" onclick="cambiaestado('+cod+','+item.status+','+x+')"><i class="fas fa-sync pe-1"></i> Cambiar Estado</button></li>'+
                         '<li><button class="dropdown-item pb-0 edit" data-bs-toggle="modal" data-bs-target="#cambiaevaldor" type="button" onclick="cambiaevaldor('+cod+','+x+')"><i class="fas fa-people-arrows pe-1"></i> Cambiar Evaluador</button></li>'+
                       '</ul>'+
@@ -362,6 +401,43 @@
     $('#fil').val(x);
     $('#ideval').val(eval);
     $('#sel_estatus').val(st);
+  }
+
+  function cambiapuesto(eval,x)
+  { $('#lb_nombre_puesto').html($('#code_evaldo_'+x).html()+ ' - '+$('#nom_evaldo_'+x).html());
+    $('#fil_puesto').val(x);
+    $('#ideval_puesto').val(eval);
+    
+    var parametros = {
+    "eval_id": eval,
+    "evaldo_id": $('#code_evaldo_'+x).html(),
+    "_token" : $('input[name="_token"]').val()}
+    $.ajax({
+      data:  parametros,
+      url:   "{{ route('evaluacion.cambiapuesto') }}",
+      type:  'POST', 
+      cache: true, 
+      dataType: "json",
+      success:  function (data) {
+        const table = new DataTable('#table_evaluadores');
+        table.clear().draw();
+        i=0;
+        jQuery(data).each(function(i, item){ 
+          i++;
+          var nombre=item.prinombre + " " + item.priapellido;
+          var sel="";
+          if(item.id_evaluador==$('#code_evaldor_'+x).html())
+          { sel="checked";}
+           table.row.add([
+            '<div style="text-align: center; vertical-align: middle;"><input class="form-check-input" style="width: 15px; height: 15px; cursor: pointer;" value="'+item.id_evaluador+'" type="radio" name="chk[]" id="chk_'+i+'" '+sel+'></div>',
+            '<div style="text-align: center; vertical-align: middle;">'+item.id_evaluador+'</div>',
+            nombre,
+            item.descpue,
+          ]).draw(false);
+        });
+      }
+    });
+
   }
 
   function cambiapass(eval,x)
