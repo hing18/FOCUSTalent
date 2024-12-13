@@ -1,10 +1,14 @@
 <!doctype html>
 <html lang="en">
+  
     <head>
         <title>{{ config('app.name', 'Laravel') }}</title>
         <!-- Required meta tags -->
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate" />
+        <meta http-equiv="Pragma" content="no-cache" />
+        <meta http-equiv="Expires" content="0" />
 
         <script>
           // Paso 1: Calcular el tiempo total de la sesión y el tiempo de expiración
@@ -59,6 +63,7 @@
 
         <!-- Template Main CSS File -->
         <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet">
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     </head>
 
@@ -172,7 +177,13 @@
                     <label for="email" class="form-label">Correo</label>
                     <div class="input-group">
                       <span class="input-group-text" id="inputGroupPrepend"><i class="fas fa-at text-secondary"></i></span>
-                      <input type="email" id="email" name="email" class="form-control" required>
+                      <input type="email" 
+                      id="email" 
+                      name="email" 
+                      class="form-control" 
+                      value="{{ old('email') }}" 
+                      required 
+                      autofocus>
                     </div>
                   </div>
                   <div class="col-12">
@@ -204,6 +215,20 @@
   <footer id="footer" class="footer">
     <div class="copyright">
       
+      @if (session('error'))
+      <div class="alert alert-danger" id="error-message">
+        <i class="fa-solid fa-triangle-exclamation pe-2"></i>
+          {{ session('error') }}
+      </div>
+      <script>
+        // Usar jQuery para ocultar el mensaje después de 3 segundos
+        $(document).ready(function() {
+            setTimeout(function() {
+                $('#error-message').fadeOut();  // Oculta con un desvanecimiento
+            }, 3000); // 3000 ms = 3 segundos
+        });
+      </script>
+  @endif
     </div>
   </footer><!-- End Footer -->
 

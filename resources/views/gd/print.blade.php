@@ -72,6 +72,10 @@
         $resp_curhab  = $item->resp_resp_curhab;
         $resp_curadic  = $item->resp_curadic;
         $resp_comp = $item->resp_comp;
+
+        $resp_kpi = $item->res_kpi;
+        $resp_kpi_cumpli = $item->resp_kpi_cumpli;
+
         $resp_respon = $item->resp_respon;
         $resp_tar = $item->resp_tar;
         $resp_hab = $item->resp_hab;
@@ -213,6 +217,39 @@
                           <td class="text-center">{{ round($tot_gap,1) }}%</td></tr>
                         @endif
 
+
+
+
+
+                    
+                        @php $band= 0; @endphp
+                        @if (count($resp_kpi_cumpli)>0)
+                          @php                      
+                            $tot_peso= 0; $tot_pts = 0; $tot_gap= 0; $band= 1;
+                          @endphp
+                          @foreach ($resp_kpi_cumpli as $array3 )
+                            @php                            
+                              $tipo="";                            
+                              $tot_peso= $tot_peso + $array3->peso;
+                              $tot_pts= $tot_pts + $array3->obtenido;
+                              $tot_gap= $tot_gap + ($array3->peso-$array3->obtenido);
+                              
+                              $total_peso= $total_peso + $array3->peso;
+                              $total_pts= $total_pts + $array3->obtenido;
+                              $total_gap= $total_gap + ($array3->peso-$array3->obtenido);
+                            @endphp
+                          @endforeach
+                        @endif
+                        
+                        @if ($band==1)
+                          <tr><td class="text-left">Cumplimiento de KPI </td>
+                          <td class="text-center">{{ round($tot_peso,0) }}% </td>
+                          <td class="text-center" style="vertical-align: middle; text-center">{{ round($tot_pts,1) }}%</td>
+                          <td class="text-center">{{ round($tot_gap,1) }}%</td></tr>
+                        @endif
+
+
+
                     
                         @php $band= 0; @endphp
                         @if (count($resp_cursos)>0)
@@ -261,7 +298,7 @@
           <small>
           <div class="card mb-3 border border-info" style="background-color: #F3F8FF">
             <div class="card-body p-0">                         
-              <label class="card-title text-primary pl-2 h6" ><i class="fas fa-address-card"></i> Plan Individual de Desarrollo</label>
+              <label class="card-title text-primary pl-2 h6" > Plan Individual de Desarrollo</label>
                 <!-- PID DE COMPETENCIAS-->
                 @if (count($resp_curcomp)>0)
                     <table id="table_resp_curcomp" class="table table-sm small table-borderless pl-2 pt-0" >
@@ -525,6 +562,72 @@
                 </div>
               </div>
             @endif
+
+            @if (count($resp_kpi_cumpli)>0)     
+              <!--- RESPUESTAS CUMPLIMIENTO KPI -->
+              <div class="card shadow mb-3">  
+                <div class="card-header text-info pl-2 p-1">
+                  <i class="fa-solid fa-chart-line pe-2"></i> Cumplimiento de Metas
+                </div>
+                <div class="card-body justify-content-center p-1">
+                  
+                  <div class="row justify-content-center align-items-center text-center">
+                    <div class="col-auto text-center">             
+                      <table class="table table-sm small" style="width:100%">
+                        <thead>
+                          <tr>
+                            <th class="text-primary text-center"width="50%"></th>
+                            <th class="text-primary text-center"width="20%">% PROMEDIO</th>
+                            <th class="text-primary text-center" width="10%" >VALOR</th>
+                            <th class="text-primary text-center" width="10%" >PERSONA</th>
+                            <th class="text-primary text-center" width="10%" >GAP</th>
+                          </tr>
+                        </thead>              
+                        <tbody class="text-dark" id="tbody_resp_cumpli_kpi_total">
+                          @foreach ($resp_kpi_cumpli as $array3 )
+                            @php
+                                $tot_pts = $tot_pts + $array3->obtenido;
+                                $tot_peso = $tot_peso + $array3->peso;
+                                $tot_gap = $tot_gap + ($array3->peso - $array3->obtenido);
+                            @endphp
+                            <tr class="table-primary">
+                              <td class="text-center text-primary fw-bold">PROMEDIO DE CUMPLIMIENTO DE METAS</td>
+                              <td style="text-align: center; vertical-align: middle;" class="text-primary text-small fw-bold">{{ $array3->cumplimiento_promedio }}</td>
+                              <td style="text-align: center; vertical-align: middle;" class="text-primary text-small fw-bold">{{ round($array3->peso,1) }}</td>
+                              <td style="text-align: center; vertical-align: middle;" class="text-primary text-small fw-bold">{{ round($array3->obtenido,1) }}</td>
+                              <td style="text-align: center; vertical-align: middle;" class="text-primary text-small fw-bold">{{ round($tot_gap,1) }}</td>
+                            </tr>
+                          @endforeach
+                        </tbody>
+                      </table>
+                    </div>      
+  
+                    
+                      <table class="table table-striped table-sm small" style="width:60%; margin-left:20%;">
+                        <thead>
+                          <tr>
+                            <th class="text-secondary text-center table-info" width="70%" style="padding:1;">INDICADOR</th>
+                            <th class="text-secondary text-center table-info" width="30%" style="padding:1;">% CUMPLIMIENTO</th>
+                          </tr>
+                        </thead>
+                        <tbody >
+                          @foreach ($resp_kpi as $array3 )
+                          <tr>
+                            <td class="text-center" style="padding:1;">{{ $array3->nom_kpi }}</td>
+                            <td style="text-align: center; vertical-align: middle; padding:0; margin:0" class="text-primary text-small">{{ round($array3->real,1) }}</td>
+                            
+                          </tr>
+                          @endforeach
+                        </tbody>
+                      </table>
+                    
+                    
+                  </div> 
+                </div>
+              </div>
+            @endif
+
+
             @if (count($resp_cursos)>0)     
               <div class="card shadow mb-3">  
                 <div class="card-header text-info pl-2 p-1">
@@ -579,6 +682,7 @@
                 </div>
               </div>
             @endif
+
             <div class="card shadow mb-3 " id="resp_desarrollo"> 
               <div class="card-body p-0">
                 <div class="mb-3 ">

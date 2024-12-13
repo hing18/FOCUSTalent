@@ -237,14 +237,18 @@ Auth::routes();
     ->middleware(['auth', 'session.expired'])
     ->group(function(){
         Route::get('config','index')->name('confeval');
-         Route::post('evaluados/levaldos','levaldos')->name('evaluacion.levaldos');
-         Route::post('evaluados/levaldores','levaldores')->name('evaluacion.levaldores');
-         Route::post('evaluados/mailevaluador','mailevaluador')->name('evaluacion.mailevaluador');
-         Route::post('evaluados/resetpass','resetpass')->name('evaluacion.resetpass');
+        Route::post('evaluados/levaldos','levaldos')->name('evaluacion.levaldos');
+        Route::post('evaluados/cambiapuesto','cambiapuesto')->name('evaluacion.cambiapuesto');
+        Route::post('evaluados/cambiaunidad','cambiaunidad')->name('evaluacion.cambiaunidad');
+        Route::post('evaluados/cambianewpuesto','cambianewpuesto')->name('evaluacion.cambianewpuesto');
+        
+        Route::post('evaluados/levaldores','levaldores')->name('evaluacion.levaldores');
+        Route::post('evaluados/mailevaluador','mailevaluador')->name('evaluacion.mailevaluador');
+        Route::post('evaluados/resetpass','resetpass')->name('evaluacion.resetpass');
          
-         Route::post('evaluados/evaluadores','evaluadores')->name('evaluacion.evaluadores');
-         Route::post('evaluados/updateevaldor','updateevaldor')->name('evaluacion.updateevaldor');
-         Route::post('evaluados','editstatus')->name('evaluacion.editstatus');
+        Route::post('evaluados/evaluadores','evaluadores')->name('evaluacion.evaluadores');
+        Route::post('evaluados/updateevaldor','updateevaldor')->name('evaluacion.updateevaldor');
+        Route::post('evaluados','editstatus')->name('evaluacion.editstatus');
     });
 // ENVIO DE EMAIL
 

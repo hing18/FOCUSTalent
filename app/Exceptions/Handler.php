@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Session\TokenMismatchException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -26,5 +27,15 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+
+    public function render($request, Throwable $exception)
+    {
+        // Verifica si es una excepción por token CSRF inválido (expiración de sesión)
+        if ($exception instanceof TokenMismatchException) {
+            return redirect('/login')->with('error', 'Tu sesión ha expirado. Por favor, vuelve a iniciar sesión.');
+        }
+
+        return parent::render($request, $exception);
     }
 }

@@ -36,6 +36,49 @@ class ConfevalController extends Controller
         }
     }
 
+    public function cambiapuesto(Request $request)
+    {
+        $data= request()->except('_token');        
+        $code_puestoevaldo= $data['code_puestoevaldo'];        
+        $query_unidades = Db::select("SELECT id, nameund FROM estructuras where id_tipo=2 order by nameund");        
+        $query_puestos = Db::select("SELECT pue1.id,pue1.descpue, pue1.idue FROM posiciones pue1 INNER JOIN posiciones pue2 on (pue2.idue=pue1.idue and pue2.id=$code_puestoevaldo ) order by pue1.descpue");
+        $salidaJson=array(
+            "unidades"=>$query_unidades,
+            "puestos"=>$query_puestos,               
+        );
+        echo(json_encode($salidaJson));
+    }
+
+    public function cambiaunidad(Request $request)
+    {
+        $data= request()->except('_token');        
+        $sel_unidad= $data['sel_unidad'];                
+        $query_puestos = Db::select("SELECT pue1.id,pue1.descpue, pue1.idue FROM posiciones pue1 where pue1.idue=$sel_unidad order by pue1.descpue");
+        $salidaJson=array(
+            "puestos"=>$query_puestos,               
+        );
+        echo(json_encode($salidaJson));
+    }
+
+    public function cambianewpuesto(Request $request)
+    {
+        $data= request()->except('_token');
+        $id_eval= $data['id_eval'];  
+        $cod_evaluado= $data['cod_evaluado'];  
+        $sel_puesto= $data['sel_puesto'];  
+
+        $query = Db::select("SELECT eval.status FROM eval_evaluado_evaluador eval where id_evaluacion=$id_eval and id_evaluado=$cod_evaluado");
+        foreach ($query as $r)
+        {   $status=$r->status;}
+        if($status==1)
+        {
+            DB::table('eval_evaluado_evaluador')
+                ->where('id_evaluacion','=', $id_eval)->where('id_evaluado','=', $cod_evaluado)
+                ->update(['id_posicion_evaluado' => $sel_puesto]);
+        }
+        echo $status;
+    }
+
     public function levaldos(Request $request)
     {
         if (isset(Auth::user()->id)) 
@@ -49,6 +92,7 @@ class ConfevalController extends Controller
                 'eval.id_posicion_evaluado',   
                 'pos.descpue',
                 'pos.iduni',
+                'pos.idue',
                 'est.nameund',
                 'pos.iddf',
                 'eval.status',

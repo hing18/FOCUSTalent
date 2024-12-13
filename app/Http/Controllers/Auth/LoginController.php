@@ -52,10 +52,7 @@ class LoginController extends Controller
         foreach ($query_reset as $r)
         {   $reset_pass=$r->reset_pass; }
         if($reset_pass==0)
-        { 
-
-
-            $query = DB::select("SELECT link 
+        {   $query = DB::select("SELECT link 
             FROM menu 
             WHERE id IN (
                 SELECT id_menu 
@@ -70,9 +67,6 @@ class LoginController extends Controller
             LIMIT 1;");
             foreach ($query as $r)
             {   $pag=$r->link; }
-            
-
-
             return redirect()->route($pag);  // Redirigir a la página de evaluación por defecto
         }else{
             return view('conf.reset');
@@ -81,11 +75,28 @@ class LoginController extends Controller
 
     public function logout(Request $request)
     {
-        Auth::logout(); // Desautentica al usuario
-               // Invalidar la sesión y regenerar el token CSRF
-               $request->session()->invalidate();
-               $request->session()->regenerateToken();
-        return redirect('/login'); // Redirige al usuario
-    }
+        // Desautentica al usuario
+        Auth::logout();
+        
+        // Invalidar la sesión y regenerar el token CSRF
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        
+        // Limpiar cookies de sesión
+        $cookies = cookie()->forget('laravel_session');   // Cookie de sesión
+        $cookies = cookie()->forget('XSRF-TOKEN');         // Cookie del token CSRF
     
+        // Redirigir al login y evitar el almacenamiento en caché
+        return redirect('/login')
+            ->header('Cache-Control', 'no-cache, no-store, must-revalidate')
+            ->header('Pragma', 'no-cache')
+            ->header('Expires', '0')
+            ->withCookie($cookies); // Añadir cookies para borrar
+    }
+
+    protected function sendFailedLoginResponse(Request $request)
+    {
+        // Personaliza el mensaje de error
+        return redirect()->back()->with('error', 'Las credenciales no son correctas.')->withInput();
+    }
 }

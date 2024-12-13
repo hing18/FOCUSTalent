@@ -10,6 +10,7 @@ use App\Models\gd\eval_res_cursos_pid_comp;
 use App\Models\gd\eval_res_cursos_pid_hab;
 use App\Models\gd\eval_res_gap;
 use App\Models\gd\eval_res_hab;
+use App\Models\gd\eval_res_kpi_cumpli;
 use App\Models\gd\eval_res_tar;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
@@ -155,7 +156,8 @@ class EvaluacionController extends Controller
                 $iddf=$r->iddf;
             }
             $id_escala="";$query_habilidades="";$query_res_cursos="";$query_tareas="";$query_respon = "";$data_competencias="";$query_resp_comp="";$query_resp_gap="";$query_resp_curcomp="";$query_resp_curhab="";$query_resp_curadic="";$query_resp_respon="";$query_resp_tar="";
-            $query_resp_hab="";$query_resp_cursos="";
+            $query_resp_hab="";$query_resp_cursos="";$query_res_kpi="";$query_res_kpi_cumpli="";
+            $prom_metas=0;
         if($status<=2)
         {    
             if($iddf>0)
@@ -212,13 +214,23 @@ class EvaluacionController extends Controller
                 WHERE res.id_eval=$eval_id and res.cod_colab=$id_evdo and id_curso<>23484");# 23484 es "como navegar en UBITS" este curso no se toma en cuenta
                 foreach( $query_res_cursos as $rescursos )
                 { $escala_cursos=1;}
-                
-                $clave=$escala_comp.$escala_respon.$escala_habi.$escala_cursos.$escala_kpi.$escala_rse;
+
+                $cont_meta=0;$prom_metas=0;
+                $query_res_kpi= DB::select("SELECT metas.id, metas.nom_kpi, metas.real FROM eval_kpi_metas as metas WHERE metas.id_eval=$eval_id and metas.id_evaluado=$id_evdo");
+                foreach( $query_res_kpi as $kpis )
+                { $escala_kpi=1;
+                    $cont_meta++;
+                    $prom_metas= $prom_metas+ $kpis->real;
+                }
+                if($escala_kpi==1)
+                {
+                    $prom_metas= $prom_metas/$cont_meta;
+                }
+                $clave= $escala_comp.$escala_respon.$escala_habi.$escala_cursos.$escala_kpi.$escala_rse;// ESAS VARIABLES LLEVAN EL CONTROL DE LAS SECCIONES DE LA EVALUACIÓN CONTROLANDO LAS ESCALAS DE QUE APLICARAN EN LA EVALUACIÓN
                 
                 $query_escala= DB::select("SELECT id FROM eval_m_escalas WHERE clave=$clave");
                 foreach( $query_escala as $escala )
                 { $id_escala= $escala->id;}
-                
                 $query_resp_curcomp= DB::select("SELECT  id_comp, comp,id_curso, curso, fecha  FROM eval_res_cursos_pid_comp WHERE id_eval=$eval_id and id_evaluado=$id_evdo and id_evaluador=$id_evaluador ");
                 $query_resp_curhab= DB::select("SELECT  id_curso, curso, fecha  FROM eval_res_cursos_pid_hab WHERE id_eval=$eval_id and id_evaluado=$id_evdo and id_evaluador=$id_evaluador ");
                 $query_resp_curadic= DB::select("SELECT area, curso, accion  FROM eval_res_cursos_pid_adic WHERE id_eval=$eval_id and id_evaluado=$id_evdo and id_evaluador=$id_evaluador ");
@@ -234,6 +246,10 @@ class EvaluacionController extends Controller
             $query_resp_tar= DB::select("SELECT id_respon, tar, opt, peso, obtenido, gap FROM eval_res_tar WHERE id_eval=$eval_id and id_evaluado=$id_evdo and id_evaluador=$id_evaluador ");
             $query_resp_hab= DB::select("SELECT hab, opt, peso, obtenido, gap FROM eval_res_hab WHERE id_eval=$eval_id and id_evaluado=$id_evdo and id_evaluador=$id_evaluador ");
             $query_resp_cursos= DB::select("SELECT curso, opt, peso, obtenido, (peso-obtenido) as gap FROM eval_res_cursos_cumpli WHERE id_eval=$eval_id and id_evaluado=$id_evdo and id_evaluador=$id_evaluador ");
+
+            $query_res_kpi_cumpli= DB::select("SELECT cumplimiento_promedio, peso, obtenido FROM eval_res_kpi_cumpli WHERE id_eval=$eval_id and id_evaluado=$id_evdo");
+            $query_res_kpi= DB::select("SELECT metas.id, metas.nom_kpi, metas.real FROM eval_kpi_metas as metas WHERE metas.id_eval=$eval_id and metas.id_evaluado=$id_evdo");
+
 
             $query_resp_gap= DB::select("SELECT gap_ci, gap_na, gap_comp, gap_conhab, gap  FROM eval_res_gap WHERE id_eval=$eval_id and id_evaluado=$id_evdo ");
             $query_resp_curcomp= DB::select("SELECT id_comp, comp, curso, fecha  FROM eval_res_cursos_pid_comp WHERE id_eval=$eval_id and id_evaluado=$id_evdo and id_evaluador=$id_evaluador ");
@@ -251,6 +267,8 @@ class EvaluacionController extends Controller
             "tareas"=>$query_tareas,
             "habilidades"=>$query_habilidades,
             "res_cursos"=>$query_res_cursos,
+            "res_kpi"=>$query_res_kpi,
+            "prom_metas"=>round($prom_metas,2),
             "escala"=>$id_escala,
             "resultado"=>round($resultado,1),
             "categoria"=>$categoria,
@@ -264,6 +282,7 @@ class EvaluacionController extends Controller
             "resp_tar"=>$query_resp_tar,
             "resp_hab"=>$query_resp_hab,
             "resp_cursos"=>$query_resp_cursos,
+            "resp_kpi_cumpli"=>$query_res_kpi_cumpli,
             "resp_gap"=>$query_resp_gap,
             "resp_curcomp"=>$query_resp_curcomp,
             "resp_resp_curhab"=>$query_resp_curhab,
@@ -333,6 +352,7 @@ class EvaluacionController extends Controller
             DB::table('eval_res_tar')->where('id_eval','=', $data['eval_id'])->where('id_evaluado','=', $data['cod_evaluado'])->where('id_evaluador','=', $data['cod_evaluador'])->delete();
             DB::table('eval_res_hab')->where('id_eval','=', $data['eval_id'])->where('id_evaluado','=', $data['cod_evaluado'])->where('id_evaluador','=', $data['cod_evaluador'])->delete();      
             DB::table('eval_res_cursos_cumpli')->where('id_eval','=', $data['eval_id'])->where('id_evaluado','=', $data['cod_evaluado'])->where('id_evaluador','=', $data['cod_evaluador'])->delete();  
+            DB::table('eval_res_kpi_cumpli')->where('id_eval','=', $data['eval_id'])->where('id_evaluado','=', $data['cod_evaluado'])->delete();  
             DB::table('eval_res_cursos_pid_comp')->where('id_eval','=', $data['eval_id'])->where('id_evaluado','=', $data['cod_evaluado'])->where('id_evaluador','=', $data['cod_evaluador'])->delete();     
             DB::table('eval_res_cursos_pid_hab')->where('id_eval','=', $data['eval_id'])->where('id_evaluado','=', $data['cod_evaluado'])->where('id_evaluador','=', $data['cod_evaluador'])->delete();        
             DB::table('eval_res_cursos_pid_adic')->where('id_eval','=', $data['eval_id'])->where('id_evaluado','=', $data['cod_evaluado'])->where('id_evaluador','=', $data['cod_evaluador'])->delete();    
@@ -475,6 +495,33 @@ class EvaluacionController extends Controller
                         $new->save();
                     }
                 }
+
+                if(($escala_peso->id_seccion==5)&&($data['countkpi_cumpli']>0))
+                {   $promedio=0;
+                    $obtenido=0;
+                    $peso= $escala_peso->peso;
+
+                    $eval_id = $data['eval_id'];
+                    $id_evdo = $data['cod_evaluado'];
+
+                    $query_res_kpi= DB::select("SELECT AVG(metas.real) as prom FROM eval_kpi_metas as metas WHERE metas.id_eval=$eval_id and metas.id_evaluado=$id_evdo");
+                    foreach( $query_res_kpi as $r )
+                    { $promedio= $r->prom; }
+
+                    $query= DB::select("SELECT esc.porcentaje FROM eval_escala_x_seccion AS esc WHERE esc.id_seccion=5 and $promedio>=esc.minimo_mayor_igual and  $promedio<=esc.maximo_menor_que");
+                    foreach( $query as $r )
+                    { $obtenido= ($r->porcentaje/100) * $escala_peso->peso; }
+
+                    $new = new eval_res_kpi_cumpli();
+                    $new->id_eval = $data['eval_id'];
+                    $new->id_evaluado = $data['cod_evaluado'];
+
+                    $new->cumplimiento_promedio = round($promedio,2);
+                    $new->peso =  round($peso,7);
+                    $new->obtenido =  round($obtenido,7);
+                    $new->save();
+                    
+                }
                }   
                 
                 if(count($data['pid_comp_cursos'])>0)
@@ -563,7 +610,7 @@ class EvaluacionController extends Controller
 
             $new->save();
 
-            $obtenido_comp=0; $obtenido_tar=0; $obtenido_hab=0; $obtenido_cumpli=0; 
+            $obtenido_comp=0; $obtenido_tar=0; $obtenido_hab=0; $obtenido_cumpli=0; $obtenido_kpi_cumpli=0;
             $id_eval=$data['eval_id'];
             $id_evaluado= $data['cod_evaluado'];
             $cod_evaluador=$data['cod_evaluador'];
@@ -584,14 +631,17 @@ class EvaluacionController extends Controller
             foreach( $query as $res )
             { $obtenido_cumpli= $res->obtenido;}
 
-            $total=round(($obtenido_comp + $obtenido_tar + $obtenido_hab + $obtenido_cumpli),7);
+            $query= DB::select("SELECT sum(obtenido) as obtenido FROM eval_res_kpi_cumpli WHERE id_eval=$id_eval and id_evaluado=$id_evaluado");
+            foreach( $query as $res )
+            { $obtenido_kpi_cumpli= $res->obtenido;}
+
+            $total=round(($obtenido_comp + $obtenido_tar + $obtenido_hab + $obtenido_cumpli + $obtenido_kpi_cumpli),7);
 
             $categoria='-';$color='';
-            $query= DB::select("SELECT categoria, color FROM eval_res_escala WHERE id_eval = $id_eval and $total >= minimo and $total<= maximo");
+            $query= DB::select("SELECT categoria, color FROM eval_res_escala WHERE id_eval = $id_eval and $total >= minimo and $total< maximo");
             foreach( $query as $res )
             {   $categoria=$res->categoria;
                 $color=$res->color; }
-
 
             DB::table('eval_evaluado_evaluador')
             ->where('id_evaluacion','=', $data['eval_id'])
@@ -669,6 +719,9 @@ class EvaluacionController extends Controller
                 $query_resp_hab= DB::select("SELECT hab, opt, peso, obtenido, gap FROM eval_res_hab WHERE id_eval=$eval_id and id_evaluado=$id_evdo and id_evaluador=$id_evaluador ");
                 $query_resp_cursos= DB::select("SELECT curso, opt, peso, obtenido, (peso-obtenido) as gap FROM eval_res_cursos_cumpli WHERE id_eval=$eval_id and id_evaluado=$id_evdo and id_evaluador=$id_evaluador ");
     
+                $query_res_kpi_cumpli= DB::select("SELECT cumplimiento_promedio, peso, obtenido FROM eval_res_kpi_cumpli WHERE id_eval=$eval_id and id_evaluado=$id_evdo");
+                $query_res_kpi= DB::select("SELECT metas.id, metas.nom_kpi, metas.real FROM eval_kpi_metas as metas WHERE metas.id_eval=$eval_id and metas.id_evaluado=$id_evdo");
+
                 $query_resp_gap= DB::select("SELECT gap_ci, gap_na, gap_comp, gap_conhab, gap  FROM eval_res_gap WHERE id_eval=$eval_id and id_evaluado=$id_evdo ");
                 $query_resp_curcomp= DB::select("SELECT id_comp, comp, curso, fecha  FROM eval_res_cursos_pid_comp WHERE id_eval=$eval_id and id_evaluado=$id_evdo and id_evaluador=$id_evaluador ");
                 $query_resp_curhab= DB::select("SELECT  id_curso, curso, fecha  FROM eval_res_cursos_pid_hab WHERE id_eval=$eval_id and id_evaluado=$id_evdo and id_evaluador=$id_evaluador ");
@@ -705,6 +758,9 @@ class EvaluacionController extends Controller
                 "res_cursos"=>$query_res_cursos,
                 "escala"=>$id_escala,*/
 
+                
+                "res_kpi"=>$query_res_kpi,
+                "resp_kpi_cumpli"=>$query_res_kpi_cumpli,
                 "resp_comp"=>$query_resp_comp,
                 "resp_respon"=>$query_resp_respon,
                 "resp_tar"=>$query_resp_tar,

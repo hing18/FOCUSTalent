@@ -272,7 +272,7 @@
         <div class="form-group row text-center mt-4">
           <label for="sel_unidad" class="col-sm-auto col-form-label">Unidad: </label>
           <div class="col-sm-8">
-            <select class="form-select form-select-sm" id="sel_unidad">
+            <select class="form-select form-select-sm" id="sel_unidad" onchange="lista_puestos()">
 >
             </select>
           </div>
@@ -289,7 +289,7 @@
 
       <div class="modal-footer py-2 bg-light">
         <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal"><i class="fa-solid fa-arrow-left pr-2"></i> Cancelar</button>
-        <button type="button" class="btn btn-primary btn-sm" onclick="cambiapuesto()"  tabindex="-1" id="bto_guarda" style="display: block"><i class="fas fa-save pr-2"></i> Guardar</button>
+        <button type="button" class="btn btn-primary btn-sm" onclick="cambianewpuesto()"  tabindex="-1" id="bto_guarda" style="display: block"><i class="fas fa-save pr-2"></i> Guardar</button>
       </div>
     </div>
   </div>
@@ -334,16 +334,16 @@
 
                 table.row.add([
                   '<span id="code_evaldo_'+x+'">'+item.id_evaluado+ '</span> - <span id="nom_evaldo_'+x+'">'+nombre+ "</span>",
-                  item.descpue,
+                  '<span id="descpue_'+x+'">'+item.descpue+'</span><input type="hidden"  id="code_puestoevaldo_'+x+'" value="'+item.id_posicion_evaluado+'"><input type="hidden"  id="code_ueevaldo_'+x+'" value="'+item.idue+'">',
                   '<span id="code_evaldor_'+x+'">'+item.id_evaluador+ "</span> - " + '<span id="nom_evaldor_'+x+'">'+evaldor+ "</span>",
                   '<div  class="fw-bold text-center" style="text-align: center; vertical-align: middle;"  id="res_'+x+'">'+resultado+'</div>',
                   '<div class="row d-flex align-items-center justify-content-center text-center"> <div class="col" id="st_'+x+'">'+status+'</div></div>',
                   '<div class="dropdown py-0">'+
                     '<button class="btn btn-sm btn-sm dropdown-toggle btn-outline-primary" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">Acciones</button>'+
                       '<ul class="dropdown-menu p-0" aria-labelledby="dropdownMenu2">'+
-                        '<li><button class="dropdown-item pb-0 edit" data-bs-toggle="modal" data-bs-target="#cambiarpuesto" type="button" onclick="cambiapuesto('+cod+','+x+')"><i class="fa-solid fa-person-circle-check pe-1"></i> Cambiar Puesto</button></li>'+
-                        '<li><button class="dropdown-item pb-0 edit" data-bs-toggle="modal" data-bs-target="#staticBackdrop" type="button" onclick="cambiaestado('+cod+','+item.status+','+x+')"><i class="fas fa-sync pe-1"></i> Cambiar Estado</button></li>'+
-                        '<li><button class="dropdown-item pb-0 edit" data-bs-toggle="modal" data-bs-target="#cambiaevaldor" type="button" onclick="cambiaevaldor('+cod+','+x+')"><i class="fas fa-people-arrows pe-1"></i> Cambiar Evaluador</button></li>'+
+                        '<li><button class="dropdown-item pb-0 edit" data-bs-toggle="modal" data-bs-target="#cambiarpuesto" type="button" onclick="cambiapuesto('+cod+','+x+')"><i class="fa-solid fa-person-circle-check pe-1 text-primary"></i> Cambiar Puesto</button></li>'+
+                        '<li><button class="dropdown-item pb-0 edit" data-bs-toggle="modal" data-bs-target="#staticBackdrop" type="button" onclick="cambiaestado('+cod+','+item.status+','+x+')"><i class="fas fa-sync pe-1 text-primary"></i> Cambiar Estado</button></li>'+
+                        '<li><button class="dropdown-item pb-0 edit" data-bs-toggle="modal" data-bs-target="#cambiaevaldor" type="button" onclick="cambiaevaldor('+cod+','+x+')"><i class="fas fa-people-arrows pe-1 text-primary"></i> Cambiar Evaluador</button></li>'+
                       '</ul>'+
                   '</div>'
                 ]).draw(false);
@@ -411,6 +411,7 @@
     var parametros = {
     "eval_id": eval,
     "evaldo_id": $('#code_evaldo_'+x).html(),
+    "code_puestoevaldo": $('#code_puestoevaldo_'+x).val(),
     "_token" : $('input[name="_token"]').val()}
     $.ajax({
       data:  parametros,
@@ -419,25 +420,76 @@
       cache: true, 
       dataType: "json",
       success:  function (data) {
-        const table = new DataTable('#table_evaluadores');
-        table.clear().draw();
-        i=0;
-        jQuery(data).each(function(i, item){ 
-          i++;
-          var nombre=item.prinombre + " " + item.priapellido;
-          var sel="";
-          if(item.id_evaluador==$('#code_evaldor_'+x).html())
-          { sel="checked";}
-           table.row.add([
-            '<div style="text-align: center; vertical-align: middle;"><input class="form-check-input" style="width: 15px; height: 15px; cursor: pointer;" value="'+item.id_evaluador+'" type="radio" name="chk[]" id="chk_'+i+'" '+sel+'></div>',
-            '<div style="text-align: center; vertical-align: middle;">'+item.id_evaluador+'</div>',
-            nombre,
-            item.descpue,
-          ]).draw(false);
+        $('#sel_unidad').empty();
+        $('#sel_puesto').empty();
+        jQuery(data.unidades).each(function(i, item){ 
+          if($('#code_ueevaldo_'+x).val()==item.id)
+          { $('#sel_unidad').append('<option value="'+item.id+'" selected>'+item.nameund+'</option>');}
+          else
+          { $('#sel_unidad').append('<option value="'+item.id+'">'+item.nameund+'</option>');}
+        });
+        jQuery(data.puestos).each(function(i, item){ 
+          if($('#code_puestoevaldo_'+x).val()==item.id)
+          { $('#sel_puesto').append('<option value="'+item.id+'" selected>'+item.descpue+'</option>');}
+          else
+          { $('#sel_puesto').append('<option value="'+item.id+'">'+item.descpue+'</option>');}
         });
       }
     });
+  }
 
+  function lista_puestos()
+  { var x=$('#fil_puesto').val();
+    var parametros = {
+    "sel_unidad": $('#sel_unidad').val(),
+    "_token" : $('input[name="_token"]').val()}
+    $.ajax({
+      data:  parametros,
+      url:   "{{ route('evaluacion.cambiaunidad') }}",
+      type:  'POST', 
+      cache: true, 
+      dataType: "json",
+      success:  function (data) {
+        $('#sel_puesto').empty();
+        $('#sel_puesto').append('<option value="0">Seleccione</option>');
+        jQuery(data.puestos).each(function(i, item){ 
+          if($('#code_puestoevaldo_'+x).val()==item.id)
+          { $('#sel_puesto').append('<option value="'+item.id+'" selected>'+item.descpue+'</option>');}
+          else
+          { $('#sel_puesto').append('<option value="'+item.id+'">'+item.descpue+'</option>');}
+          
+        });
+      }
+    });
+  }
+
+  function cambianewpuesto()
+  {
+    var x=$('#fil_puesto').val();
+    var parametros = {
+    "id_eval": $('#ideval_puesto').val(),
+    "cod_evaluado": $('#code_evaldo_'+x).html(),
+    "sel_puesto": $('#sel_puesto').val(),
+    "_token" : $('input[name="_token"]').val()}
+    $.ajax({
+      data:  parametros,
+      url:   "{{ route('evaluacion.cambianewpuesto') }}",
+      type:  'POST', 
+      cache: false, 
+      success:  function (data) {
+        if(data==1)
+        {
+          $('#descpue_'+x).html($('#sel_puesto option:selected').text());
+          $('#code_puestoevaldo_'+x).val($('#sel_puesto option:selected').val());
+          bien('El puesto a evaluar ha sido modificado.');
+        }
+        else
+        {
+          mal('No se actualizó el puesto a evaluar. Intente cambiar el estado a "Pendiente" y luego modifique el puesto.');
+        }
+        $("#cambiarpuesto").modal('toggle')
+      }
+    });
   }
 
   function cambiapass(eval,x)

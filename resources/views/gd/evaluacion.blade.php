@@ -421,11 +421,8 @@
 
                 </div>
               </div>
-
-
             </div>
         </div>
-      
     </div>  
   </div>
   
@@ -438,7 +435,7 @@
 
 
 
-    
+      <!-- RESPUESTAS COMPETENCIAS -->
       <div class="card shadow mb-3 visually-hidden" id="resp_comp"> 
         <div class="card-header text-info">
           <i class="fas fa-list-ol fa-lg pe-2"></i> Competencias Organizacionales
@@ -472,10 +469,8 @@
           </div>
         </div>
       </div>
-      
-
-      
-    
+            
+      <!-- RESPUESTAS TAREAS Y FUNCIONES -->
       <div class="card shadow mb-3 visually-hidden" id="resp_tar"> 
         <div class="card-header text-info">
           <i class="fas fa-user-check pe-2"></i> Tareas y Funciones
@@ -509,6 +504,7 @@
         </div>
       </div>
     
+      <!-- RESPUESTAS HABILIDADES -->
       <div class="card shadow mb-3 visually-hidden" id="resp_hab"> 
         <div class="card-header text-info">
           <i class="fas fa-street-view pe-2"></i> Habilidades y Conocimientos
@@ -544,6 +540,48 @@
         </div>
       </div>
     
+
+      <!--- RESPUESTAS CUMPLIMIENTO KPI -->
+      <div class="card shadow mb-3 visually-hidden" id="resp_cumplimiento_kpi">
+        <div class="card-header text-info">
+          <i class="fa-solid fa-chart-line pe-2"></i> Cumplimiento de Metas
+        </div>
+        <div class="card-body justify-content-center">
+          <div class="row justify-content-center align-items-center text-center pt-4">
+            <div class="col-11 text-center">       
+              <table class="table table-sm small" style="width:100%">
+                <thead>
+                  <tr>
+                    <th class="text-primary text-center"width="50%"></th>
+                    <th class="text-primary text-center"width="20%">% PROMEDIO</th>
+                    <th class="text-primary text-center" width="10%" >VALOR</th>
+                    <th class="text-primary text-center" width="10%" >PERSONA</th>
+                    <th class="text-primary text-center" width="10%" >GAP</th>
+                  </tr>
+                </thead>              
+                <tbody class="text-dark" id="tbody_resp_cumpli_kpi_total">
+
+                </tbody>
+              </table>
+            </div>      
+            <div class="col-8 text-center small">       
+              <table id="table_resp_cumpli_kpi" class="table table-striped table-sm small" style="width:100%">
+                <thead>
+                  <tr>
+                    <th class="text-secondary text-center table-info" width="80%">INDICADOR</th>
+                    <th class="text-secondary text-center table-info" width="20%" >% CUMPLIMIENTO</th>
+                  </tr>
+                </thead>
+                <tbody class="text-dark" id="tbody_resp_cumpli_kpi">
+                   
+                </tbody>
+              </table>
+            </div>
+          </div> 
+        </div>
+      </div>
+
+      <!-- RESPUESTAS CUMPLIMIENTO PID -->
       <div class="card shadow mb-3 visually-hidden" id="resp_cumpli_pid"> 
         <div class="card-header text-info">
           <i class="fas fa-user-graduate pe-2"></i> Cumplimiento de Plan Individual de Desarrollo
@@ -578,8 +616,8 @@
           </div>
         </div>
       </div>
-
-      
+    
+      <!-- RESPUESTAS LOGROS, PROYECCION DE CARRERA Y COMETARIOS DEL JEFE -->
       <div class="card shadow mb-3 visually-hidden" id="resp_desarrollo"> 
         <div class="card-body">
           <div class="my-3 ">
@@ -616,354 +654,361 @@
       </div>
     
 
-   
+      
 
 
-  <!-- FORMULARIO DE COMPETENCIAS -->
-  <div class="accordion shadow mb-3" id="div_competencias" style="display: none">
-    <div class="accordion-item">
-      <h2 class="accordion-header" id="headingOne">
-        <button class="accordion-button fw-bold text-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-          <i class="fas fa-list-ol pe-2"></i> COMPETENCIAS ORGANIZACIONALES
-        </button>
-      </h2>
-      <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-        <div class="accordion-body">       
-          <div class="row align-items-center justify-content-center">
-            <div class="col-9 alert alert-info  text-justify small" role="alert">              
-                  <i class="fas fa-info-circle fa-lg text-primary"></i> Por favor, evalúa cada una de las competencias organizacionales en una escala del <b>1</b> al <b>10</b>. La columna de la derecha, <b>NIVEL ESPERADO</b>, indica el perfil óptimo necesario para lograr un desempeño eficaz en el puesto de trabajo.              </div>
+      <!-- FORMULARIO DE COMPETENCIAS -->
+      <div class="accordion shadow mb-3" id="div_competencias" style="display: none">
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingOne">
+            <button class="accordion-button fw-bold text-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+              <i class="fas fa-list-ol pe-2"></i> COMPETENCIAS ORGANIZACIONALES
+            </button>
+          </h2>
+          <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+            <div class="accordion-body">       
+              <div class="row align-items-center justify-content-center">
+                <div class="col-9 alert alert-info  text-justify small" role="alert">              
+                      <i class="fas fa-info-circle fa-lg text-primary"></i> Por favor, evalúa cada una de las competencias organizacionales en una escala del <b>1</b> al <b>10</b>. La columna de la derecha, <b>NIVEL ESPERADO</b>, indica el perfil óptimo necesario para lograr un desempeño eficaz en el puesto de trabajo.              </div>
+                </div>
+              <table id="table_competencias" class="table table-hover table-sm small" style="width:100%">
+                <thead>
+                  <tr>
+                    <th class="text-info text-center">COMPETENCIAS</th>
+                    <th class="text-info text-center" width="23%" >EVALUAR</th>
+                    <th class="text-info text-center" width="8%" >NIVEL ESPERADO</th>
+                  </tr>
+                </thead>
+                <tbody class="text-dark" id="tbody_competencias">            
+                </tbody>
+              </table>
+              <input type="hidden" id="countcomp" value="0">
             </div>
-          <table id="table_competencias" class="table table-hover table-sm small" style="width:100%">
-            <thead>
-              <tr>
-                <th class="text-info text-center">COMPETENCIAS</th>
-                <th class="text-info text-center" width="23%" >EVALUAR</th>
-                <th class="text-info text-center" width="8%" >NIVEL ESPERADO</th>
-              </tr>
-            </thead>
-            <tbody class="text-dark" id="tbody_competencias">            
-            </tbody>
-          </table>
-          <input type="hidden" id="countcomp" value="0">
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- FORMULARIO DE TAREAS Y FUNCIONES -->
-  <div class="accordion shadow mb-3" id="div_respon" style="display: none">
-    <div class="accordion-item">
-      <h2 class="accordion-header" id="headingtareas">
-        <button class="accordion-button fw-bold text-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapsetareas" aria-expanded="true" aria-controls="collapsetareas">
-          <i class="fas fa-user-check pe-2"></i> TAREAS Y FUNCIONES
-        </button>
-      </h2>
-      <div id="collapsetareas" class="accordion-collapse collapse show" aria-labelledby="headingtareas" data-bs-parent="#accordionExample">
-        <div class="accordion-body">  
-          <div class="row mb-2 align-items-center justify-content-center">  
-              <div class="col-9 alert alert-info small mb-0" role="alert">                
-                  <i class="fas fa-info-circle fa-lg text-primary"></i> A continuación, debe evaluar las tareas correspondientes a cada área de responsabilidad. Por favor, califica cada tarea en una escala del <b>1</b> al <b>5</b>, de acuerdo con las siguientes definiciones:
-                  <ol>
-                    <li> <u>Muy Deficiente:</u> No realiza la tarea o la lleva a cabo de manera insatisfactoria.</li>
-                    <li> <u>Regular:</u> Realiza la tarea con calidad aceptable, pero con entregas tardías.</li>
-                    <li> <u>Buena:</u> Cumple con la tarea dentro del plazo establecido, aunque ocasionalmente presenta</li>
-                    <li> <u>Muy Buena:</u> Realiza la tarea de manera efectiva y siempre cumple con los plazos requeridos.</li>
-                    <li> <u>Excelente:</u> Supera las expectativas en cuanto a calidad y entrega, realizando la tarea de manera sobresaliente.</li>
-                  </ol>
-              </div>
-          </div>     
-          <table id="table_respon" class="table table-sm show small table-hover" style="width:100%">
-            <thead>
-              <tr>
-                <th class="text-info text-center" width="20%">AREA DE RESPONSABILDIAD</th>
-                <th class="text-info text-center" width="66%" >TAREAS</th>
-                <th class="text-info text-center"  width="14%">EVALUAR</th>
-              </tr>
-            </thead>
-            <tbody class="text-dark" id="tbody_respon">            
-            </tbody>
-          </table>
-          <input type="hidden" id="counttar" value="0">
-        </div>
-      </div>
-    </div>
-  </div>
-
-    <!-- FORMULARIO DE HABILIDADES -->
-  <div class="accordion shadow mb-3" id="div_habilidades" style="display: none">
-    <div class="accordion-item">
-      <h2 class="accordion-header" id="headinghabilidades">
-        <button class="accordion-button fw-bold text-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapsehabilidades" aria-expanded="true" aria-controls="collapsehabilidades">
-          <i class="fas fa-street-view pe-2"></i> HABILIDADES Y CONOCIMIENTOS
-        </button>
-      </h2>
-      <div id="collapsehabilidades" class="accordion-collapse collapse show" aria-labelledby="headinghabilidades" data-bs-parent="#accordionExample">
-        <div class="accordion-body">       
-
-          <div class="row mb-3 pb-0 align-items-center justify-content-center">  
-            <div class="col-9 alert alert-info small" role="alert">                     
-                <i class="fas fa-info-circle fa-lg text-primary"></i> A continuación, se presenta un listado de habilidades y conocimientos que debe tener el colaborador para un buen desempeño en el puesto de trabajo. Por favor, evalúa en cada habilidad según las siguientes opciones:
-                <ul>
-                  <li> <b>No la Tiene:</b> Si el colaborador no posee esta habilidad.</li>
-                  <li> <b>Esta en Desarrollo:</b> Si el colaborador está trabajando en mejorar esta habilidad, pero aún no la domina.</li>
-                  <li> <b>Si la Tiene:</b> Si el colaborador tiene esta habilidad y la aplica de manera efectiva en su puesto de trabajo.</li>
-                </ul>
-            </div>
-          </div>          
-          <div class="row d-flex align-items-center justify-content-center text-center text-secondary">
-          <table id="table_habilidades" class="table table-sm small table-hover" style="width:90%">
-            <thead>
-              <tr>
-                <th class="text-info text-center" width="50%">HABILIDADES</th>
-                <th class="text-info text-center" width="50%" >EVALUAR</th>
-              </tr>
-            </thead>
-            <tbody class="text-dark" id="tbody_habilidad">            
-            </tbody>
-          </table>
-          <input type="hidden" id="counthab" value="0">
-          </div>
-    
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!--- CUMPLIMIENTO KPI -->
-  <div class="accordion shadow mb-3" id="div_cumplimiento_kpi" style="display: none">
-    <div class="accordion-item">
-      <h2 class="accordion-header" id="headingcumplimientokpi">
-        <button class="accordion-button fw-bold text-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapsecumplimientokpi" aria-expanded="true" aria-controls="collapsecumplimientokpi">
-          <i class="fas fa-user-graduate pe-2"></i> CUMPLIMIENTO DE KPI
-        </button>
-      </h2>
-      <div id="collapsecumplimientokpi" class="accordion-collapse collapse show" aria-labelledby="headingcumplimientokpi" data-bs-parent="#accordionExample">
-        <div class="accordion-body"> 
-
-
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!--- CUMPLIMIENTO PID -->
-  <div class="accordion shadow mb-3" id="div_cumplimiento_pid" style="display: none">
-    <div class="accordion-item">
-      <h2 class="accordion-header" id="headingcumplimientopid">
-        <button class="accordion-button fw-bold text-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapsecumplimientopid" aria-expanded="true" aria-controls="collapsecumplimientopid">
-          <i class="fas fa-user-graduate pe-2"></i> CUMPLIMIENTO DE PLAN INDIVIDUAL DE DESARROLLO
-        </button>
-      </h2>
-      <div id="collapsecumplimientopid" class="accordion-collapse collapse show" aria-labelledby="headingcumplimientopid" data-bs-parent="#accordionExample">
-        <div class="accordion-body"> 
-          <div class="col small  d-flex justify-content-center">
-            <table id="table_cumplimiento_pid" class="table table-sm" style="width:60%">
-              <thead>
-                <tr>
-                  <th class="text-info text-center" width="80%">NOMBRE DE CURSOS ASIGNADOS ANTERIORMENTE</th>
-                  <th class="text-info text-center" width="20%" >RESULTADO</th>
-                </tr>
-              </thead>
-              <tbody class="text-secondary" id="tbody_cumplimiento_pid">
-              </tbody>
-            </table>
-            <input type="hidden" id="countcursos" value="0">
           </div>
         </div>
       </div>
-    </div>
-  </div>
 
-  <!--- PID -->
-  <div class="accordion shadow mb-3" id="div_pid" style="display: none">
-    <div class="accordion-item">
-      <h2 class="accordion-header" id="headingpid">
-        <button class="accordion-button fw-bold text-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapsepid" aria-expanded="true" aria-controls="collapsepid">
-          <i class="fas fa-chalkboard-teacher pe-2"></i> NUEVO PLAN INDIVIDUAL DE DESARROLLO
-        </button>
-      </h2>
-      <div id="collapsepid" class="accordion-collapse collapse show" aria-labelledby="headingpid" data-bs-parent="#accordionExample">
-        <div class="accordion-body"> 
-
-          
-              <div class="row" id="instrucc_compe">
-                  <div class="row mb-2 pb-0 align-items-center justify-content-center">  
-                    <div class="col-10 alert alert-info info small" role="alert">                     
-                        <i class="fas fa-info-circle fa-lg text-primary"></i>
-                        Con base en la evaluación en curso, se ha identificado GAP en competencias con alto nivel de criticidad según el perfil del puesto. 
-                        Por favor seleccionar un curso del listado disponible en cada una de las competencias.
-                    </div>
+      <!-- FORMULARIO DE TAREAS Y FUNCIONES -->
+      <div class="accordion shadow mb-3" id="div_respon" style="display: none">
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingtareas">
+            <button class="accordion-button fw-bold text-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapsetareas" aria-expanded="true" aria-controls="collapsetareas">
+              <i class="fas fa-user-check pe-2"></i> TAREAS Y FUNCIONES
+            </button>
+          </h2>
+          <div id="collapsetareas" class="accordion-collapse collapse show" aria-labelledby="headingtareas" data-bs-parent="#accordionExample">
+            <div class="accordion-body">  
+              <div class="row mb-2 align-items-center justify-content-center">  
+                  <div class="col-9 alert alert-info small mb-0" role="alert">                
+                      <i class="fas fa-info-circle fa-lg text-primary"></i> A continuación, debe evaluar las tareas correspondientes a cada área de responsabilidad. Por favor, califica cada tarea en una escala del <b>1</b> al <b>5</b>, de acuerdo con las siguientes definiciones:
+                      <ol>
+                        <li> <u>Muy Deficiente:</u> No realiza la tarea o la lleva a cabo de manera insatisfactoria.</li>
+                        <li> <u>Regular:</u> Realiza la tarea con calidad aceptable, pero con entregas tardías.</li>
+                        <li> <u>Buena:</u> Cumple con la tarea dentro del plazo establecido, aunque ocasionalmente presenta</li>
+                        <li> <u>Muy Buena:</u> Realiza la tarea de manera efectiva y siempre cumple con los plazos requeridos.</li>
+                        <li> <u>Excelente:</u> Supera las expectativas en cuanto a calidad y entrega, realizando la tarea de manera sobresaliente.</li>
+                      </ol>
                   </div>
+              </div>     
+              <table id="table_respon" class="table table-sm show small table-hover" style="width:100%">
+                <thead>
+                  <tr>
+                    <th class="text-info text-center" width="20%">ÁREA DE RESPONSABILDIAD</th>
+                    <th class="text-info text-center" width="66%" >TAREAS</th>
+                    <th class="text-info text-center"  width="14%">EVALUAR</th>
+                  </tr>
+                </thead>
+                <tbody class="text-dark" id="tbody_respon">            
+                </tbody>
+              </table>
+              <input type="hidden" id="counttar" value="0">
+            </div>
+          </div>
+        </div>
+      </div>
+
+        <!-- FORMULARIO DE HABILIDADES -->
+      <div class="accordion shadow mb-3" id="div_habilidades" style="display: none">
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headinghabilidades">
+            <button class="accordion-button fw-bold text-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapsehabilidades" aria-expanded="true" aria-controls="collapsehabilidades">
+              <i class="fas fa-street-view pe-2"></i> HABILIDADES Y CONOCIMIENTOS
+            </button>
+          </h2>
+          <div id="collapsehabilidades" class="accordion-collapse collapse show" aria-labelledby="headinghabilidades" data-bs-parent="#accordionExample">
+            <div class="accordion-body">       
+
+              <div class="row mb-3 pb-0 align-items-center justify-content-center">  
+                <div class="col-9 alert alert-info small" role="alert">                     
+                    <i class="fas fa-info-circle fa-lg text-primary"></i> A continuación, se presenta un listado de habilidades y conocimientos que debe tener el colaborador para un buen desempeño en el puesto de trabajo. Por favor, evalúa en cada habilidad según las siguientes opciones:
+                    <ul>
+                      <li> <b>No la Tiene:</b> Si el colaborador no posee esta habilidad.</li>
+                      <li> <b>Esta en Desarrollo:</b> Si el colaborador está trabajando en mejorar esta habilidad, pero aún no la domina.</li>
+                      <li> <b>Si la Tiene:</b> Si el colaborador tiene esta habilidad y la aplica de manera efectiva en su puesto de trabajo.</li>
+                    </ul>
+                </div>
+              </div>          
+              <div class="row d-flex align-items-center justify-content-center text-center text-secondary">
+              <table id="table_habilidades" class="table table-sm small table-hover" style="width:90%">
+                <thead>
+                  <tr>
+                    <th class="text-info text-center" width="50%">HABILIDADES</th>
+                    <th class="text-info text-center" width="50%" >EVALUAR</th>
+                  </tr>
+                </thead>
+                <tbody class="text-dark" id="tbody_habilidad">            
+                </tbody>
+              </table>
+              <input type="hidden" id="counthab" value="0">
               </div>
-              <div class="col small">
-                <table id="table_desarrollo" class="table table-hover table-sm" style="width:100%">
+        
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!--- CUMPLIMIENTO KPI -->
+      <div class="accordion shadow mb-3" id="div_cumplimiento_kpi" style="display: none">
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingcumplimientokpi">
+            <button class="accordion-button fw-bold text-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapsecumplimientokpi" aria-expanded="true" aria-controls="collapsecumplimientokpi">
+              <i class="fa-solid fa-chart-line pe-2"></i> CUMPLIMIENTO DE METAS
+            </button>
+          </h2>
+          <div id="collapsecumplimientokpi" class="accordion-collapse collapse show" aria-labelledby="headingcumplimientokpi" data-bs-parent="#accordionExample">
+            <div class="accordion-body">           
+              <div class="col small  d-flex justify-content-center">
+                <table id="table_cumplimiento_metas" class="table table-sm" style="width:60%">
                   <thead>
                     <tr>
-                      <th class="text-primary text-center" width="30%">COMPETENCIAS DE MAYOR GAP<input type="hidden" id="cant_curso_asig_comp" value="0"></th>
-                      <th class="text-primary text-center" width="50%" >CURSO RELACIONADO</th>
-                      <th class="text-primary text-center" width="10%" >FECHA</th>
+                      <th class="text-info text-center" width="80%">INDICADOR</th>
+                      <th class="text-info text-center" width="20%" >% RESULTADO</th>
                     </tr>
                   </thead>
-                  <tbody class="text-dark" id="tbody_pid_comp">
-                  <tr>
-                    <td colspan="2" class="text-center text-secondary">No mantiene GAP en las competencias organizacionales</td>
-                    </td>
-                  </tr>
+                  <tbody class="text-secondary" id="tbody_cumplimiento_kpi">
+                  </tbody>
+                  <thead>
+                    <tr>
+                      <th class="text-info text-center" >Promedio de cumplimiento de metas</th>
+                      <th class="text-info text-center" ><span id="promedio_kpi_cumpli"></span></th>
+                    </tr>
+                  </thead>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!--- CUMPLIMIENTO PID -->
+      <div class="accordion shadow mb-3" id="div_cumplimiento_pid" style="display: none">
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingcumplimientopid">
+            <button class="accordion-button fw-bold text-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapsecumplimientopid" aria-expanded="true" aria-controls="collapsecumplimientopid">
+              <i class="fas fa-user-graduate pe-2"></i> CUMPLIMIENTO DE PLAN INDIVIDUAL DE DESARROLLO
+            </button>
+          </h2>
+          <div id="collapsecumplimientopid" class="accordion-collapse collapse show" aria-labelledby="headingcumplimientopid" data-bs-parent="#accordionExample">
+            <div class="accordion-body"> 
+              <div class="col small  d-flex justify-content-center">
+                <table id="table_cumplimiento_pid" class="table table-sm" style="width:60%">
+                  <thead>
+                    <tr>
+                      <th class="text-info text-center" width="80%">NOMBRE DE CURSOS ASIGNADOS ANTERIORMENTE</th>
+                      <th class="text-info text-center" width="20%" >RESULTADO</th>
+                    </tr>
+                  </thead>
+                  <tbody class="text-secondary" id="tbody_cumplimiento_pid">
+                  </tbody>
+                </table>
+                <input type="hidden" id="countcursos" value="0">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!--- NUEVO PID -->
+      <div class="accordion shadow mb-3" id="div_pid" style="display: none">
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingpid">
+            <button class="accordion-button fw-bold text-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapsepid" aria-expanded="true" aria-controls="collapsepid">
+              <i class="fas fa-chalkboard-teacher pe-2"></i> NUEVO PLAN INDIVIDUAL DE DESARROLLO
+            </button>
+          </h2>
+          <div id="collapsepid" class="accordion-collapse collapse show" aria-labelledby="headingpid" data-bs-parent="#accordionExample">
+            <div class="accordion-body">           
+                  <div class="row" id="instrucc_compe">
+                      <div class="row mb-2 pb-0 align-items-center justify-content-center">  
+                        <div class="col-10 alert alert-info info small" role="alert">                     
+                            <i class="fas fa-info-circle fa-lg text-primary"></i>
+                            Con base en la evaluación en curso, se ha identificado GAP en competencias con alto nivel de criticidad según el perfil del puesto. 
+                            Por favor seleccionar un curso del listado disponible en cada una de las competencias.
+                        </div>
+                      </div>
+                  </div>
+                  <div class="col small">
+                    <table id="table_desarrollo" class="table table-hover table-sm" style="width:100%">
+                      <thead>
+                        <tr>
+                          <th class="text-primary text-center" width="30%">COMPETENCIAS DE MAYOR GAP<input type="hidden" id="cant_curso_asig_comp" value="0"></th>
+                          <th class="text-primary text-center" width="50%" >CURSO RELACIONADO</th>
+                          <th class="text-primary text-center" width="10%" >FECHA</th>
+                        </tr>
+                      </thead>
+                      <tbody class="text-dark" id="tbody_pid_comp">
+                      <tr>
+                        <td colspan="2" class="text-center text-secondary">No mantiene GAP en las competencias organizacionales</td>
+                        </td>
+                      </tr>
+                      </tbody>
+                    </table>
+                  </div>
+            
+
+              <div class="row" id="instrucc_hab">
+                <div class="row mb-2 pb-0 align-items-center justify-content-center">  
+                  <div class="col-8 alert alert-info info small" role="alert">                     
+                      <i class="fas fa-info-circle fa-lg text-primary"></i>
+                      Seleccionar al menos <span id="cant_curso_hab">3</span> cursos de habilidades funcionales según las tareas requeridas en el puesto.
+                  </div>
+                </div>
+              </div>
+              <div class="col small">
+                <table id="table_habilidadespid" class="table table-hover table-sm" style="width:100%">
+                  <thead>
+                    <tr>
+                      <th class="text-primary text-center" >ASIGNACIÓN DE CURSOS PARA HABILIDADES FUNCIONALES<input type="hidden" id="cant_curso_asig_hab" value="0"></th>
+                      <th class="text-primary text-center" width="10%" >FECHA</th>
+                      <th width="5%"></th>
+                    </tr>
+                    
+                  </thead>
+                  <tbody class="text-dark" id="tbody_pid_hab">
+                    <tr><td  colspan="3" class="text-center"><span class="editlink_naranja fw-bold small"  onclick="selcoursehab()"><i class="far fa-edit fa-lg"></i> Seleccionar cursos</span></td></tr>
                   </tbody>
                 </table>
               </div>
-         
-
-          <div class="row" id="instrucc_hab">
-            <div class="row mb-2 pb-0 align-items-center justify-content-center">  
-              <div class="col-8 alert alert-info info small" role="alert">                     
-                  <i class="fas fa-info-circle fa-lg text-primary"></i>
-                  Seleccionar al menos <span id="cant_curso_hab">3</span> cursos de habilidades funcionales según las tareas requeridas en el puesto.
-              </div>
-            </div>
-          </div>
-          <div class="col small">
-            <table id="table_habilidadespid" class="table table-hover table-sm" style="width:100%">
-              <thead>
-                <tr>
-                  <th class="text-primary text-center" >ASIGNACIÓN DE CURSOS PARA HABILIDADES FUNCIONALES<input type="hidden" id="cant_curso_asig_hab" value="0"></th>
-                  <th class="text-primary text-center" width="10%" >FECHA</th>
-                  <th width="5%"></th>
-                </tr>
-                
-              </thead>
-              <tbody class="text-dark" id="tbody_pid_hab">
-                <tr><td  colspan="3" class="text-center"><span class="editlink_naranja fw-bold small"  onclick="selcoursehab()"><i class="far fa-edit fa-lg"></i> Seleccionar cursos</span></td></tr>
-              </tbody>
-            </table>
-          </div>
-          
-        
-          
-          <div class="row" id="instrucc_hab_adicional">
-            <div class="row mb-2 pb-0 align-items-center justify-content-center">  
-              <div class="col-8 alert alert-info info small" role="alert">                     
-                  <i class="fas fa-info-circle fa-lg text-primary"></i>
-                  Opcional. Si desea añadir un curso relacionado con habilidades funcionales que no esté mencionado en la sección anterior, le invitamos a hacerlo en el espacio que se encuentra a continuación.
-              </div>
-            </div>
-          </div>
-
-          
-          <div class="col small">
-            <div class="row small">
-              <div class="col small">
-                <input class="form-control form-control-sm" type="text" placeholder="Área de desarrollo" aria-label=".form-control-sm" id="txt_area_desa">
-              </div>
-              <div class="col small">
-                <input class="form-control form-control-sm" type="text" placeholder="Nombre de curso" aria-label=".form-control-sm" id="txt_area_desa_curso">
-              </div>
-              <div class="col small">
-                <input class="form-control form-control-sm" type="text" placeholder="Otras Acciones específicas" aria-label=".form-control-sm" id="txt_area_desa_acciones">
-              </div>
-              <div class="col-auto small">
-                <button type="button" class="btn btn-sm btn-outline-info" onclick="add_otro()"> <i class="far fa-plus-square fa-lg me-2"></i>Agregar</button>
-              </div>
-            </div>
-            <table id="table_habilidadespid_adicional" class="table table-hover table-sm table-striped mt-4" style="width:100%">
-              <thead>
-                <tr>
-                  <td class="text-primary text-center" >ÁREA DE DESARROLLO</td><td class="text-primary text-center" >CURSO RELACIONADO</td><td colspan="2" class="text-primary text-center" >OTRAS ACCIONES ESPECÍFICAS</td>
-                </tr>
-                
-              </thead>
-              <tbody class="text-dark" id="tbody_pid_hab_adicional">
-              </tbody>
-            </table>
-          </div>
-
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- FORMULARIO DE DESARROLLO class="card-title py-2" style="color: #778DB2"-->
-  <div class="card shadow mb-3" id="div_desarrollo" style="display: none">
-
-    <div class="card-body my-3">
-      <div class="my-3 pt-3">
-        <label for="txtlogros" class="form-label card-title py-0 text-primary"><i class="fas fa-user-tag pe-2"></i> LOGROS DEL COLABORADOR</label>
-        <textarea class="form-control  form-control-sm" id="txtlogros" rows="3"></textarea>
-      </div>
-
-
-      <hr>
-      <div class="my-3">
-          <label class="form-label card-title py-0 text-primary"><i class="fas fa-user-tie pe-2"></i> PROYECCIÓN DE DESARROLLO DE CARRERA</label>
-          <div class="col ps-4 small">
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="promo" id="promo1">
-              <label class="form-check-label" for="promo1"> Promoverlo de forma inmediata </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="promo" id="promo2">
-              <label class="form-check-label" for="promo2"> Promoverlo a mediano plazo (1 a 2 años) </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="promo" id="promo3" checked>
-              <label class="form-check-label" for="promo3"> Promoverlo a largo plazo (3 a 5 años) </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="promo" id="promo4" checked>
-              <label class="form-check-label" for="promo4"> No se contempla actualmente </label>
-            </div>
-          </div>
-      </div>
-
-      <hr>      
-      
-      <div class="my-3">
-        <label for="txtcoment" class="form-label card-title py-0 text-primary"><i class="fas fa-comment-dots pe-2"></i> COMENTARIOS DEL EVALUADOR</label>
-        <textarea class="form-control  form-control-sm" id="txtcoment" rows="3"></textarea>
-      </div>
-
-    </div>
-  </div>
-
-
-  <div class="modal fade" id="solcursoModal" tabindex="-1" aria-labelledby="solcursoModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header bg-light text-primary">
-          <h5 class="modal-title" id="solcursoModalLabel"><i class="fas fa-chalkboard-teacher pe-2"></i> Plan Individual de Desarrollo</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form>
-            <div class="mb-3">
-              <input id="tipo_curso" value="" type="hidden">
-              <input id="num_c_comp" value="0" type="hidden">
-              <label for="sel_curso_pid" class="col-form-label">Seleccionar curso:</label>
-              <select class="form-select form-select-sm" aria-label=".form-select-sm example" id="sel_curso_pid">
-                
-
-              </select>
-            </div>
+              
             
-          </form>
-        </div>
-        <div class="modal-footer bg-light">
-          <button type="button" class="btn btn-secondary btn-small" data-bs-dismiss="modal"><i class="fa-solid fa-arrow-left pe-2"></i>Cancelar</button>
-          <button type="button" class="btn btn-primary btn-small" onclick="add_curso()"><i class="fas fa-plus pe-2"></i>Agregar</button>
+              
+              <div class="row" id="instrucc_hab_adicional">
+                <div class="row mb-2 pb-0 align-items-center justify-content-center">  
+                  <div class="col-8 alert alert-info info small" role="alert">                     
+                      <i class="fas fa-info-circle fa-lg text-primary"></i>
+                      Opcional. Si desea añadir un curso relacionado con habilidades funcionales que no esté mencionado en la sección anterior, le invitamos a hacerlo en el espacio que se encuentra a continuación.
+                  </div>
+                </div>
+              </div>
+
+              
+              <div class="col small">
+                <div class="row small">
+                  <div class="col small">
+                    <input class="form-control form-control-sm" type="text" placeholder="Área de desarrollo" aria-label=".form-control-sm" id="txt_area_desa">
+                  </div>
+                  <div class="col small">
+                    <input class="form-control form-control-sm" type="text" placeholder="Nombre de curso" aria-label=".form-control-sm" id="txt_area_desa_curso">
+                  </div>
+                  <div class="col small">
+                    <input class="form-control form-control-sm" type="text" placeholder="Otras Acciones específicas" aria-label=".form-control-sm" id="txt_area_desa_acciones">
+                  </div>
+                  <div class="col-auto small">
+                    <button type="button" class="btn btn-sm btn-outline-info" onclick="add_otro()"> <i class="far fa-plus-square fa-lg me-2"></i>Agregar</button>
+                  </div>
+                </div>
+                <table id="table_habilidadespid_adicional" class="table table-hover table-sm table-striped mt-4" style="width:100%">
+                  <thead>
+                    <tr>
+                      <td class="text-primary text-center" >ÁREA DE DESARROLLO</td><td class="text-primary text-center" >CURSO RELACIONADO</td><td colspan="2" class="text-primary text-center" >OTRAS ACCIONES ESPECÍFICAS</td>
+                    </tr>
+                    
+                  </thead>
+                  <tbody class="text-dark" id="tbody_pid_hab_adicional">
+                  </tbody>
+                </table>
+              </div>
+
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
+
+      <!-- FORMULARIO DE DESARROLLO class="card-title py-2" style="color: #778DB2"-->
+      <div class="card shadow mb-3" id="div_desarrollo" style="display: none">
+
+        <div class="card-body my-3">
+          <div class="my-3 pt-3">
+            <label for="txtlogros" class="form-label card-title py-0 text-primary"><i class="fas fa-user-tag pe-2"></i> LOGROS DEL COLABORADOR</label>
+            <textarea class="form-control  form-control-sm" id="txtlogros" rows="3"></textarea>
+          </div>
+
+
+          <hr>
+          <div class="my-3">
+              <label class="form-label card-title py-0 text-primary"><i class="fas fa-user-tie pe-2"></i> PROYECCIÓN DE DESARROLLO DE CARRERA</label>
+              <div class="col ps-4 small">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="promo" id="promo1">
+                  <label class="form-check-label" for="promo1"> Promoverlo de forma inmediata </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="promo" id="promo2">
+                  <label class="form-check-label" for="promo2"> Promoverlo a mediano plazo (1 a 2 años) </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="promo" id="promo3" checked>
+                  <label class="form-check-label" for="promo3"> Promoverlo a largo plazo (3 a 5 años) </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="promo" id="promo4" checked>
+                  <label class="form-check-label" for="promo4"> No se contempla actualmente </label>
+                </div>
+              </div>
+          </div>
+
+          <hr>      
+          
+          <div class="my-3">
+            <label for="txtcoment" class="form-label card-title py-0 text-primary"><i class="fas fa-comment-dots pe-2"></i> COMENTARIOS DEL EVALUADOR</label>
+            <textarea class="form-control  form-control-sm" id="txtcoment" rows="3"></textarea>
+          </div>
+
+        </div>
+      </div>
+
+
+      <div class="modal fade" id="solcursoModal" tabindex="-1" aria-labelledby="solcursoModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header bg-light text-primary">
+              <h5 class="modal-title" id="solcursoModalLabel"><i class="fas fa-chalkboard-teacher pe-2"></i> Plan Individual de Desarrollo</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form>
+                <div class="mb-3">
+                  <input id="tipo_curso" value="" type="hidden">
+                  <input id="num_c_comp" value="0" type="hidden">
+                  <label for="sel_curso_pid" class="col-form-label">Seleccionar curso:</label>
+                  <select class="form-select form-select-sm" aria-label=".form-select-sm example" id="sel_curso_pid">
+                  </select>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer bg-light">
+              <button type="button" class="btn btn-secondary btn-small" data-bs-dismiss="modal"><i class="fa-solid fa-arrow-left pe-2"></i>Cancelar</button>
+              <button type="button" class="btn btn-primary btn-small" onclick="add_curso()"><i class="fas fa-plus pe-2"></i>Agregar</button>
+            </div>
+          </div>
+        </div>
+      </div>
 
   </form>
   <div id="rpt"></div>
   
 
 <!-- Modal -->
-
-
- 
-
     <div class="modal fade" id="leermas" tabindex="-1" aria-labelledby="leermas_competencia" aria-hidden="true">
       <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
@@ -981,10 +1026,8 @@
                 <span class="fw-bold">Niveles Bajos:</span>
                 <p id="leermas_nivel_bajo"></p>
               </div>
-              
             </form>
           </div>
-
         </div>
       </div>
     </div>
@@ -1015,7 +1058,7 @@
           cod_evaluado= $("#lb_code_evaluado").html();
           cod_evaluador= $("#cod_evaluador").val();
           eval_id= $("#eval_id").val();
-          var p=0;
+          var p=0; var countkpi_cumpli=0;
           const competencias = [];
           const tareas = [];
           const hab = [];
@@ -1134,6 +1177,11 @@
             pid_cursos_cumpli.push({ "id_curso_cumpli": $("#id_curso_cumpli_"+p).val(), "nom_curso_cumpli": $("#nom_curso_cumpli_"+p).html(), "nota_curso_cumpli": $("#nota_curso_cumpli_"+p).html()})
           }
 
+
+    
+          countkpi_cumpli=$("#tbody_cumplimiento_kpi tr").length;
+        
+
           if(document.getElementById('promo1').checked) { desarrollo=0;}
           if(document.getElementById('promo2').checked) { desarrollo=1;}
           if(document.getElementById('promo3').checked) { desarrollo=2;}
@@ -1155,6 +1203,7 @@
               "tareas":tareas,
               "hab":hab,
               "pid_cursos_cumpli":pid_cursos_cumpli,
+              "countkpi_cumpli": countkpi_cumpli,
               "pid_comp_cursos":pid_comp_cursos,
               "pid_hab_cursos":pid_hab_cursos,
               "pid_adic_cursos":pid_adic_cursos,
@@ -1258,6 +1307,7 @@
             if(status<3)
             {  $('#estatus').val(status);
               $('#bto_print').addClass('visually-hidden');
+              // LISTANDO COMPETENCIAS A EVALUAR
               if(data.competencias.length>0)
               { document.getElementById('div_competencias').style.display="block";  
                 jQuery(data.competencias).each(function(i, item){
@@ -1288,17 +1338,17 @@
               }
               $("#countcomp").val(nrows); 
 
+              // LISTANDO TAREAS Y HABILDIADES A EVALUAR
               if(data.respons.length>0)
-              { 
-                  document.getElementById('div_respon').style.display="block";   
-                  x=0;cont_respon=0;
-                  jQuery(data.respons).each(function(i, item){ 
-                    contendor  = $("#tbody_respon").html();
-                    cont_respon++;
-                    nuevaFila  ="";
-                    nuevaFila   += '<tr>';
-                    nuevaFila  += '<td class="align-middle text-uppercase small text-secondary fw-bold" style="background-color:#FFFFFF" rowspan="'+item.cant_tarea+'"><span id="respon_'+cont_respon+'">'+item.area_respon+'</span></th>';     
-                    jQuery(data.tareas).each(function(i, item2){
+              { document.getElementById('div_respon').style.display="block";   
+                x=0;cont_respon=0;
+                jQuery(data.respons).each(function(i, item){ 
+                  contendor  = $("#tbody_respon").html();
+                  cont_respon++;
+                  nuevaFila  ="";
+                  nuevaFila   += '<tr>';
+                  nuevaFila  += '<td class="align-middle text-uppercase small text-secondary fw-bold" style="background-color:#FFFFFF" rowspan="'+item.cant_tarea+'"><span id="respon_'+cont_respon+'">'+item.area_respon+'</span></th>';     
+                  jQuery(data.tareas).each(function(i, item2){
                       if(item.id_respon===item2.idarearespon)
                       { x++;
                         nuevaFila  += '<td class="align-middle"><span id="desctar_'+x+'">'+item2.tarea.slice(3)+'</span><input type="hidden" id="idrespon_'+x+'" value="'+cont_respon+'"></td>';
@@ -1320,10 +1370,11 @@
                       }
                     });
                     $("#tbody_respon").html(contendor+nuevaFila);
-                  });
+                });
                 $("#counttar").val(x);
               }
 
+              // LISTANDO HABILIDADES Y CONOCIMIENTOS A EVALUAR
               if(data.habilidades.length>0)
               {
                 document.getElementById('div_habilidades').style.display="block";
@@ -1358,22 +1409,13 @@
                 }); 
                 $("#counthab").val(x);
               }
-              
-              if(data.logros!=null)
-              { $('#txtlogros').val(data.logros);}
-              if(data.comentarios!=null)
-              { $('#txtcoment').val(data.comentarios);}
-              if(data.carrera!=null)
-              { if(data.carrera==0){ document.getElementById('promo1').checked='checked';}
-                if(data.carrera==1){ document.getElementById('promo2').checked='checked';}
-                if(data.carrera==2){ document.getElementById('promo3').checked='checked';}
-                if(data.carrera==3){ document.getElementById('promo4').checked='checked';}
-              }
 
+
+              // LISTADO CURSOS OPTENIDOS EN UBITS
               if(data.res_cursos.length>0)
               {
                   document.getElementById('div_cumplimiento_pid').style.display="block";  
-                  tbody_cumplimiento_pid
+
                   $("#tbody_cumplimiento_pid").html('');
                   x=0;
                   jQuery(data.res_cursos).each(function(i, item){ 
@@ -1384,12 +1426,30 @@
                   });
                   $("#countcursos").val(x);
               }
-              
-                $("#tbody_pid_comp").html('');
-                // Iterar sobre los resultados para agregar filas a la tabla de los PID de  las competencias
-                if(data.resp_curcomp.length>0)
-                { $("#cant_curso_asig_comp").val(0);
 
+              // LISTANDO KPI SI LOS TIENE
+              $("#promedio_kpi_cumpli").html('');
+              if(data.res_kpi.length>0)
+              {
+                  document.getElementById('div_cumplimiento_kpi').style.display="block";  
+   
+                  $("#tbody_cumplimiento_kpi").html('');
+                  x=0;
+                  jQuery(data.res_kpi).each(function(i, item){ 
+                  contendor  = $("#tbody_cumplimiento_kpi").html();
+                  x++;
+                  nuevaFila   = '<tr><td class="ps-4 text-secondary text-start align-middle"><span id="nom_kpi_'+x+'">'+item.nom_kpi+'</span><input type="hidden" id="id_kpi_cumpli_'+x+'" value="'+item.id+'"></td><td class="align-middle text-center"><span id="kpi_cumpli_'+x+'">'+item.real+'</span></td></tr>';
+                  $("#tbody_cumplimiento_kpi").append(nuevaFila);
+                  });
+                  $("#promedio_kpi_cumpli").html(data.prom_metas);
+              }
+              
+
+              $("#tbody_pid_comp").html('');
+              // Iterar sobre los resultados para agregar filas a la tabla de los PID de  las competencias              
+              //  NUEVO PID
+              if(data.resp_curcomp.length>0)
+              { $("#cant_curso_asig_comp").val(0);
                   jQuery(data.resp_curcomp).each(function(i, item){
                     contendor  = $("#tbody_pid_comp").html();
                     fila=$("#tbody_pid_comp tr").length+1;
@@ -1405,23 +1465,22 @@
                     if(item.curso!=null)
                     { $("#cant_curso_asig_comp").val(parseInt($("#cant_curso_asig_comp").val())+1);}
                   }); 
-                  $("#table_desarrollo").removeClass('visually-hidden');
-                  $('#instrucc_compe').removeClass('visually-hidden');
-                }
+                $("#table_desarrollo").removeClass('visually-hidden');
+                $('#instrucc_compe').removeClass('visually-hidden');
+              }
 
-                $("#tbody_pid_hab").html('<tr><td colspan="3" class="text-center"><span class="editlink_naranja fw-bold small"  onclick="selcoursehab()"><i class="far fa-edit fa-lg"></i> Seleccionar cursos</span></td></tr>');contendor  ="";nuevaFila   = "";
-                x=0;
-                jQuery(data.resp_resp_curhab).each(function(i, item){
-                  x++;
-                  contendor  = $("#tbody_pid_hab").html();
-                  nuevaFila   = '<tr>'+
-                    '<td  class="ps-4" style=" vertical-align: middle;"><span id="nom_curso_hab_'+x+'">'+item.curso+' </span><input type="hidden" id="id_curso_hab_'+x+'" value="'+item.id_curso+'"></td>'+
-                    
-                    '<td class="text-center"><input class="form-control form-control-sm" type="date" id="fecha_curso_hb_'+x+'" value="'+ item.fecha +'"/></td>' +
-                    '<td class="text-center align-middle"><i class="fa-solid fa-trash-can dell" onclick=delrow(this,"programa") title="Eliminar Curso"></i></td></tr>';
-                    $("#tbody_pid_hab").html(contendor+nuevaFila); 
-                    $("#cant_curso_asig_hab").val(x);
-                }); 
+              $("#tbody_pid_hab").html('<tr><td colspan="3" class="text-center"><span class="editlink_naranja fw-bold small"  onclick="selcoursehab()"><i class="far fa-edit fa-lg"></i> Seleccionar cursos</span></td></tr>');contendor  ="";nuevaFila   = "";
+              x=0;
+              jQuery(data.resp_resp_curhab).each(function(i, item){
+                x++;
+                contendor  = $("#tbody_pid_hab").html();
+                nuevaFila   = '<tr>'+
+                  '<td  class="ps-4" style=" vertical-align: middle;"><span id="nom_curso_hab_'+x+'">'+item.curso+' </span><input type="hidden" id="id_curso_hab_'+x+'" value="'+item.id_curso+'"></td>'+ 
+                  '<td class="text-center"><input class="form-control form-control-sm" type="date" id="fecha_curso_hb_'+x+'" value="'+ item.fecha +'"/></td>' +
+                  '<td class="text-center align-middle"><i class="fa-solid fa-trash-can dell" onclick=delrow(this,"programa") title="Eliminar Curso"></i></td></tr>';
+                  $("#tbody_pid_hab").html(contendor+nuevaFila); 
+                  $("#cant_curso_asig_hab").val(x);
+              }); 
                 
                 x=0;
                 jQuery(data.resp_curadic).each(function(i, item){
@@ -1435,14 +1494,26 @@
                     
                     $("#tbody_pid_hab_adicional").html(contendor+nuevaFila); 
                 }); 
-
+              
+              
+              if(data.logros!=null)
+              { $('#txtlogros').val(data.logros);}
+              if(data.comentarios!=null)
+              { $('#txtcoment').val(data.comentarios);}
+              if(data.carrera!=null)
+              { if(data.carrera==0){ document.getElementById('promo1').checked='checked';}
+                if(data.carrera==1){ document.getElementById('promo2').checked='checked';}
+                if(data.carrera==2){ document.getElementById('promo3').checked='checked';}
+                if(data.carrera==3){ document.getElementById('promo4').checked='checked';}
+              }
 
               $("#id_escala").val(data.escala);
               document.getElementById('div_desarrollo').style.display="block";              
               document.getElementById("div_pid").style.display='block';
             }
             else
-            { $('#estatus').val(status);
+            { band_competencias=0; band_tareas=0; band_habilidades=0; band_kpi=0; band_pid=0;
+              $('#estatus').val(status);
               $("#tbody_resp_eval").html('');
               $('#resp_gap').removeClass('visually-hidden');
 
@@ -1535,220 +1606,286 @@
                     $("#tbody_resp_curadic").html(contendor+nuevaFila); 
                 }); 
 
+
+                // DETALLE DE EVALUACIÓN
                 $("#tbody_resp_competencias").html('');contendor  ="";nuevaFila   = "";
                 var tot_gap_comp=0;
                 var tot_pts_comp=0;
                 var tot_peso_comp=0; 
                 var tot_cumpli_comp=0;
-                jQuery(data.resp_comp).each(function(i, item){
-                  nrows++;
-                  contendor  = $("#tbody_resp_competencias").html();
-                  tipo=""
-                  if(item.prf==8){tipo="Crítica";}
-                  if(item.prf==7){tipo="Muy Importante";}
-                  if(item.prf==6){tipo="Importante";}
-                  rango_inf=item.prf;
-                  rango_sup=item.prf+2;
-                  tot_pts_comp = tot_pts_comp + Number(item.obtenido);
-                  tot_peso_comp= tot_peso_comp + Number(item.peso);
-                  tot_gap_comp= tot_gap_comp + Number(item.gap);
-                  numero_pts=Number(item.obtenido).toFixed(1);
-                  numero_peso=Number(item.peso).toFixed(1);
-                  numero_cumpli=Number((item.obtenido/item.peso)*100).toFixed(1);
-                  numero_gap=Number(item.gap).toFixed(1);
-                    /*nuevaFila   = '<tr>'+
-                    '<td style="text-align: left; vertical-align: middle;"><small>'+item.comp+'  </small></td>'+
-                    '<td style="text-align: center; vertical-align: middle;"><small>'+tipo+'  </small></td>'+
-                    '<td style="text-align: center; vertical-align: middle;"><small>'+rango_inf+' - '+rango_sup+'</small></td>'+
-                    '<td style="text-align: center; vertical-align: middle;"><small>'+item.opt+'  </small></td>'+
-                    '<td style="text-align: center; vertical-align: middle;"><small>'+numero_pts+'  </small></td>'+
-                    '<td style="text-align: center; vertical-align: middle;"><small>'+numero_peso+'  </small></td>'+
-                    '<td style="text-align: center; vertical-align: middle;"><small>'+numero_cumpli+' % </small></td>'+
-                    '<td style="text-align: center; vertical-align: middle;"><small>'+numero_gap+' % </small></td></tr>';*/
-                    extinf_min=0;
-                    extsup_max=0;                    
-                    extesperado=(Number(item.prf)*10);
-                    val_obtenido=(item.opt*10)
-                    if(val_obtenido<=(Number(item.prf)*10))
-                    { extinf_min= ((Number(item.prf)*10)-val_obtenido);}
-                    else
-                    { extinf_min= 0;}
-                    if((val_obtenido+extinf_min)>=(Number(item.prf)*10))
-                    { extesperado=20-((val_obtenido+extinf_min)-(Number(item.prf)*10));}                
-                    nuevaFila   = '<tr>'+
-                      '<td colspan="4" style="text-align: left; vertical-align: middle;">'+
-                        '<h4 class="small font-weight-bold">'+item.comp+' </h4>'+
 
-                      '<div class="progress mb-4">'+
-                        '<div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" role="progressbar" style="width: '+val_obtenido+'%" aria-valuenow="'+val_obtenido+'" aria-valuemin="0" aria-valuemax="10"><b>'+item.opt+'</b></div>'+
-                        '<div class="progress-bar text-dark" role="progressbar" style="width: '+extinf_min+'%; background:#E9ECEF;" aria-valuenow="'+extinf_min+'" aria-valuemin="0" aria-valuemax="10"></div>'+                    
-                        '<div class="progress-bar" role="progressbar" style="width: '+extesperado+'%; background:#ADB8C3;" aria-valuenow="'+extesperado+'" aria-valuemin="0" aria-valuemax="10"></div>'+                        
-                    '</div></td>'+
-                    '<td style="text-align: center; vertical-align: middle;">'+tipo+'</td>'+
-                    '<td style="text-align: center; vertical-align: middle;">'+numero_peso+'</td>'+
-                    '<td style="text-align: center; vertical-align: middle;">'+numero_pts+'</td>'+
-                    '<td style="text-align: center; vertical-align: middle;">'+numero_gap+'</td></tr>';
-                    $("#tbody_resp_competencias").html(contendor+nuevaFila); 
-                }); 
-                $("#tot_pts_comp").html(tot_peso_comp.toFixed(1));
-                $("#tot_cumpli_comp").html(tot_pts_comp.toFixed(1));
-                $("#tot_gap_comp").html(tot_gap_comp.toFixed(1));
-                $("#tbody_resp_eval").html($("#tbody_resp_eval").html()+
-                '<tr><td style="vertical-align: middle;" class="ps-2 text-start">Competencias Organizacionales </td>'+
+                if(data.resp_comp.length>0)
+                {
+                  band_competencias=1;
+
+                  jQuery(data.resp_comp).each(function(i, item){
+                    nrows++;
+                    contendor  = $("#tbody_resp_competencias").html();
+                    tipo=""
+                    if(item.prf==8){tipo="Crítica";}
+                    if(item.prf==7){tipo="Muy Importante";}
+                    if(item.prf==6){tipo="Importante";}
+                    rango_inf=item.prf;
+                    rango_sup=item.prf+2;
+                    tot_pts_comp = tot_pts_comp + Number(item.obtenido);
+                    tot_peso_comp= tot_peso_comp + Number(item.peso);
+                    tot_gap_comp= tot_gap_comp + Number(item.gap);
+                    numero_pts=Number(item.obtenido).toFixed(1);
+                    numero_peso=Number(item.peso).toFixed(1);
+                    numero_cumpli=Number((item.obtenido/item.peso)*100).toFixed(1);
+                    numero_gap=Number(item.gap).toFixed(1);
+
+                      extinf_min=0;
+                      extsup_max=0;                    
+                      extesperado=(Number(item.prf)*10);
+                      val_obtenido=(item.opt*10)
+                      if(val_obtenido<=(Number(item.prf)*10))
+                      { extinf_min= ((Number(item.prf)*10)-val_obtenido);}
+                      else
+                      { extinf_min= 0;}
+                      if((val_obtenido+extinf_min)>=(Number(item.prf)*10))
+                      { extesperado=20-((val_obtenido+extinf_min)-(Number(item.prf)*10));}                
+                      nuevaFila   = '<tr>'+
+                        '<td colspan="4" style="text-align: left; vertical-align: middle;">'+
+                          '<h4 class="small font-weight-bold">'+item.comp+' </h4>'+
+
+                        '<div class="progress mb-4">'+
+                          '<div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" role="progressbar" style="width: '+val_obtenido+'%" aria-valuenow="'+val_obtenido+'" aria-valuemin="0" aria-valuemax="10"><b>'+item.opt+'</b></div>'+
+                          '<div class="progress-bar text-dark" role="progressbar" style="width: '+extinf_min+'%; background:#E9ECEF;" aria-valuenow="'+extinf_min+'" aria-valuemin="0" aria-valuemax="10"></div>'+                    
+                          '<div class="progress-bar" role="progressbar" style="width: '+extesperado+'%; background:#ADB8C3;" aria-valuenow="'+extesperado+'" aria-valuemin="0" aria-valuemax="10"></div>'+                        
+                      '</div></td>'+
+                      '<td style="text-align: center; vertical-align: middle;">'+tipo+'</td>'+
+                      '<td style="text-align: center; vertical-align: middle;">'+numero_peso+'</td>'+
+                      '<td style="text-align: center; vertical-align: middle;">'+numero_pts+'</td>'+
+                      '<td style="text-align: center; vertical-align: middle;">'+numero_gap+'</td></tr>';
+                      $("#tbody_resp_competencias").html(contendor+nuevaFila); 
+                  }); 
+                  $("#tot_pts_comp").html(tot_peso_comp.toFixed(1));
+                  $("#tot_cumpli_comp").html(tot_pts_comp.toFixed(1));
+                  $("#tot_gap_comp").html(tot_gap_comp.toFixed(1));
+                  $("#tbody_resp_eval").html($("#tbody_resp_eval").html()+
+                  '<tr><td style="vertical-align: middle;" class="ps-2 text-start">Competencias Organizacionales </td>'+
                   '<td style="vertical-align: middle; text-center">'+tot_peso_comp.toFixed(0)+'%'+
                   '<td style="vertical-align: middle; text-center">'+tot_pts_comp.toFixed(1)+'%'+
                   '</td><td style="vertical-align: middle; text-center">'+tot_gap_comp.toFixed(1)+'%</td></tr>');
-
+                }
 
                 $("#tbody_resp_tar").html('');contendor  ="";nuevaFila1   = "";nuevaFila2   = "";nuevaFila3   = "";
                 x=0;
                 tot_peso_respon= 0;
                 tot_obtenido_respon= 0;
                 tot_gap_respon= 0;
-                jQuery(data.resp_respon).each(function(i, item){
-                  x++;
-                  contendor  =$("#tbody_resp_tar").html();
-                  //numero_cumpli=Number((item.obtenido/item.peso)*100).toFixed(1);
-                  //numero_gap=Number((item.gap/item.peso)*100).toFixed(1);
-                  tot_peso_respon= tot_peso_respon + Number(item.peso);
-                  tot_obtenido_respon= tot_obtenido_respon + Number(item.obtenido);
-                  tot_gap_respon= tot_gap_respon + Number(item.gap);
-                  peso= Number(item.peso).toFixed(1);
-                  obtenido= Number(item.obtenido).toFixed(1);
-                  gap= Number(item.gap).toFixed(1);
-                  nuevaFila1   = '<tr>'+
-                  '<td colspan="4" class=" text-center">'+
-                      '<div class="accordion accordion-flush" id="accordionFlush'+x+'">'+
-                        '<div class="accordion-item">'+
-                          '<span class="accordion-header" id="flush-heading'+x+'">'+
-                            '<button class="accordion-button collapsed m-0 p-0" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse'+x+'" aria-expanded="false" aria-controls="flush-collapse'+x+'">'+
-                              
-                              '<table style="width:100%" class="table table-sm small m-0 p-0  table-borderless">'+
-                                '<tr>'+
-                                  '<td class="text-left"width="55%">'+item.respon+'</td>'+
-                                  '<td class="text-center" width="15%" >'+peso+'</td>'+
-                                  '<td class="text-center" width="15%" >'+obtenido+'</td>'+
-                                  '<td class="text-center" width="15%" >'+gap+'</td>'+
-                                '</tr>'+
-                              '</table>'+
-
-                            '</button>'+
-                          '</span>'+
-                          '<div id="flush-collapse'+x+'" class="accordion-collapse collapse" aria-labelledby="flush-heading'+x+'" data-bs-parent="#accordionFlush'+x+'">'+
-                            '<div class="accordion-body my-0 py-0"><small><div class="row my-2"><div class="col-1"></div><div class="col-10">';
-                              nuevaFila2   = '<table style="width:100%" class="table small table-striped">'+'<thead><tr>'+
-                                '<th class="text-secondary text-center table-info"width="60%">TAREAS</th>'+
-                                '<th class="text-secondary text-center table-info" width="10%" >EVALUACIÓN</th>'+
-                                '<th class="text-secondary text-center table-info" width="10%" >VALOR</th>'+
-                                '<th class="text-secondary text-center table-info" width="10%" >PERSONA</th>'+
-                                '<th class="text-secondary text-center table-info" width="10%" >GAP</th>'+
-                              '</tr></thead>';
-                              jQuery(data.resp_tar).each(function(i, item2){
-                                if(item2.id_respon==item.id_respon)
-                                { peso2=Number(item2.peso).toFixed(1);
-                                  obtenido2=Number(item2.obtenido).toFixed(1);
-                                  gap2=Number(item2.gap).toFixed(1);
-                                  nuevaFila2+=
+                if(data.resp_respon.length>0)
+                {
+                  band_tareas=1;
+                  jQuery(data.resp_respon).each(function(i, item){
+                    x++;
+                    contendor  =$("#tbody_resp_tar").html();
+                    //numero_cumpli=Number((item.obtenido/item.peso)*100).toFixed(1);
+                    //numero_gap=Number((item.gap/item.peso)*100).toFixed(1);
+                    tot_peso_respon= tot_peso_respon + Number(item.peso);
+                    tot_obtenido_respon= tot_obtenido_respon + Number(item.obtenido);
+                    tot_gap_respon= tot_gap_respon + Number(item.gap);
+                    peso= Number(item.peso).toFixed(1);
+                    obtenido= Number(item.obtenido).toFixed(1);
+                    gap= Number(item.gap).toFixed(1);
+                    nuevaFila1   = '<tr>'+
+                    '<td colspan="4" class=" text-center">'+
+                        '<div class="accordion accordion-flush" id="accordionFlush'+x+'">'+
+                          '<div class="accordion-item">'+
+                            '<span class="accordion-header" id="flush-heading'+x+'">'+
+                              '<button class="accordion-button collapsed m-0 p-0" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse'+x+'" aria-expanded="false" aria-controls="flush-collapse'+x+'">'+
+                                
+                                '<table style="width:100%" class="table table-sm small m-0 p-0  table-borderless">'+
                                   '<tr>'+
-                                    '<td style="text-align: left; vertical-align: middle;">'+item2.tar+'</td>'+
-                                    '<td style="text-align: center; vertical-align: middle;" class="text-primary">'+item2.opt+'</td>'+
-                                    '<td style="text-align: center; vertical-align: middle;">'+peso2+'</td>'+
-                                    '<td style="text-align: center; vertical-align: middle;">'+obtenido2+'</td>'+
-                                    '<td style="text-align: center; vertical-align: middle;">'+gap2+'</td>'+
-                                  '</tr>';}
-                              });
-                               nuevaFila2+='</table>';
-                            nuevaFila3   = '</div><div class="col-1"></div></div></small></div>'+
+                                    '<td class="text-left"width="55%">'+item.respon+'</td>'+
+                                    '<td class="text-center" width="15%" >'+peso+'</td>'+
+                                    '<td class="text-center" width="15%" >'+obtenido+'</td>'+
+                                    '<td class="text-center" width="15%" >'+gap+'</td>'+
+                                  '</tr>'+
+                                '</table>'+
+
+                              '</button>'+
+                            '</span>'+
+                            '<div id="flush-collapse'+x+'" class="accordion-collapse collapse" aria-labelledby="flush-heading'+x+'" data-bs-parent="#accordionFlush'+x+'">'+
+                              '<div class="accordion-body my-0 py-0"><small><div class="row my-2"><div class="col-1"></div><div class="col-10">';
+                                nuevaFila2   = '<table style="width:100%" class="table small table-striped">'+'<thead><tr>'+
+                                  '<th class="text-secondary text-center table-info"width="60%">TAREAS</th>'+
+                                  '<th class="text-secondary text-center table-info" width="10%" >EVALUACIÓN</th>'+
+                                  '<th class="text-secondary text-center table-info" width="10%" >VALOR</th>'+
+                                  '<th class="text-secondary text-center table-info" width="10%" >PERSONA</th>'+
+                                  '<th class="text-secondary text-center table-info" width="10%" >GAP</th>'+
+                                '</tr></thead>';
+                                jQuery(data.resp_tar).each(function(i, item2){
+                                  if(item2.id_respon==item.id_respon)
+                                  { peso2=Number(item2.peso).toFixed(1);
+                                    obtenido2=Number(item2.obtenido).toFixed(1);
+                                    gap2=Number(item2.gap).toFixed(1);
+                                    nuevaFila2+=
+                                    '<tr>'+
+                                      '<td style="text-align: left; vertical-align: middle;">'+item2.tar+'</td>'+
+                                      '<td style="text-align: center; vertical-align: middle;" class="text-primary">'+item2.opt+'</td>'+
+                                      '<td style="text-align: center; vertical-align: middle;">'+peso2+'</td>'+
+                                      '<td style="text-align: center; vertical-align: middle;">'+obtenido2+'</td>'+
+                                      '<td style="text-align: center; vertical-align: middle;">'+gap2+'</td>'+
+                                    '</tr>';}
+                                });
+                                nuevaFila2+='</table>';
+                              nuevaFila3   = '</div><div class="col-1"></div></div></small></div>'+
+                            '</div>'+
                           '</div>'+
                         '</div>'+
-                      '</div>'+
-                    '</td>'+
-                    '</tr>';
-                    $("#tbody_resp_tar").html(contendor + nuevaFila1 + nuevaFila2 + nuevaFila3); 
-                });
-                $("#tot_pts_tar").html(Number(tot_peso_respon).toFixed(1));
-                $("#tot_cumpli_tar").html(Number(tot_obtenido_respon).toFixed(1));
-                $("#tot_gap_tar").html(Number(tot_gap_respon).toFixed(1));
-               
-                $("#tbody_resp_eval").html($("#tbody_resp_eval").html()+
-                '<tr><td style="vertical-align: middle;" class="ps-2 text-start">Tareas y Funciones </td>'+
+                      '</td>'+
+                      '</tr>';
+                      $("#tbody_resp_tar").html(contendor + nuevaFila1 + nuevaFila2 + nuevaFila3); 
+                  });
+                  $("#tot_pts_tar").html(Number(tot_peso_respon).toFixed(1));
+                  $("#tot_cumpli_tar").html(Number(tot_obtenido_respon).toFixed(1));
+                  $("#tot_gap_tar").html(Number(tot_gap_respon).toFixed(1));
+                
+                  $("#tbody_resp_eval").html($("#tbody_resp_eval").html()+
+                  '<tr><td style="vertical-align: middle;" class="ps-2 text-start">Tareas y Funciones </td>'+
                   '<td style="vertical-align: middle; text-center">'+tot_peso_respon.toFixed(0)+'%'+
                   '<td style="vertical-align: middle; text-center">'+tot_obtenido_respon.toFixed(1)+'%'+
                   '</td><td style="vertical-align: middle; text-center">'+tot_gap_respon.toFixed(1)+'%</td></tr>');
 
-
+                }
 
                   $("#tbody_resp_hab").html('');contendor  ="";nuevaFila= "";
                   x=0;
                   tot_peso_hab= 0;
                   tot_obtenido_hab= 0;
                   tot_gap_habi= 0;
-                  jQuery(data.resp_hab).each(function(i, item){
-                    x++;
-                    contendor  =$("#tbody_resp_hab").html();
-                    tot_peso_hab= tot_peso_hab + Number(item.peso);
-                    tot_obtenido_hab= tot_obtenido_hab + Number(item.obtenido);
-                    tot_gap_habi= tot_gap_habi + Number(item.gap);
-                    peso= Number(item.peso).toFixed(1);
-                    obtenido= Number(item.obtenido).toFixed(1);
-                    gap= Number(item.gap).toFixed(1);
-                    dato="";
-                    if(item.opt==0){dato="No la tiene"}
-                    if(item.opt==3){dato="Esta en Desarrollo"}
-                    if(item.opt==5){dato="Si la tiene"}
-                    nuevaFila   = '<tr>'+
-                      '<td style="text-align: left; vertical-align: middle;">'+item.hab+'</td>'+
-                      '<td style="text-align: center; vertical-align: middle;" class="text-primary text-small">'+dato+'</td>'+
-                      '<td style="text-align: center; vertical-align: middle;">'+peso+'</td>'+
-                      '<td style="text-align: center; vertical-align: middle;">'+obtenido+'</td>'+
-                      '<td style="text-align: center; vertical-align: middle;">'+gap+'</td>'+
-                      '</tr>';
-                      $("#tbody_resp_hab").html(contendor + nuevaFila); 
-                  });
-                    $("#tot_pts_habi").html(Number(tot_peso_hab).toFixed(1));
-                    $("#tot_cumpli_habi").html(Number(tot_obtenido_hab).toFixed(1));
-                    $("#tot_gap_habi").html(Number(tot_gap_habi).toFixed(1));
-                    
-                    $("#tbody_resp_eval").html($("#tbody_resp_eval").html()+
-                  '<tr><td style="vertical-align: middle;" class="ps-2 text-start">Habilidades y Conocimientos </td>'+
-                  '<td style="vertical-align: middle; text-center">'+tot_peso_hab.toFixed(0)+'%'+
-                  '<td style="vertical-align: middle; text-center">'+tot_obtenido_hab.toFixed(1)+'%'+
-                  '</td><td style="vertical-align: middle; text-center">'+tot_gap_habi.toFixed(1)+'%</td></tr>');
 
-
-                    $("#tbody_resp_cumpli_pid").html('');contendor  ="";nuevaFila= "";
-                    x=0;
-                    tot_peso_cumpli_pid= 0;
-                    tot_obtenido_cumpli_pid= 0;
-                    tot_gap_cumpli_pid= 0;
-                    jQuery(data.resp_cursos).each(function(i, item){
+                  if(data.resp_hab.length>0)
+                  {
+                    band_habilidades=1; 
+                    jQuery(data.resp_hab).each(function(i, item){
                       x++;
-                      contendor  =$("#tbody_resp_cumpli_pid").html();
-                      tot_peso_cumpli_pid= tot_peso_cumpli_pid + Number(item.peso);
-                      tot_obtenido_cumpli_pid= tot_obtenido_cumpli_pid + Number(item.obtenido);
-                      tot_gap_cumpli_pid= tot_gap_cumpli_pid + Number(item.gap);
+                      contendor  =$("#tbody_resp_hab").html();
+                      tot_peso_hab= tot_peso_hab + Number(item.peso);
+                      tot_obtenido_hab= tot_obtenido_hab + Number(item.obtenido);
+                      tot_gap_habi= tot_gap_habi + Number(item.gap);
                       peso= Number(item.peso).toFixed(1);
                       obtenido= Number(item.obtenido).toFixed(1);
                       gap= Number(item.gap).toFixed(1);
-
+                      dato="";
+                      if(item.opt==0){dato="No la tiene"}
+                      if(item.opt==3){dato="Esta en Desarrollo"}
+                      if(item.opt==5){dato="Si la tiene"}
                       nuevaFila   = '<tr>'+
-                        '<td style="text-align: left; vertical-align: middle;">'+item.curso+'</td>'+
-                        '<td style="text-align: center; vertical-align: middle;" class=" text-primary">'+item.opt+'</td>'+
+                        '<td style="text-align: left; vertical-align: middle;">'+item.hab+'</td>'+
+                        '<td style="text-align: center; vertical-align: middle;" class="text-primary text-small">'+dato+'</td>'+
                         '<td style="text-align: center; vertical-align: middle;">'+peso+'</td>'+
                         '<td style="text-align: center; vertical-align: middle;">'+obtenido+'</td>'+
                         '<td style="text-align: center; vertical-align: middle;">'+gap+'</td>'+
                         '</tr>';
-                        $("#tbody_resp_cumpli_pid").html(contendor + nuevaFila); 
+                        $("#tbody_resp_hab").html(contendor + nuevaFila); 
                     });
-                    $("#tot_pts_cumpli_pid").html(Number(tot_peso_cumpli_pid).toFixed(1));
-                    $("#tot_cumpli_cumpli_pid").html(Number(tot_obtenido_cumpli_pid).toFixed(1));
-                    $("#tot_gap_cumpli_pid").html(Number(tot_gap_cumpli_pid).toFixed(1));
-                     
+                    $("#tot_pts_habi").html(Number(tot_peso_hab).toFixed(1));
+                    $("#tot_cumpli_habi").html(Number(tot_obtenido_hab).toFixed(1));
+                    $("#tot_gap_habi").html(Number(tot_gap_habi).toFixed(1));
+                      
                     $("#tbody_resp_eval").html($("#tbody_resp_eval").html()+
-                    '<tr><td style="vertical-align: middle;" class="ps-2 text-start">Cumplimiento de PID </td>'+
-                    '<td style="vertical-align: middle; text-center">'+tot_peso_cumpli_pid.toFixed(0)+'%'+
-                    '<td style="vertical-align: middle; text-center">'+tot_obtenido_cumpli_pid.toFixed(1)+'%'+
-                    '</td><td style="vertical-align: middle; text-center">'+tot_gap_cumpli_pid.toFixed(1)+'%</td></tr>');
+                    '<tr><td style="vertical-align: middle;" class="ps-2 text-start">Habilidades y Conocimientos </td>'+
+                    '<td style="vertical-align: middle; text-center">'+tot_peso_hab.toFixed(0)+'%'+
+                    '<td style="vertical-align: middle; text-center">'+tot_obtenido_hab.toFixed(1)+'%'+
+                    '</td><td style="vertical-align: middle; text-center">'+tot_gap_habi.toFixed(1)+'%</td></tr>');
+                  }
+
+
+                  $("#tbody_resp_cumpli_kpi_total").html('');
+                  $("#tbody_resp_cumpli_kpi").html('');
+                  gap_kpi= 0; 
+                  obtenido_kpi= 0;
+                  tot_peso_kpi= 0;
+                  if(data.res_kpi.length>0)
+                  { 
+                    band_kpi=1;
+                    $('#resp_cumplimiento_kpi').removeClass('visually-hidden'); 
+                    
+                    jQuery(data.resp_kpi_cumpli).each(function(i, item){
+                      gap=item.peso-item.obtenido;
+                      obtenido_kpi= obtenido_kpi + Number(item.obtenido);
+                      tot_peso_kpi= tot_peso_kpi + Number(item.peso);
+                      gap_kpi= item.peso-item.obtenido;
+                      peso= Number(item.peso).toFixed(1);
+                      obtenido= Number(item.obtenido).toFixed(1);
+                      gap= Number(gap).toFixed(1);
+                      $("#tbody_resp_cumpli_kpi_total").html('<tr class="table-primary">'+
+                        '<td style="text-align: left; vertical-align: middle;" class=" text-primary fw-bold ps-4">Promedio de cumplimiento de metas</td>'+
+                        '<td style="text-align: center; vertical-align: middle;" class="text-primary fw-bold text-center">'+item.cumplimiento_promedio+'</td>'+
+                        '<td style="text-align: center; vertical-align: middle;" class="text-primary fw-bold text-center">'+peso+'</td>'+
+                        '<td style="text-align: center; vertical-align: middle;" class="text-primary fw-bold text-center">'+obtenido+'</td>'+
+                        '<td style="text-align: center; vertical-align: middle;" class="text-primary fw-bold text-center">'+gap+'</td>'+
+                        '</tr>');
+                    });
+
+                    jQuery(data.res_kpi).each(function(i, item){
+                      contendor  =$("#tbody_resp_cumpli_kpi").html();
+                    $("#tbody_resp_cumpli_kpi").html(contendor+'<tr>'+
+                        '<td style="text-align: left; vertical-align: middle;" class=" text-secondary ps-4">'+item.nom_kpi+'</td>'+
+                        '<td style="text-align: center; vertical-align: middle;">'+item.real+'</td>'+
+                        '</tr>');
+                    });
+
+
+
+                    $("#tbody_resp_eval").html($("#tbody_resp_eval").html()+
+                    '<tr><td style="vertical-align: middle;" class="ps-2 text-start">Cumplimiento de KPI </td>'+
+                    '<td style="vertical-align: middle; text-center">'+tot_peso_kpi.toFixed(0)+'%'+
+                    '<td style="vertical-align: middle; text-center">'+obtenido_kpi.toFixed(1)+'%'+
+                    '</td><td style="vertical-align: middle; text-center">'+gap_kpi.toFixed(1)+'%</td></tr>');
+
+                  }
+
+
+
+
+                    $("#tbody_resp_cumpli_pid").html('');contendor  ="";nuevaFila= "";
+                    if(data.resp_cursos.length>0)
+                    {  band_pid=1;
+                      $('#resp_cumpli_pid').removeClass('visually-hidden');                       
+                      x=0;
+                      tot_peso_cumpli_pid= 0;
+                      tot_obtenido_cumpli_pid= 0;
+                      tot_gap_cumpli_pid= 0;
+                      jQuery(data.resp_cursos).each(function(i, item){
+                        x++;
+                        contendor  =$("#tbody_resp_cumpli_pid").html();
+                        tot_peso_cumpli_pid= tot_peso_cumpli_pid + Number(item.peso);
+                        tot_obtenido_cumpli_pid= tot_obtenido_cumpli_pid + Number(item.obtenido);
+                        tot_gap_cumpli_pid= tot_gap_cumpli_pid + Number(item.gap);
+                        peso= Number(item.peso).toFixed(1);
+                        obtenido= Number(item.obtenido).toFixed(1);
+                        gap= Number(item.gap).toFixed(1);
+
+                        nuevaFila   = '<tr>'+
+                          '<td style="text-align: left; vertical-align: middle;">'+item.curso+'</td>'+
+                          '<td style="text-align: center; vertical-align: middle;" class=" text-primary">'+item.opt+'</td>'+
+                          '<td style="text-align: center; vertical-align: middle;">'+peso+'</td>'+
+                          '<td style="text-align: center; vertical-align: middle;">'+obtenido+'</td>'+
+                          '<td style="text-align: center; vertical-align: middle;">'+gap+'</td>'+
+                          '</tr>';
+                          $("#tbody_resp_cumpli_pid").html(contendor + nuevaFila); 
+                      });
+
+
+
+
+                      
+                      $("#tot_pts_cumpli_pid").html(Number(tot_peso_cumpli_pid).toFixed(1));
+                      $("#tot_cumpli_cumpli_pid").html(Number(tot_obtenido_cumpli_pid).toFixed(1));
+                      $("#tot_gap_cumpli_pid").html(Number(tot_gap_cumpli_pid).toFixed(1));
+                      
+                      $("#tbody_resp_eval").html($("#tbody_resp_eval").html()+
+                      '<tr><td style="vertical-align: middle;" class="ps-2 text-start">Cumplimiento de PID </td>'+
+                      '<td style="vertical-align: middle; text-center">'+tot_peso_cumpli_pid.toFixed(0)+'%'+
+                      '<td style="vertical-align: middle; text-center">'+tot_obtenido_cumpli_pid.toFixed(1)+'%'+
+                      '</td><td style="vertical-align: middle; text-center">'+tot_gap_cumpli_pid.toFixed(1)+'%</td></tr>');
+                    }
+
+
                      
 
                     $('#resp_txtlogros').html(data.logros.replace(/\n/g, "<br>"));
@@ -1759,9 +1896,9 @@
                     if(data.carrera==3){  $('#resp_promo').html('No se contempla actualmente');}
 
 
-                    $('#total_valor_eval').html((tot_peso_comp + tot_peso_respon + tot_peso_hab + tot_peso_cumpli_pid).toFixed(0)+'%');
-                    $('#total_cumpli_eval').html((tot_pts_comp + tot_obtenido_respon + tot_obtenido_hab + tot_obtenido_cumpli_pid).toFixed(1)+'%');
-                    $('#total_gap_eval').html((tot_gap_comp + tot_gap_respon + tot_gap_habi + tot_gap_cumpli_pid).toFixed(1)+'%');
+                    $('#total_valor_eval').html((tot_peso_comp + tot_peso_respon + tot_peso_hab + tot_peso_cumpli_pid + tot_peso_kpi).toFixed(0)+'%');
+                    $('#total_cumpli_eval').html((tot_pts_comp + tot_obtenido_respon + tot_obtenido_hab + tot_obtenido_cumpli_pid + obtenido_kpi).toFixed(1)+'%');
+                    $('#total_gap_eval').html((tot_gap_comp + tot_gap_respon + tot_gap_habi + tot_gap_cumpli_pid + gap_kpi).toFixed(1)+'%');
 
 
                   Highcharts.chart('container-graf', {
@@ -1837,23 +1974,54 @@
                       name: 'Registrations',
                       colorByPoint: true,
                       innerSize: '75%',
-                      data: [{
-                          name: 'Competencias',
-                          y: tot_pts_comp
-                      }, {
-                          name: 'Tareas y Funciones',
-                          y: tot_obtenido_respon
-                      }, {
-                          name: 'Habilidades',
-                          y: tot_obtenido_hab
-                      },{
-                          name: 'Cumplimiento PID',
-                          y: tot_obtenido_cumpli_pid
-                      },  {
-                          name: 'GAP',
-                          y: (tot_gap_respon+tot_gap_comp+tot_gap_habi+tot_gap_cumpli_pid),
-                          color: '#E6E6E6',
-                      }]
+
+                      data: (function() {
+                        // Crear un arreglo vacío para los datos de la serie
+                        let seriesData = [];
+
+                        // Agregar los datos solo si son mayores a 0 
+                        if (band_competencias > 0) {
+                            seriesData.push({
+                                name: 'Competencias',
+                                y: tot_pts_comp
+                            });
+                        }
+                        if (band_tareas > 0) {
+                            seriesData.push({
+                                name: 'Tareas y Funciones',
+                                y: tot_obtenido_respon
+                            });
+                        }
+                        if (band_habilidades > 0) {
+                            seriesData.push({
+                                name: 'Habilidades',
+                                y: tot_obtenido_hab
+                            });
+                        }
+                        if (band_kpi > 0) {
+                            seriesData.push({
+                                name: 'Cumplimiento KPI',
+                                y: obtenido_kpi
+                            });
+                        }
+                        if (band_pid > 0) {
+                            seriesData.push({
+                                name: 'Cumplimiento PID',
+                                y: tot_obtenido_cumpli_pid
+                            });
+                        }
+                        if ((tot_gap_respon + tot_gap_comp + tot_gap_habi + tot_gap_cumpli_pid + gap_kpi) > 0) {
+                            seriesData.push({
+                                name: 'GAP',
+                                y: (tot_gap_respon + tot_gap_comp + tot_gap_habi + tot_gap_cumpli_pid + gap_kpi),
+                                color: '#E6E6E6'
+                            });
+                        }
+
+                        // Retornar el arreglo con los datos de la serie
+                        return seriesData;
+                    })()
+
                   }]
                 });
             }
@@ -2151,6 +2319,9 @@
       $('#resp_tar').addClass('visually-hidden');      
       $('#resp_hab').addClass('visually-hidden');      
       $('#resp_cumpli_pid').addClass('visually-hidden');
+      $('#resp_cumplimiento_kpi').addClass('visually-hidden');
+      $("#tbody_resp_cumpli_kpi").html('');
+      $("#tbody_resp_cumpli_kpi_total").html('');
       $('#resp_desarrollo').addClass('visually-hidden');
       $('#div_pid_titulo').addClass('visually-hidden');
       $('#resp_resumen').addClass('visually-hidden');
@@ -2164,6 +2335,7 @@
       $("#tbody_respon").html('');
       $("#tbody_habilidad").html('');
       $("#tbody_cumplimiento_pid").html('');
+      $("#tbody_cumplimiento_kpi").html('');
       $("#tbody_pid_comp").html('<tr><td colspan="3" class="text-center text-secondary">No mantiene GAP en las competencias organizacionales</td></td></tr>');
       $("#tbody_pid_hab").html('<tr><td colspan="3" class="text-center"><span class="editlink_naranja fw-bold small"  onclick="selcoursehab()"><i class="far fa-edit fa-lg"></i> Seleccionar cursos</span></td></tr>');
       $("#txtlogros").val('');
