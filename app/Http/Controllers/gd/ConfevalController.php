@@ -185,10 +185,13 @@ class ConfevalController extends Controller
         if (isset(Auth::user()->id)) 
         {   $data= request()->except('_token');
             $eval_id=$data['eval_id'];
-            $query_evaluadores= DB::select("SELECT distinct edor.id_evaluador, mae.prinombre, mae.priapellido, mae.id_posicion, pos.descpue FROM eval_evaluado_evaluador edor 
-                left join m_empleados mae on (mae.id = edor.id_evaluador)
+            $query_evaluadores= DB::select("SELECT distinct mae.id as id_evaluador, mae.prinombre, mae.priapellido, mae.id_posicion, pos.descpue 
+            /*FROM eval_evaluado_evaluador edor 
+                left join m_empleados mae on (mae.id = edor.id_evaluador)*/
+                FROM m_empleados mae
                 left join posiciones pos on (mae.id_posicion = pos.id)
-                where edor.id_evaluacion=$eval_id  order by mae.prinombre and mae.priapellido");
+               /* where edor.id_evaluacion=$eval_id  */
+                order by mae.prinombre and mae.priapellido");
             echo(json_encode($query_evaluadores));
         }
         else
