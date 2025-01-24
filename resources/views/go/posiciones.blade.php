@@ -49,8 +49,8 @@
               <th class="text-light text-center">POSICIÓN</th>
               <th class="text-light text-center">DESCRIPTIVO</th>
               <th class="text-light text-center">UNIDAD</th>
+              <th class="text-light text-center">DEPTO/SUCURSAL</th>
               <th class="text-light text-center">JEFE INMEDIATO</th>
-              <th class="text-light text-center" width='8%'>ESTATUS</th>
               <th class="text-light text-center" width='6%'><i class="fas fa-cog"></i></th>
             </tr>
           </thead>
@@ -64,8 +64,9 @@
               <td>{{$pos->id}} - {{$pos->descpue}}</td>
               <td>{{$pos->descrip}}</td>
               <td>{{$pos->nomue}}</td>
+              <td>{{$pos->nomuni}}</td>
               <td>{{$pos->descpuej}}</td>
-              <td><div class="row d-flex align-items-center justify-content-center text-center"> <div class="col">@php echo $status; @endphp</div></div></td>
+              
               <td>
                   <div class="row d-flex align-items-center justify-content-center text-center">
                     <div class="col-md-2 col-xs-6 text-secondary">
@@ -340,8 +341,8 @@ function su(opt)
                   item.descpue,
                   item.descrip,
                   item.nomue,
+                  item.nomuni,
                   item.descpuej,
-                  '<div class="row d-flex align-items-center justify-content-center text-center"> <div class="col">'+status+'</div></div>',
                   '<div class="row d-flex align-items-center justify-content-center text-center">'+
                   '<div class="col-md-2 col-xs-6 text-secondary">'+
                   '<i class="fa-solid fa-pencil fa-lg edit" onclick="modalcrud(2,'+item.id+')" data-bs-toggle="modal" data-bs-target="#Modal"></i>'+  

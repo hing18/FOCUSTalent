@@ -235,7 +235,7 @@
 
 
             $(document).ready(function() {
-            $image_crop = $('#image_demo_emplo').croppie({
+            $image_crop_emplo = $('#image_demo_emplo').croppie({
                     enableExif: true,
                     viewport: {
                     width:200,
@@ -251,7 +251,7 @@
                 $('#insert_image_emplo').on('change', function(){
                        var reader = new FileReader();
                         reader.onload = function (event) {
-                            $image_crop.croppie('bind', {
+                            $image_crop_emplo.croppie('bind', {
                                 url: event.target.result
                             }).then(function(){
                                 console.log('jQuery bind complete');
@@ -265,7 +265,7 @@
 
 
                 $('.crop_image_emplo').click(function(event){                    
-                    $image_crop.croppie('result', {
+                    $image_crop_emplo.croppie('result', {
                     type: 'canvas',
                     size: 'viewport'
                     }).then(function(response){

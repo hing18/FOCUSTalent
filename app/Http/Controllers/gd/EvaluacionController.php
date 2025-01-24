@@ -240,21 +240,21 @@ class EvaluacionController extends Controller
         }
         if($status==3)
         { 
-            $query_resp_comp= DB::select("SELECT id_comp, comp, opt, prf, peso, obtenido, gap  FROM eval_res_comp WHERE id_eval=$eval_id and id_evaluado=$id_evdo and id_evaluador=$id_evaluador order by prf desc, gap desc");
+            $query_resp_comp= DB::select("SELECT id_comp, comp, opt, prf, peso, obtenido, gap  FROM eval_res_comp WHERE id_eval=$eval_id and id_evaluado=$id_evdo  order by prf desc, gap desc");
 
-            $query_resp_respon= DB::select("SELECT id_respon, respon, sum(peso) as peso, sum(obtenido) as obtenido, sum(gap) as gap FROM eval_res_tar WHERE id_eval=$eval_id and id_evaluado=$id_evdo and id_evaluador=$id_evaluador GROUP BY id_respon, respon");
-            $query_resp_tar= DB::select("SELECT id_respon, tar, opt, peso, obtenido, gap FROM eval_res_tar WHERE id_eval=$eval_id and id_evaluado=$id_evdo and id_evaluador=$id_evaluador ");
-            $query_resp_hab= DB::select("SELECT hab, opt, peso, obtenido, gap FROM eval_res_hab WHERE id_eval=$eval_id and id_evaluado=$id_evdo and id_evaluador=$id_evaluador ");
-            $query_resp_cursos= DB::select("SELECT curso, opt, peso, obtenido, (peso-obtenido) as gap FROM eval_res_cursos_cumpli WHERE id_eval=$eval_id and id_evaluado=$id_evdo and id_evaluador=$id_evaluador ");
+            $query_resp_respon= DB::select("SELECT id_respon, respon, sum(peso) as peso, sum(obtenido) as obtenido, sum(gap) as gap FROM eval_res_tar WHERE id_eval=$eval_id and id_evaluado=$id_evdo  GROUP BY id_respon, respon");
+            $query_resp_tar= DB::select("SELECT id_respon, tar, opt, peso, obtenido, gap FROM eval_res_tar WHERE id_eval=$eval_id and id_evaluado=$id_evdo  ");
+            $query_resp_hab= DB::select("SELECT hab, opt, peso, obtenido, gap FROM eval_res_hab WHERE id_eval=$eval_id and id_evaluado=$id_evdo ");
+            $query_resp_cursos= DB::select("SELECT curso, opt, peso, obtenido, (peso-obtenido) as gap FROM eval_res_cursos_cumpli WHERE id_eval=$eval_id and id_evaluado=$id_evdo  ");
 
             $query_res_kpi_cumpli= DB::select("SELECT cumplimiento_promedio, peso, obtenido FROM eval_res_kpi_cumpli WHERE id_eval=$eval_id and id_evaluado=$id_evdo");
             $query_res_kpi= DB::select("SELECT metas.id, metas.nom_kpi, metas.real FROM eval_kpi_metas as metas WHERE metas.id_eval=$eval_id and metas.id_evaluado=$id_evdo");
 
 
             $query_resp_gap= DB::select("SELECT gap_ci, gap_na, gap_comp, gap_conhab, gap  FROM eval_res_gap WHERE id_eval=$eval_id and id_evaluado=$id_evdo ");
-            $query_resp_curcomp= DB::select("SELECT id_comp, comp, curso, fecha  FROM eval_res_cursos_pid_comp WHERE id_eval=$eval_id and id_evaluado=$id_evdo and id_evaluador=$id_evaluador ");
-            $query_resp_curhab= DB::select("SELECT  id_curso, curso, fecha  FROM eval_res_cursos_pid_hab WHERE id_eval=$eval_id and id_evaluado=$id_evdo and id_evaluador=$id_evaluador ");
-            $query_resp_curadic= DB::select("SELECT area, curso, accion  FROM eval_res_cursos_pid_adic WHERE id_eval=$eval_id and id_evaluado=$id_evdo and id_evaluador=$id_evaluador ");
+            $query_resp_curcomp= DB::select("SELECT id_comp, comp, curso, fecha  FROM eval_res_cursos_pid_comp WHERE id_eval=$eval_id and id_evaluado=$id_evdo ");
+            $query_resp_curhab= DB::select("SELECT  id_curso, curso, fecha  FROM eval_res_cursos_pid_hab WHERE id_eval=$eval_id and id_evaluado=$id_evdo  ");
+            $query_resp_curadic= DB::select("SELECT area, curso, accion  FROM eval_res_cursos_pid_adic WHERE id_eval=$eval_id and id_evaluado=$id_evdo ");
         }
         $salidaJson=array(
             "evaluador"=>$id_evaluador,
@@ -712,20 +712,20 @@ class EvaluacionController extends Controller
                     else
                     { $photo=$res->photo;  }
                 }
-                $query_resp_comp= DB::select("SELECT id_comp, comp, opt, prf, peso, obtenido, gap  FROM eval_res_comp WHERE id_eval=$eval_id and id_evaluado=$id_evdo and id_evaluador=$id_evaluador order by prf desc, gap desc");
+                $query_resp_comp= DB::select("SELECT id_comp, comp, opt, prf, peso, obtenido, gap  FROM eval_res_comp WHERE id_eval=$eval_id and id_evaluado=$id_evdo  order by prf desc, gap desc");
 
-                $query_resp_respon= DB::select("SELECT id_respon, respon, sum(peso) as peso, sum(obtenido) as obtenido, sum(gap) as gap FROM eval_res_tar WHERE id_eval=$eval_id and id_evaluado=$id_evdo and id_evaluador=$id_evaluador GROUP BY id_respon, respon");
-                $query_resp_tar= DB::select("SELECT id_respon, tar, opt, peso, obtenido, gap FROM eval_res_tar WHERE id_eval=$eval_id and id_evaluado=$id_evdo and id_evaluador=$id_evaluador ");
-                $query_resp_hab= DB::select("SELECT hab, opt, peso, obtenido, gap FROM eval_res_hab WHERE id_eval=$eval_id and id_evaluado=$id_evdo and id_evaluador=$id_evaluador ");
-                $query_resp_cursos= DB::select("SELECT curso, opt, peso, obtenido, (peso-obtenido) as gap FROM eval_res_cursos_cumpli WHERE id_eval=$eval_id and id_evaluado=$id_evdo and id_evaluador=$id_evaluador ");
+                $query_resp_respon= DB::select("SELECT id_respon, respon, sum(peso) as peso, sum(obtenido) as obtenido, sum(gap) as gap FROM eval_res_tar WHERE id_eval=$eval_id and id_evaluado=$id_evdo GROUP BY id_respon, respon");
+                $query_resp_tar= DB::select("SELECT id_respon, tar, opt, peso, obtenido, gap FROM eval_res_tar WHERE id_eval=$eval_id and id_evaluado=$id_evdo  ");
+                $query_resp_hab= DB::select("SELECT hab, opt, peso, obtenido, gap FROM eval_res_hab WHERE id_eval=$eval_id and id_evaluado=$id_evdo  ");
+                $query_resp_cursos= DB::select("SELECT curso, opt, peso, obtenido, (peso-obtenido) as gap FROM eval_res_cursos_cumpli WHERE id_eval=$eval_id and id_evaluado=$id_evdo ");
     
                 $query_res_kpi_cumpli= DB::select("SELECT cumplimiento_promedio, peso, obtenido FROM eval_res_kpi_cumpli WHERE id_eval=$eval_id and id_evaluado=$id_evdo");
                 $query_res_kpi= DB::select("SELECT metas.id, metas.nom_kpi, metas.real FROM eval_kpi_metas as metas WHERE metas.id_eval=$eval_id and metas.id_evaluado=$id_evdo");
 
                 $query_resp_gap= DB::select("SELECT gap_ci, gap_na, gap_comp, gap_conhab, gap  FROM eval_res_gap WHERE id_eval=$eval_id and id_evaluado=$id_evdo ");
-                $query_resp_curcomp= DB::select("SELECT id_comp, comp, curso, fecha  FROM eval_res_cursos_pid_comp WHERE id_eval=$eval_id and id_evaluado=$id_evdo and id_evaluador=$id_evaluador ");
-                $query_resp_curhab= DB::select("SELECT  id_curso, curso, fecha  FROM eval_res_cursos_pid_hab WHERE id_eval=$eval_id and id_evaluado=$id_evdo and id_evaluador=$id_evaluador ");
-                $query_resp_curadic= DB::select("SELECT area, curso, accion  FROM eval_res_cursos_pid_adic WHERE id_eval=$eval_id and id_evaluado=$id_evdo and id_evaluador=$id_evaluador ");
+                $query_resp_curcomp= DB::select("SELECT id_comp, comp, curso, fecha  FROM eval_res_cursos_pid_comp WHERE id_eval=$eval_id and id_evaluado=$id_evdo  ");
+                $query_resp_curhab= DB::select("SELECT  id_curso, curso, fecha  FROM eval_res_cursos_pid_hab WHERE id_eval=$eval_id and id_evaluado=$id_evdo ");
+                $query_resp_curadic= DB::select("SELECT area, curso, accion  FROM eval_res_cursos_pid_adic WHERE id_eval=$eval_id and id_evaluado=$id_evdo ");
 
                 // Eliminar el prefijo de base64
                 $imgData = str_replace('data:image/png;base64,', '', $imgData);

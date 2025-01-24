@@ -60,6 +60,7 @@ Auth::routes();
         Route::get('unidades/create', 'create')->name('estructura.create');
         Route::get('unidades', 'unidades')->name('estructura.unidades');
         Route::put('unidades/update', 'update')->name('estructura.update');
+        Route::post('unidades/org', 'org')->name('estructura.org');
     });
  
 

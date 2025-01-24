@@ -97,7 +97,7 @@ class ProcedimientosController extends Controller
                     # PPSICIONES
                             $check='';
                                     if($vestruc->COD_PUE!=null){ 
-                                    echo' <td class="align-middle bg-white"><small>'.$vestruc->DESC_PUE.'</small></td></tr>';
+                                    echo' <td class="align-middle bg-white"><small>'.$vestruc->COD_PUE.'-'.$vestruc->DESC_PUE.'</small></td></tr>';
                                     }
                                     else {
                                     echo' <td><small>-</small></td></tr>';

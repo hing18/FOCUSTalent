@@ -256,6 +256,7 @@
             <div id="div_formulario" class="small" style="display: none">
               <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-2">           
                 <a href="#" class="btn btn-sm btn-secondary" onclick="back()"><i class="fas fa-arrow-left pe-2 fa-lg"></i>Volver</a>
+                <!--<a href="#" class="btn btn-sm btn-danger" onclick="no_evaluar()"><i class="fa-solid fa-ban pe-2 fa-lg"></i>No se evaluará</a>--> 
                 <a href="#" class="btn btn-sm btn-success visually-hidden" id="bto_print" onclick="print()"><i class="fas fa-file-pdf pe-2 fa-lg"></i>Imprimir</a>
                 <a href="#" class="btn btn-sm btn-warning" id="bto_continuar" onclick="save(2)"><i class="fas fa-save pe-2 fa-lg"></i>Guardar y continuar luego</a>
                 <a href="#" class="btn btn-sm btn-primary" id="bto_guarda" onclick="save(3)"><i class="fas fa-save pe-2 fa-lg"></i>Guardar y finalizar</a>
@@ -1614,6 +1615,7 @@
                 var tot_peso_comp=0; 
                 var tot_cumpli_comp=0;
 
+                tot_obtenido_cumpli_pid= 0;tot_gap_cumpli_pid =0;
                 if(data.resp_comp.length>0)
                 {
                   band_competencias=1;
@@ -1797,7 +1799,7 @@
                   $("#tbody_resp_cumpli_kpi_total").html('');
                   $("#tbody_resp_cumpli_kpi").html('');
                   gap_kpi= 0; 
-                  obtenido_kpi= 0;
+                  obtenido_kpi= 0;tot_peso_cumpli_pid=0;
                   tot_peso_kpi= 0;
                   if(data.res_kpi.length>0)
                   { 
@@ -1884,7 +1886,7 @@
                       '<td style="vertical-align: middle; text-center">'+tot_obtenido_cumpli_pid.toFixed(1)+'%'+
                       '</td><td style="vertical-align: middle; text-center">'+tot_gap_cumpli_pid.toFixed(1)+'%</td></tr>');
                     }
-
+else{$('#resp_cumpli_pid').addClass('visually-hidden'); }
 
                      
 
