@@ -77,7 +77,7 @@
 
 </style>
 
-
+<!-- GAP GLOBAL -->
 <div class="visually-hidden" id="resp_gap"> 
   <div class="row row-cols-5">
 
@@ -160,7 +160,7 @@
     </div>
   </div>
 </div>
-
+<!-- GAP GLOBAL HASTA AQUI -->
   <div class="card mb-3">
     <div class="card-header pb-0">
       <h4><i class="fas fa-tasks"></i> Evaluación de Desempeño</h4>
@@ -227,6 +227,12 @@
                             if($evaluado->status==2)
                             { $resultado='';
                               $link_evaluar='<span class=" fw-bold" style="color:#ff7700"><i class="far fa-edit fa-lg pe-2"></i>Continuar</span>';
+                            }
+                            else {
+                              if($evaluado->status==4)
+                              { $resultado='';
+                                $link_evaluar='<span class="text-danger  fw-bold"><i class="fas fa-exclamation-triangle fa-lg pe-2"></i>No Evaluado</span>';
+                              }
                             }
                           }
                         }
@@ -310,7 +316,7 @@
                             <div class="col-auto label fw-bold text-secondary">Categoría:</div>
                             <div id="lb_calificacion" class="col-lg-9 col-md-8 text-primary fw-bold"> </div>
                           </div>
-
+                          <div id="lb_comet__noevaluado" class="col-lg-9 col-md-8 visually-hidden text-secondary"> </div>
                         </div>
                       </div>
                     </div>
@@ -430,11 +436,6 @@
   <form action="">
     @csrf
     <input type="hidden" id="id_escala" value="0">
-
-
-
-
-
 
       <!-- RESPUESTAS COMPETENCIAS -->
       <div class="card shadow mb-3 visually-hidden" id="resp_comp"> 
@@ -653,11 +654,7 @@
           
         </div>
       </div>
-    
-
       
-
-
       <!-- FORMULARIO DE COMPETENCIAS -->
       <div class="accordion shadow mb-3" id="div_competencias" style="display: none">
         <div class="accordion-item">
@@ -1224,23 +1221,35 @@
                 {  resultado=Number(data.resultado);
                   $('#div_res_'+cod_evaluado).html(resultado.toFixed(1)+"% ");
                   $('#link_eval_'+cod_evaluado).html('<div class="edit"  onclick="eval('+cod_evaluado+','+estatus+')">'+
-                  '<span class="text-primary fw-bold"><i class="fas fa-search fa-lg pe-2"></i>Evaluado</span></div>'); }
+                  '<span class="text-primary fw-bold"><i class="fas fa-search fa-lg pe-2"></i>Evaluado</span></div>'); 
+                  document.getElementById("div_tabla").style.display='block';
+                  document.getElementById("div_formulario").style.display='none';
+                  document.getElementById('div_competencias').style.display="none";
+                  document.getElementById('div_respon').style.display="none";
+                  document.getElementById('div_habilidades').style.display="none";
+                  document.getElementById('div_desarrollo').style.display="none";
+                  document.getElementById('div_cumplimiento_pid').style.display="none";
+                  document.getElementById("div_pid").style.display='none';
+                  document.getElementById('div_cumplimiento_kpi').style.display="none";
+                
+                  bien('La evaluación ha sido almacenada.');}
                 if(estatus==2)
                 { 
                   $('#link_eval_'+cod_evaluado).html('<div class="edit"  onclick="eval('+cod_evaluado+','+estatus+')">'+
-                  '<span class=" fw-bold" style="color:#ff7700"><i class="far fa-edit fa-lg pe-2"></i>Continuar</span></div>'); }                
+                  '<span class=" fw-bold" style="color:#ff7700"><i class="far fa-edit fa-lg pe-2"></i>Continuar</span></div>'); 
+                  document.getElementById("div_tabla").style.display='block';
+                  document.getElementById("div_formulario").style.display='none';
+                  document.getElementById('div_competencias').style.display="none";
+                  document.getElementById('div_respon').style.display="none";
+                  document.getElementById('div_habilidades').style.display="none";
+                  document.getElementById('div_desarrollo').style.display="none";
+                  document.getElementById('div_cumplimiento_pid').style.display="none";
+                  document.getElementById("div_pid").style.display='none';
+                  document.getElementById('div_cumplimiento_kpi').style.display="none";
+                
+                  bien('La evaluación ha sido almacenada.');}                
 
-                document.getElementById("div_tabla").style.display='block';
-                document.getElementById("div_formulario").style.display='none';
-                document.getElementById('div_competencias').style.display="none";
-                document.getElementById('div_respon').style.display="none";
-                document.getElementById('div_habilidades').style.display="none";
-                document.getElementById('div_desarrollo').style.display="none";
-                document.getElementById('div_cumplimiento_pid').style.display="none";
-                document.getElementById("div_pid").style.display='none';
-                document.getElementById('div_cumplimiento_kpi').style.display="none";
-               
-                bien('La evaluación ha sido almacenada.');
+                
               }
             });
           }
@@ -1275,6 +1284,8 @@
       document.getElementById('div_desarrollo').style.display="none";
       document.getElementById('div_cumplimiento_pid').style.display="none";
       document.getElementById('div_cumplimiento_kpi').style.display="none";
+      $('#lb_comet__noevaluado').addClass('visually-hidden');
+      $('#lb_comet__noevaluado').html('');
       
       var _token = $('input[name="_token"]').val();
       var parametros = {
@@ -1411,7 +1422,6 @@
                 $("#counthab").val(x);
               }
 
-
               // LISTADO CURSOS OPTENIDOS EN UBITS
               if(data.res_cursos.length>0)
               {
@@ -1445,7 +1455,6 @@
                   $("#promedio_kpi_cumpli").html(data.prom_metas);
               }
               
-
               $("#tbody_pid_comp").html('');
               // Iterar sobre los resultados para agregar filas a la tabla de los PID de  las competencias              
               //  NUEVO PID
@@ -1513,28 +1522,31 @@
               document.getElementById("div_pid").style.display='block';
             }
             else
-            { band_competencias=0; band_tareas=0; band_habilidades=0; band_kpi=0; band_pid=0;
-              $('#estatus').val(status);
-              $("#tbody_resp_eval").html('');
-              $('#resp_gap').removeClass('visually-hidden');
+            { if(status<4)
+              {
+                // INFORME DE COLABORADOR EVALUADO
+                band_competencias=0; band_tareas=0; band_habilidades=0; band_kpi=0; band_pid=0;
+                $('#estatus').val(status);
+                $("#tbody_resp_eval").html('');
+                $('#resp_gap').removeClass('visually-hidden');
 
-              $('#resp_comp').removeClass('visually-hidden');
-              $('#resp_tar').removeClass('visually-hidden');
-              $('#resp_hab').removeClass('visually-hidden');
-              $('#resp_cumpli_pid').removeClass('visually-hidden');
-              $('#resp_desarrollo').removeClass('visually-hidden');
-              $('#resp_resumen').removeClass('visually-hidden');
-              $('#div_resultado').removeClass('visually-hidden');
-              $('#div_calificacion').removeClass('visually-hidden');
-              $('#div_f_evaluacion').removeClass('visually-hidden');
-              $('#bto_continuar').addClass('visually-hidden');
-              $('#bto_print').removeClass('visually-hidden');
-              $('#bto_guarda').addClass('visually-hidden');
-              $('#lb_resultado').html(data.resultado+"%");
-              $('#lb_calificacion').html("<div style=color:"+data.color+">"+data.categoria+"</div>");
-              $('#lb_f_evaluacion').html(data.feval);
- 
-              //-------------- RESP TABLA GAB
+                $('#resp_comp').removeClass('visually-hidden');
+                $('#resp_tar').removeClass('visually-hidden');
+                $('#resp_hab').removeClass('visually-hidden');
+                $('#resp_cumpli_pid').removeClass('visually-hidden');
+                $('#resp_desarrollo').removeClass('visually-hidden');
+                $('#resp_resumen').removeClass('visually-hidden');
+                $('#div_resultado').removeClass('visually-hidden');
+                $('#div_calificacion').removeClass('visually-hidden');
+                $('#div_f_evaluacion').removeClass('visually-hidden');
+                $('#bto_continuar').addClass('visually-hidden');
+                $('#bto_print').removeClass('visually-hidden');
+                $('#bto_guarda').addClass('visually-hidden');
+                $('#lb_resultado').html(data.resultado+"%");
+                $('#lb_calificacion').html("<div style=color:"+data.color+">"+data.categoria+"</div>");
+                $('#lb_f_evaluacion').html(data.feval);
+  
+                //-------------- RESP TABLA GAB
                 $("#tbody_resp_gap").html('');contendor  ="";nuevaFila   = "";
                 jQuery(data.resp_gap).each(function(i, item){
                   contendor  = $("#tbody_resp_gap").html();
@@ -1560,7 +1572,7 @@
                     $("#tbody_resp_gap").html(contendor+nuevaFila); 
                 }); 
 
-              //-------------- RESP TABLA PID COMPETENCIAS
+                //-------------- RESP TABLA PID COMPETENCIAS
                 $("#tbody_resp_curcomp").html('');contendor  ="";nuevaFila   = "";
                 if(data.resp_curcomp.length>0){ $('#div_pid_cursos_com').removeClass('visually-hidden'); $('#div_pid_titulo').removeClass('visually-hidden');}
                 jQuery(data.resp_curcomp).each(function(i, item){
@@ -1886,7 +1898,7 @@
                       '<td style="vertical-align: middle; text-center">'+tot_obtenido_cumpli_pid.toFixed(1)+'%'+
                       '</td><td style="vertical-align: middle; text-center">'+tot_gap_cumpli_pid.toFixed(1)+'%</td></tr>');
                     }
-else{$('#resp_cumpli_pid').addClass('visually-hidden'); }
+                    else{$('#resp_cumpli_pid').addClass('visually-hidden'); }
 
                      
 
@@ -2026,6 +2038,11 @@ else{$('#resp_cumpli_pid').addClass('visually-hidden'); }
 
                   }]
                 });
+              }
+              else{
+                $('#lb_comet__noevaluado').removeClass('visually-hidden');
+                $('#lb_comet__noevaluado').html("<b>Observación:</b> "+data.comentarios.replace(/\n/g, "<br>"));
+              }
             }
           }
           else{

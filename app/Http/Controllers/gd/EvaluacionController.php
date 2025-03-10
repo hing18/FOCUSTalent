@@ -140,14 +140,15 @@ class EvaluacionController extends Controller
             emp.priapellido,
             emp.genero,
             emp.finicio,
-            emp.id_posicion,
+            eval.id_posicion_evaluado,
             pos.descpue,
             est.nameund,
             pos.iddf
             FROM m_empleados AS emp 
-            LEFT JOIN posiciones as pos ON (pos.id=emp.id_posicion)
+            LEFT JOIN eval_evaluado_evaluador eval ON (eval.id_evaluacion=$eval_id and eval.id_evaluado=emp.id and eval.id_evaluador=$id_evaluador)
+            LEFT JOIN posiciones as pos ON (pos.id=eval.id_posicion_evaluado)
             LEFT JOIN estructuras as est ON (est.id=pos.iduni)
-            WHERE emp.id=$id_evdo");
+            WHERE emp.id=$id_evdo;");
             foreach ($data_evaluado as $r)
             {   $nom_evaluado=$r->prinombre." ".$r->priapellido;
                 
@@ -295,8 +296,8 @@ class EvaluacionController extends Controller
 
     public function showfoto(Request $request)
     {
-        if (isset(Auth::user()->id)) 
-        {   $data= request()->except('_token');
+       /* if (isset(Auth::user()->id)) 
+        {  */ $data= request()->except('_token');
             $id_evdo= $data['id_evdo'];
             
             $query = DB::select("SELECT photo FROM m_empleados WHERE id=$id_evdo");
@@ -307,15 +308,15 @@ class EvaluacionController extends Controller
                 { $dataresp=$res->photo;  }
             }
             echo($dataresp);
-        }else{
+       /* }else{
             return view('auth.login');
-        }
+        }*/
     }
 
     public function compcursos(Request $request)
     {
-        if (isset(Auth::user()->id)) 
-        {   $data= request()->except('_token');
+       /* if (isset(Auth::user()->id)) 
+        { */  $data= request()->except('_token');
             if($data['tipo']=='hab')
             {
                 $evaluado= $data['evaluado'];
@@ -335,15 +336,15 @@ class EvaluacionController extends Controller
                 ORDER BY curso.curso");
             }
             echo(json_encode($query));
-        }else{
+        /*}else{
             return view('auth.login');
-        }
+        }*/
     }
 
     public function save(Request $request)
     {
-        if (isset(Auth::user()->id)) 
-        {  $data= request()->except('_token');
+       /* if (isset(Auth::user()->id)) 
+        { */ $data= request()->except('_token');
            $competencias= $data['competencias'];
            $tareas=  $data['tareas'];
            $hab=  $data['hab'];           
@@ -653,14 +654,14 @@ class EvaluacionController extends Controller
     
             echo(json_encode($salidaJson));
 
-        }
-        else{   return view('auth.login');}
+       /* }
+        else{   return view('auth.login');}*/
     }
     
     public function print(Request $request)
     {
-        if (isset(Auth::user()->id)) 
-        {   $data= request()->except('_token');
+        /*if (isset(Auth::user()->id)) 
+        { */  $data= request()->except('_token');
             $id_evdo= $data['id_evdo_rpt'];
             $id_evaluador = Auth::user()->codigo;
             $eval_id= $data['eval_id_rpt'];
@@ -781,8 +782,8 @@ class EvaluacionController extends Controller
 
 
 
-        }
-        else{   return view('auth.login');}
+       /* }
+        else{   return view('auth.login');}*/
     }
 
     public function leermas(Request $request)

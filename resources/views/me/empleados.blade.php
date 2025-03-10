@@ -92,11 +92,11 @@
                     </div>
                 </div>
                 
-                <div class="row">
+                <div class="row pt-4">
                 
                     <div class="col-12">
                             <!-- Bordered Tabs -->
-                            <ul class="nav nav-tabs nav-tabs-bordered  nav-fill">
+                            <ul class="nav nav-tabs">
                               <li class="nav-item">
                                 <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab1">Información Personal</button>
                               </li>
@@ -116,37 +116,40 @@
                             <div class="tab-content pt-2">            
                                 <!-- INFORMACIÓN PERSONAL -->
                                 <div class="tab-pane fade show active p-4" id="tab1">   
-                                  <small>         
-                                    <div class="row mb-3">
-                                      <div class="col-md">
-                                        <label for="prinombre" class="form-label form-label-sm"><i class="fas fa-asterisk text-danger fa-2xs"></i> Primer nombre:</label>
-                                        <input type="text" class="form-control form-control-sm" id="prinombre" name="prinombre" value="">
+                                  <small>  
+                                    <div class="row pb-4">       
+                                      <h5 class="py-2 text-primary" style=" background-color: #D4DCEB; border-radius: 10px 10px 0px 0px;"><i style="color:#37517E;" class="fas fa-user-tag"></i>  Datos Personales del Colaborador</h5> 
+                                     
+                                      <div class="row mb-3">
+                                        <div class="col-md">
+                                          <label for="prinombre" class="form-label form-label-sm"><i class="fas fa-asterisk text-danger fa-2xs"></i> Primer nombre:</label>
+                                          <input type="text" class="form-control form-control-sm" id="prinombre" name="prinombre" value="">
+                                        </div>
+                                        <div class="col-md">
+                                          <label for="segnombre" class="form-label form-label-sm">Segundo nombre:</label>
+                                          <input type="text" class="form-control form-control-sm" id="segnombre" name="segnombre" value="">
+                                        </div>
+                                        <div class="col-md">
+                                          <label for="priapellido" class="form-label form-label-sm"><i class="fas fa-asterisk text-danger fa-2xs"></i> Primer apellido:</label>
+                                          <input type="text" class="form-control form-control-sm" id="priapellido" name="priapellido" value="">
+                                        </div>
+                                        <div class="col-md">
+                                          <label for="segapellido" class="form-label form-label-sm">Segundo apellido:</label>
+                                          <input type="text" class="form-control form-control-sm" id="segapellido" name="segapellido" value="">
+                                        </div>
                                       </div>
-                                      <div class="col-md">
-                                        <label for="segnombre" class="form-label form-label-sm">Segundo nombre:</label>
-                                        <input type="text" class="form-control form-control-sm" id="segnombre" name="segnombre" value="">
-                                      </div>
-                                      <div class="col-md">
-                                        <label for="priapellido" class="form-label form-label-sm"><i class="fas fa-asterisk text-danger fa-2xs"></i> Primer apellido:</label>
-                                        <input type="text" class="form-control form-control-sm" id="priapellido" name="priapellido" value="">
-                                      </div>
-                                      <div class="col-md">
-                                        <label for="segapellido" class="form-label form-label-sm">Segundo apellido:</label>
-                                        <input type="text" class="form-control form-control-sm" id="segapellido" name="segapellido" value="">
-                                      </div>
-                                    </div>
 
-                                    <div class="row mb-3">
-                                      <div class="col-md-3 mt-4 pt-2">
-                                        <div class="form-check form-check-inline">
-                                          <input class="form-check-input" type="radio" name="sel_genero[]" id="genero_M" value="M" checked>
-                                          <label class="form-check-label" for="genero_M">Masculino</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                          <input class="form-check-input" type="radio" name="sel_genero[]" id="genero_F" value="F">
-                                          <label class="form-check-label" for="genero_F">Femenino</label>
-                                        </div>
-                                      </div>  
+                                      <div class="row mb-3">
+                                        <div class="col-md-3 mt-4 pt-2">
+                                          <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="sel_genero[]" id="genero_M" value="M" checked>
+                                            <label class="form-check-label" for="genero_M">Masculino</label>
+                                          </div>
+                                          <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="sel_genero[]" id="genero_F" value="F">
+                                            <label class="form-check-label" for="genero_F">Femenino</label>
+                                          </div>
+                                        </div>  
                                         <div class="col-md-3">
                                           <label for="f_nacimiento" class="form-label form-label-sm"><i class="fas fa-asterisk text-danger fa-2xs"></i> Fecha de nacimiento:</label>
                                           <input type="date" class="form-control form-control-sm" id="f_nacimiento" name="f_nacimiento">
@@ -163,7 +166,7 @@
                                             <option value="viudo">VIUDO (A)</option>
                                           </select>
                                         </div>
-                                    </div>
+                                      </div>
 
 
                                
@@ -187,8 +190,11 @@
                                               @endforeach
                                           </select>
                                         </div>
-
                                       </div>
+                                    </div>
+                                      
+                                    <div class="row py-4">       
+                                      <h5 class="py-2 text-primary" style=" background-color: #D4DCEB; border-radius: 10px 10px 0px 0px;"><i style="color:#37517E;" class="far fa-id-card"></i> Datos de Identificación</h5>
                                       <div class="row mb-3">
                                         <div class="col-md-3">
                                           <label for="sel_tipodoc" class="form-label form-label-sm"><i class="fas fa-asterisk text-danger fa-2xs"></i> Tipo de documento:</label>
@@ -205,23 +211,27 @@
                                         <div class="col-md-3">
                                             <label for="f_vencimiento_docip" class="form-label form-label-sm"><i class="fas fa-asterisk text-danger fa-2xs"></i> Vencimiento del documento:</label>
                                             <input type="date" class="form-control form-control-sm" id="f_vencimiento_docip" name="f_vencimiento_docip">
-                                        </div>
-                                      </div>
-                                      <div class="row mb-3">
-                                        
+                                        </div>                                        
                                         <div class="col-md-3">
                                           <label for="num_ss" class="form-label form-label-sm"><i class="fas fa-asterisk text-danger fa-2xs"></i> Número de seguro social:</label>
                                           <input type="text" class="form-control form-control-sm" id="num_ss" name="num_ss" value="">
                                         </div>
+                                      </div>
+                                    </div>
+                                      
+                                    <div class="row py-4">       
+                                      <h5 class="py-2 text-primary" style=" background-color: #D4DCEB; border-radius: 10px 10px 0px 0px;"><i style="color:#37517E;" class="fas fa-address-book"></i> Datos de Contacto</h5>
+                                      <div class="row mb-3">
                                         <div class="col-md-3">
-                                            <label for="telefono" class="form-label form-label-sm"><i class="fas fa-asterisk text-danger fa-2xs"></i> Teléfono:</label>
-                                            <input type="tel" class="form-control form-control-sm" id="telefono" name="telefono" value="">
-                                        </div>
+                                          <label for="telefono" class="form-label form-label-sm"><i class="fas fa-asterisk text-danger fa-2xs"></i> Teléfono:</label>
+                                          <input type="tel" class="form-control form-control-sm" id="telefono" name="telefono" value="">
+                                        </div>                                        
                                         <div class="col-md-3">
-                                            <label for="mail" class="form-label form-label-sm">Correo electrónico:</label>
-                                            <input type="email" class="form-control form-control-sm" id="mail" name="mail" value="">
+                                          <label for="mail" class="form-label form-label-sm">Correo electrónico:</label>
+                                          <input type="email" class="form-control form-control-sm" id="mail" name="mail" value="">
                                         </div>
                                       </div>
+
                                       <div id="div_permiso_trab" style="display:none">
                                         <div class="row mb-3">
                                           <div class="col-md-3 align-middle">
@@ -236,7 +246,6 @@
                                           
                                           <div class="col-md-auto mt-4 pt-2">
                                             <a href="info/PERMISOS DE TRABAJO AUTORIZADOS POR MITRADEL.pdf" download="PERMISOS DE TRABAJO AUTORIZADOS POR MITRADEL.pdf"><i class="far fa-file-pdf fa-2x editlink" title="Descargar documento de permisos de trabajo"></i></a>
-                                            
                                           </div>
                                           <div class="col-md-3">
                                               <label for="f_vence_permiso" class="form-label form-label-sm"><i class="fas fa-asterisk text-danger fa-2xs"></i> Vencimiento del permiso:</label>
@@ -247,9 +256,26 @@
                                               <input class="form-control form-control-sm" name="filepermiso" id="filepermiso" type="file" accept=".doc,.pdf,image/*">
                                           </div>
                                         </div>
-                                      </div>
-                                   
+                                      </div>                                  
+                                    </div>
 
+                                      
+                                    <div class="row py-4">       
+                                      <h5 class="py-2 text-primary" style=" background-color: #D4DCEB; border-radius: 10px 10px 0px 0px;"><i style="color:#37517E;" class="fas fa-wheelchair"></i> Discapacidad</h5>
+                                      <div class="row mb-3">
+                                        <div class="col-md-2 align-middle">
+                                          <label for="sel_discapacidad" class="form-label form-label-sm" id="lb_docip"> Posee alguna discapacidad?</label>
+                                          <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="sel_discapacidad" id="sel_discapacidad">
+                                            <option selected value='NO'>NO</option>
+   
+                                          </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                          <label for="explique_disc" class="form-label form-label-sm"> Discapacidad específica:</label>
+                                          <input class="form-control form-control-sm" type="text" id="explique_disc" name="explique_disc" value="">
+                                        </div>
+                                      </div>                                 
+                                    </div>
 
 
                                   </small>         
@@ -332,9 +358,15 @@
                 if(data.genero=='M'){ $("#genero_M").prop("checked", true);}
                 if(data.genero=='F'){ $("#genero_F").prop("checked", true);}
                 $('#sel_nacionalidad').val(data.id_nacionalidad);
+                $('#f_nacimiento').val(data.f_nacimiento);
+                $('#mail').val(data.email);
+                $('#sel_tipodoc').val(data.id_tipo_doc_letra);
+                $('#num_docip').val(data.num_doc);
+                
               
             }
-          });
+          });1/27/1952
+          10/14/1977
 
     }
     function back()

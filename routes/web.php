@@ -250,6 +250,8 @@ Auth::routes();
         Route::post('evaluados/evaluadores','evaluadores')->name('evaluacion.evaluadores');
         Route::post('evaluados/updateevaldor','updateevaldor')->name('evaluacion.updateevaldor');
         Route::post('evaluados','editstatus')->name('evaluacion.editstatus');
+        Route::post('evaluador','informe')->name('evaluacion.informe');
+        Route::post('evaluacion/avances','avances')->name('evaluacion.avances');   
     });
 // ENVIO DE EMAIL
 

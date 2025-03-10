@@ -117,15 +117,23 @@ class ConfevalController extends Controller
         else
         {   return view('auth.login');}
     }
+
     public function levaldores(Request $request)
     {
         if (isset(Auth::user()->id)) 
         {   $data= request()->except('_token');
             $id= $data['id_eval'];
             $query_evaluacion = Db::select("SELECT id,desde, hasta, observacion, status, activo, proceso, finalizado, rechazado, total FROM vw_evaluaciones where id=$id");
-            $query_evaluadores = DB::select("WITH evaluadores as (Select DISTINCT id_evaluador 
-            from eval_evaluado_evaluador where id_evaluacion=$id) 
-            SELECT eval.id_evaluador, emp.prinombre, emp.priapellido, pos.descpue, pos.iduni, est.nameund 
+            $query_evaluadores = DB::select("WITH evaluadores as (SELECT e.id_evaluador, 
+                SUM(CASE WHEN e.status <= 1 THEN 1 ELSE 0 END) AS pendiente, 
+                SUM(CASE WHEN e.status = 2 THEN 1 ELSE 0 END) AS en_proceso, 
+                SUM(CASE WHEN e.status = 3 THEN 1 ELSE 0 END) AS evaluado, 
+                SUM(CASE WHEN e.status = 4 THEN 1 ELSE 0 END) AS rechazado
+            FROM eval_evaluado_evaluador e 
+            WHERE e.id_evaluacion = $id
+            GROUP BY e.id_evaluador) 
+            SELECT eval.id_evaluador, emp.prinombre, emp.priapellido, pos.descpue, pos.iduni, est.nameund, eval.pendiente+eval.en_proceso as por_evaluar,
+            eval.evaluado+eval.rechazado as por_evaluados
             from evaluadores eval 
             left join m_empleados as emp on (emp.id=eval.id_evaluador) 
             left join posiciones as pos on (pos.id=emp.id_posicion) 
@@ -145,7 +153,6 @@ class ConfevalController extends Controller
     {
         if (isset(Auth::user()->id)) 
         {   $data= request()->except('_token');
-     
             $st= $data['st'];      
             if($st==1)
             {   DB::table('eval_evaluado_evaluador')
@@ -250,5 +257,175 @@ class ConfevalController extends Controller
         else
         {   return view('auth.login');}
     }
+
+    public function informe(Request $request)
+    {
+        $data= request()->except('_token');     
+        $eval_id= $data['eval'];
+        $id_evdo= $data['evaldo'];
+        $id_evaluador= $data['evaldor'];
+
+
+
+        $data_evaluado=DB::select("SELECT eval.status, eval.resultado, eval.categoria, eval.color, eval.logros, eval.comentarios_evaldor, eval.carrera, eval.updated_at  FROM eval_evaluado_evaluador eval WHERE eval.id_evaluado=$id_evdo and eval.id_evaluador=$id_evaluador and eval.id_evaluacion=$eval_id");
+        foreach ($data_evaluado as $r)
+        {   $status=$r->status;
+            $resultado=$r->resultado;
+            $categoria=$r->categoria;
+            $color=$r->color;
+            $logros=$r->logros;
+            $comentarios=$r->comentarios_evaldor;
+            $carrera=$r->carrera;
+            $feval= \Carbon\Carbon::parse($r->updated_at)->isoFormat('DD \d\e MMM  Y');}        
+
+            $data_evaluado=DB::select("SELECT 
+            emp.id,
+            emp.prinombre,
+            emp.segnombre, 
+            emp.priapellido,
+            emp.genero,
+            emp.finicio,
+            emp.id_posicion,
+            pos.descpue,
+            est.nameund,
+            pos.iddf
+            FROM m_empleados AS emp 
+            LEFT JOIN eval_evaluado_evaluador eval on (eval.id_evaluado=$id_evdo and eval.id_evaluacion=$eval_id)
+            LEFT JOIN posiciones as pos ON (pos.id=eval.id_posicion_evaluado)
+            LEFT JOIN estructuras as est ON (est.id=pos.iduni)
+            WHERE emp.id=$id_evdo");
+            foreach ($data_evaluado as $r)
+            {   $nom_evaluado=$r->prinombre." ".$r->priapellido;
+                
+                $code_evaluado=$r->id;
+                $finicio= \Carbon\Carbon::parse($r->finicio)->isoFormat('DD \d\e MMM  Y');
+                $iddf=$r->iddf;
+            }
+            /*$id_escala="";$query_habilidades="";$query_res_cursos="";$query_tareas="";$query_respon = "";$data_competencias="";$query_resp_comp="";$query_resp_gap="";$query_resp_curcomp="";$query_resp_curhab="";$query_resp_curadic="";$query_resp_respon="";$query_resp_tar="";
+            $query_resp_hab="";$query_resp_cursos="";$query_res_kpi="";$query_res_kpi_cumpli="";
+            $prom_metas=0;*/
+
+
+            $query_resp_evaluador= DB::select("SELECT emp.id, emp.prinombre, emp.priapellido, pos.descpue FROM m_empleados emp 
+            LEFT JOIN posiciones pos on (pos.id=emp.id_posicion) where emp.id=$id_evaluador");
+            foreach ($query_resp_evaluador as $r)
+            {   $nom_evaluador=$r->id." - ".$r->prinombre." ".$r->priapellido;
+                $puesto_evaldor=$r->descpue;                
+            }
+
+        $query_resp_comp= DB::select("SELECT id_comp, comp, opt, prf, peso, obtenido, gap  FROM eval_res_comp WHERE id_eval=$eval_id and id_evaluado=$id_evdo  and id_evaluador=$id_evaluador order by prf desc, gap desc");
+
+        $query_resp_respon= DB::select("SELECT id_respon, respon, sum(peso) as peso, sum(obtenido) as obtenido, sum(gap) as gap FROM eval_res_tar WHERE id_eval=$eval_id and id_evaluado=$id_evdo and id_evaluador=$id_evaluador  GROUP BY id_respon, respon");
+        $query_resp_tar= DB::select("SELECT id_respon, tar, opt, peso, obtenido, gap FROM eval_res_tar WHERE id_eval=$eval_id and id_evaluado=$id_evdo  and id_evaluador=$id_evaluador ");
+        $query_resp_hab= DB::select("SELECT hab, opt, peso, obtenido, gap FROM eval_res_hab WHERE id_eval=$eval_id and id_evaluado=$id_evdo and id_evaluador=$id_evaluador ");
+        $query_resp_cursos= DB::select("SELECT curso, opt, peso, obtenido, (peso-obtenido) as gap FROM eval_res_cursos_cumpli WHERE id_eval=$eval_id and id_evaluado=$id_evdo and id_evaluador=$id_evaluador  ");
+
+        $query_res_kpi_cumpli= DB::select("SELECT cumplimiento_promedio, peso, obtenido FROM eval_res_kpi_cumpli WHERE id_eval=$eval_id and id_evaluado=$id_evdo ");
+        $query_res_kpi= DB::select("SELECT metas.id, metas.nom_kpi, metas.real FROM eval_kpi_metas as metas WHERE metas.id_eval=$eval_id and metas.id_evaluado=$id_evdo");
+
+
+        $query_resp_gap= DB::select("SELECT gap_ci, gap_na, gap_comp, gap_conhab, gap  FROM eval_res_gap WHERE id_eval=$eval_id and id_evaluado=$id_evdo ");
+        $query_resp_curcomp= DB::select("SELECT id_comp, comp, curso, fecha  FROM eval_res_cursos_pid_comp WHERE id_eval=$eval_id and id_evaluado=$id_evdo  and id_evaluador=$id_evaluador");
+        $query_resp_curhab= DB::select("SELECT  id_curso, curso, fecha  FROM eval_res_cursos_pid_hab WHERE id_eval=$eval_id and id_evaluado=$id_evdo  and id_evaluador=$id_evaluador ");
+        $query_resp_curadic= DB::select("SELECT area, curso, accion  FROM eval_res_cursos_pid_adic WHERE id_eval=$eval_id and id_evaluado=$id_evdo  and id_evaluador=$id_evaluador");
+
+
+
+        $salidaJson=array(
+            "evaluador"=>$id_evaluador,
+            "status"=>$status,
+            "nom_evaluado"=>$nom_evaluado,
+            "finicio"=>$finicio,
+            "evaluado"=>$data_evaluado,
+            "nom_evaldor"=>$nom_evaluador,
+            "puesto_evaldor"=>$puesto_evaldor,
+           /* "competencias"=>$data_competencias,
+            "respons"=>$query_respon,
+            "tareas"=>$query_tareas,
+            "habilidades"=>$query_habilidades,
+            "res_cursos"=>$query_res_cursos,
+            "res_kpi"=>$query_res_kpi,
+            "prom_metas"=>round($prom_metas,2),
+            "escala"=>$id_escala,*/
+            "resultado"=>round($resultado,1),
+            "categoria"=>$categoria,
+            "color"=>$color,
+            "logros"=>$logros,
+            "comentarios"=>$comentarios,
+            "carrera"=>$carrera,
+
+
+            "resp_comp"=>$query_resp_comp,
+            "resp_respon"=>$query_resp_respon,
+            "resp_tar"=>$query_resp_tar,
+            "resp_hab"=>$query_resp_hab,
+            "resp_cursos"=>$query_resp_cursos,
+            "resp_kpi_cumpli"=>$query_res_kpi_cumpli,
+            "res_kpi"=>$query_res_kpi,
+            "resp_gap"=>$query_resp_gap,
+            "resp_curcomp"=>$query_resp_curcomp,
+            "resp_resp_curhab"=>$query_resp_curhab,
+            "resp_curadic"=>$query_resp_curadic,
+            "feval"=>$feval,
+            
+        );
+
+        echo(json_encode($salidaJson));
+        
+    }
+
+    public function avances(Request $request)
+    {
+        if (isset(Auth::user()->id)) 
+        {   $data= request()->except('_token');
+            $id_eval=$data['id_eval'];
+            $query_grupos= DB::select("SELECT 
+                up.nameund AS undsup, 
+                u.nameund AS und, 
+                SUM(e.status <= 1) AS pendiente, 
+                SUM(e.status = 2) AS en_proceso, 
+                SUM(e.status = 3) AS evaluado, 
+                SUM(e.status = 4) AS rechazado, 
+                COUNT(*) AS total,
+                ROUND(COALESCE((SUM(e.status = 3) + SUM(e.status = 4)) * 1.0 / NULLIF(COUNT(*), 0), 0)*100, 0) AS cumplimiento
+            FROM eval_evaluado_evaluador e 
+            JOIN posiciones p ON e.id_posicion_evaluado = p.id 
+            JOIN estructuras u ON p.idue = u.id 
+            JOIN estructuras up ON u.id_sup = up.id 
+            WHERE e.id_evaluacion = $id_eval
+            GROUP BY up.id, up.nameund, u.id, u.nameund
+            ORDER BY up.id ASC, cumplimiento DESC;");
+    //        echo(json_encode($query_grupos));
+
+            $query_grp_consolidado= DB::select("SELECT 
+                up.nameund AS undsup, 
+                SUM(CASE WHEN e.status <= 1 THEN 1 ELSE 0 END) AS pendiente, 
+                SUM(CASE WHEN e.status = 2 THEN 1 ELSE 0 END) AS en_proceso, 
+                SUM(CASE WHEN e.status = 3 THEN 1 ELSE 0 END) AS evaluado, 
+                SUM(CASE WHEN e.status = 4 THEN 1 ELSE 0 END) AS rechazado, 
+                COUNT(*) AS total, 
+                ROUND(COALESCE((SUM(CASE WHEN e.status IN (3,4) THEN 1 ELSE 0 END) * 1.0 / NULLIF(COUNT(*), 0)), 0) * 100, 0) AS cumplimiento
+            FROM eval_evaluado_evaluador e
+            JOIN posiciones p ON e.id_posicion_evaluado = p.id
+            JOIN estructuras u ON p.idue = u.id
+            JOIN estructuras up ON u.id_sup = up.id
+            WHERE e.id_evaluacion = $id_eval
+            GROUP BY up.nameund
+            ORDER BY up.nameund ASC;");
+
+            $salidaJson=array(
+                "det_grupos"=>$query_grupos,                
+                "grp_consolidado"=>$query_grp_consolidado,                
+            );
+    
+            echo(json_encode($salidaJson));
+
+
+
+        }
+        else
+        {   return view('auth.login');}
+    }
+
 }
 

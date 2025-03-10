@@ -98,33 +98,29 @@
 
 
         
-<!-- Modal de advertencia por inactividad -->
-<div class="modal fade" id="sessionWarningModal" tabindex="-1" aria-labelledby="sessionWarningModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header bg-light">
-          <h5 class="modal-title" id="sessionWarningModalLabel">Tu sesión está a punto de finalizar</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <!-- Modal de advertencia por inactividad -->
+        <div class="modal fade" id="sessionWarningModal" tabindex="-1" aria-labelledby="sessionWarningModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-light">
+                <h5 class="modal-title" id="sessionWarningModalLabel">Tu sesión está a punto de finalizar</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                Estás por ser redirigido al inicio de sesión debido a la inactividad. Si deseas continuar, haz clic en el botón para permanecer en la página.
+                </div>
+                <div class="modal-footer bg-light">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Permanecer conectado</button>
+                <button type="button" class="btn btn-primary" onclick="redirectToLogin()">Redirigir al Login</button>
+                </div>
+            </div>
+            </div>
         </div>
-        <div class="modal-body">
-          Estás por ser redirigido al inicio de sesión debido a la inactividad. Si deseas continuar, haz clic en el botón para permanecer en la página.
-        </div>
-        <div class="modal-footer bg-light">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Permanecer conectado</button>
-          <button type="button" class="btn btn-primary" onclick="redirectToLogin()">Redirigir al Login</button>
-        </div>
-      </div>
-    </div>
-  </div>
 
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-
-
-
-        @endauth
-        
+        @endauth        
  
         <!-- Vendor JS Files -->
         <script src="{{ asset('assets/vendor/apexcharts/apexcharts.min.js')}}"></script>
@@ -143,10 +139,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
         <script src="https://cdn.datatables.net/2.0.2/js/dataTables.js"></script>
         <script src="https://cdn.datatables.net/2.0.2/js/dataTables.bootstrap5.js"></script>
-
-        
-
-
+     
       
         <!-- Template Main JS File -->
         

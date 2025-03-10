@@ -1402,7 +1402,7 @@
                       <div class="accordion-item">
                         <h2 class="accordion-header" id="headingSeven">
                           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">
-                            <b><i class="fas fa-address-book text-info fa-lg"></i> Domicilio</b>
+                            <b><i class="fas fa-address-book text-info fa-lg"></i> Domicilio</b> 
                           </button>
                         </h2>
                         <div id="collapseSeven" class="accordion-collapse collapse" aria-labelledby="headingSeven" data-bs-parent="#accordionFlushExample">
