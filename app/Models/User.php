@@ -25,6 +25,7 @@ class User extends Authenticatable
         'photo',
         'estatus',
         'reset_pass',
+        'last_login',
     ];
 
     /**

@@ -194,7 +194,7 @@
                 
                   
                 <div class="row mb-4 small">
-                  <div class="col-auto label fw-bold text-secondary">Posición:</div>
+                  <div class="col-auto label fw-bold text-secondary">Puesto:</div>
                   <div class="col-lg-9 col-md-8 text-secondary text-uppercase"> {{ $nom_pue_evaluador }}</div>
                 </div>
 
@@ -203,7 +203,7 @@
                     <tr>
                       <th class="text-light text-center" >CODIGO</th>
                       <th class="text-light text-center" >NOMBRE</th>
-                      <th class="text-light text-center" >POSICIÓN</th>
+                      <th class="text-light text-center" >PUESTO</th>
                       <th class="text-light text-center" >DEPARTAMENTO</th>
                       <th class="text-light text-center" >RESULTADO</th>
                       <th class="text-light text-center" width='10%'><i class="fas fa-cog"></i></th>
@@ -260,13 +260,15 @@
         
             <!-- FORMULARIO DE EVALUACIÓN --> 
             <div id="div_formulario" class="small" style="display: none">
-              <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-2">           
-                <a href="#" class="btn btn-sm btn-secondary" onclick="back()"><i class="fas fa-arrow-left pe-2 fa-lg"></i>Volver</a>
-                <!--<a href="#" class="btn btn-sm btn-danger" onclick="no_evaluar()"><i class="fa-solid fa-ban pe-2 fa-lg"></i>No se evaluará</a>--> 
-                <a href="#" class="btn btn-sm btn-success visually-hidden" id="bto_print" onclick="print()"><i class="fas fa-file-pdf pe-2 fa-lg"></i>Imprimir</a>
-                <a href="#" class="btn btn-sm btn-warning" id="bto_continuar" onclick="save(2)"><i class="fas fa-save pe-2 fa-lg"></i>Guardar y continuar luego</a>
-                <a href="#" class="btn btn-sm btn-primary" id="bto_guarda" onclick="save(3)"><i class="fas fa-save pe-2 fa-lg"></i>Guardar y finalizar</a>
-              </div>
+
+                  <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-2">
+                    <a href="#" class="btn btn-sm btn-danger me-4" id="bto_no_evalua" data-bs-toggle="modal" data-bs-target="#modal_no_evaluado" onclick="noevaluador()"><i class="fa-solid fa-ban pe-2 fa-lg"></i>No será evaluado</a>           
+                    <a href="#" class="btn btn-sm btn-secondary" onclick="back()"><i class="fas fa-arrow-left pe-2 fa-lg"></i>Volver</a>
+                    <a href="#" class="btn btn-sm btn-success visually-hidden" id="bto_print" onclick="print()"><i class="fas fa-file-pdf pe-2 fa-lg"></i>Imprimir</a>
+                    <a href="#" class="btn btn-sm btn-warning" id="bto_continuar" onclick="save(2)"><i class="fas fa-save pe-2 fa-lg"></i>Guardar y continuar luego</a>
+                    <a href="#" class="btn btn-sm btn-primary" id="bto_guarda" onclick="save(3)"><i class="fas fa-save pe-2 fa-lg"></i>Guardar y finalizar</a>
+                  </div>
+
               <div class="alert alert-danger d-flex align-items-center mt-4 visually-hidden" role="alert" id="alert_noasignado">
                 <i class="fas fa-exclamation-circle fa-lg pe-2"></i> El colaborador no esta asignado para ser evaluado por usted.
               </div>
@@ -292,7 +294,7 @@
                           </div>
                             
                           <div class="row mb-2">
-                            <div class="col-auto label fw-bold text-secondary">Posición:</div>
+                            <div class="col-auto label fw-bold text-secondary">Puesto:</div>
                             <div id="lb_nom_puesto_evaluado" class="col-lg-9 col-md-8 text-secondary text-uppercase"></div>
                           </div>   
         
@@ -301,7 +303,7 @@
                             <div id="lb_nom_depto_evaluado" class="col-lg-9 col-md-8 text-secondary text-uppercase"></div>
                           </div>
 
-                          <div class="row mb-2">
+                          <div class="row mb-2 visually-hidden">
                             <div class="col-auto label fw-bold text-secondary">Fecha de Ingreso:</div>
                             <div id="lb_finicio" class="col-lg-9 col-md-8 text-secondary text-uppercase"> </div>
                           </div>
@@ -321,6 +323,13 @@
                       </div>
                     </div>
                   </div>
+                  
+                  <div class="row  d-flex justify-content-center visually-hidden" id="alert_cursos">
+                    <div class=" col-10 alert alert-warning alert-dismissible fade show" role="alert">
+                      <strong>Nota:</strong> La persona evaluada está en proceso de finalizar los cursos asignados en UBITS. <br>Puede continuar la evaluación sin ningún problema. Una vez que la persona termine los cursos, podrá finalizar el proceso y obtener el resultado total.
+                    </div>
+                  </div>
+
                 </section> 
               </div>
 
@@ -809,6 +818,7 @@
           <div id="collapsecumplimientopid" class="accordion-collapse collapse show" aria-labelledby="headingcumplimientopid" data-bs-parent="#accordionExample">
             <div class="accordion-body"> 
               <div class="col small  d-flex justify-content-center">
+
                 <table id="table_cumplimiento_pid" class="table table-sm" style="width:60%">
                   <thead>
                     <tr>
@@ -1030,11 +1040,142 @@
       </div>
     </div>
 
+    <!--Modal no EVALUADO-->
+ 
+    <div class="modal fade" id="modal_no_evaluado" data-bs-backdrop="static" aria-labelledby="exampleModalLongTitle" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header bg-light">
+            <h5 class="modal-title text-danger" id="exampleModalLongTitle"><i class="fa-solid fa-ban pe-2 fa-lg"></i>No será evaluado</h5>
+          </div>
+          <div class="modal-body small">                  
+            <div class="my-2">
+               Por favor indicar la razón por la cual el colaborador no será evaluado.
+            </div>
+            <div class="form-check ms-2">
+              <input class="form-check-input" type="radio" name="opt" id="opt1" onchange="destalle_noeval()" style="cursor: pointer" checked>
+              <label class="form-check-label" for="opt1" style="cursor: pointer">
+                Ya no labora en la organización.
+              </label>
+            </div>
+            <div class="form-check ms-2">
+              <input class="form-check-input" type="radio" name="opt" id="opt2" onchange="destalle_noeval()" style="cursor: pointer">
+              <label class="form-check-label" for="opt2" style="cursor: pointer">
+                Es nuevo en la organización (menos de 6 meses).
+              </label>
+            </div>
+            <div class="form-check ms-2">
+              <input class="form-check-input" type="radio" name="opt" id="opt3" onchange="destalle_noeval()" style="cursor: pointer">
+              <label class="form-check-label" for="opt3" style="cursor: pointer">
+                No pertenece a este departamento.
+              </label>
+            </div>    
+            <div class="form-check ms-2">
+              <input class="form-check-input" type="radio" name="opt" id="opt4" onchange="destalle_noeval()" style="cursor: pointer">
+              <label class="form-check-label" for="opt4" style="cursor: pointer">
+                Otra.
+              </label>
+            </div>         
+            <div class="my-3 visually-hidden" id="coment_noeval">
+              <label for="txtdet_noevalua" class="form-label py-0 text-secondary"> Especificar</label>
+              <textarea class="form-control  form-control-sm" id="txtdet_noevalua" rows="2"></textarea>
+            </div>
+            <div class="text-center visually-hidden text-danger" id="div_msn_detallar">
+              <i class="fas fa-exclamation-triangle"></i> Por favor detallar un poco más.
+           </div>
+          </div>
+          <div class="modal-footer bg-light">
+            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal"><i class="fa-solid fa-arrow-left pe-2"></i>Cancelar</button>
+            <button type="button" class="btn btn-primary btn-sm"  onclick="noeval(4)"><i class="fas fa-save pe-2 fa-lg"></i>Guardar</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 @endsection
 <script type='text/javascript'>
+  function noevaluador()
+  { $('#coment_noeval').addClass('visually-hidden');
+    $('#opt1').prop('checked', true); 
+    $('#txtdet_noevalua').val('');
+  }
+    function destalle_noeval()
+    { $('#txtdet_noevalua').val('');
+      if ($('#opt4').is(':checked')) {
+        $('#coment_noeval').removeClass('visually-hidden'); // Muestra el div
+        $('#txtdet_noevalua').focus();
+      } else {
+        $('#coment_noeval').addClass('visually-hidden'); // Oculta el div
+      }
+    }
+
+    function noeval(estatus)
+    { if ($('#opt1').is(':checked')) { comentarios='Ya no labora en la organización.';}
+      if ($('#opt2').is(':checked')) { comentarios='Es nuevo en la organización (menos de 6 meses).';}
+      if ($('#opt3').is(':checked')) { comentarios='No pertenece a este departamento.';}
+      if ($('#opt4').is(':checked')) { comentarios='Otra. '+$('#txtdet_noevalua').val();}
+      
+      if(comentarios.length>10)
+      {
+        Swal.fire({
+        text: "Se procederá a cerrar la evaluación indicando que el colaborador no será evaluado. ¿Desea continuar? ",
+        showCancelButton: true,
+          cancelButtonText:  '<i class="fas fa-arrow-left"></i> Cancelar',
+          confirmButtonText: '<i class="fas fa-save pr-2"></i> Si, continuar',
+          confirmButtonColor: "#d33",
+          icon: "warning",
+        }).then((result) => {
+          /* Read more about isConfirmed, isDenied below */
+          if (result.isConfirmed) 
+          {  cod_evaluado=$("#lb_code_evaluado").html();
+              var parametros = {
+              "cod_evaluado": cod_evaluado,
+              "cod_evaluador": $("#cod_evaluador").val(),
+              "comentarios": comentarios,
+              "eval_id": $("#eval_id").val(),
+              "estatus": estatus,
+              "_token": $('input[name="_token"]').val()};
+
+            $.ajax({
+              data:  parametros, 
+              url:   "{{ route('evaluacion.save') }}",
+              type:  'POST', 
+              cache: false,    
+              dataType: "json",      
+              success:  function (data) { 
+              
+                $('#modal_no_evaluado').modal('hide');
+                $('#link_eval_'+cod_evaluado).html('<div class="edit"  onclick="eval('+cod_evaluado+','+estatus+')">'+                    
+                '<span class="text-danger  fw-bold"><i class="fas fa-exclamation-triangle fa-lg pe-2"></i>No Evaluado</span>'); 
+                document.getElementById("div_tabla").style.display='block';
+                document.getElementById("div_formulario").style.display='none';
+                document.getElementById('div_competencias').style.display="none";
+                document.getElementById('div_respon').style.display="none";
+                document.getElementById('div_habilidades').style.display="none";
+                document.getElementById('div_desarrollo').style.display="none";
+                document.getElementById('div_cumplimiento_pid').style.display="none";
+                document.getElementById("div_pid").style.display='none';
+                document.getElementById('div_cumplimiento_kpi').style.display="none";
+                bien('La evaluación ha sido finalizada.');                
+                
+              }
+                
+            });
+
+
+
+          }
+          })
+      }
+      else
+      {
+        $('#div_msn_detallar').removeClass('visually-hidden');
+        setTimeout(function(){ $('#div_msn_detallar').addClass('visually-hidden')}, 3000);        
+        $('#txtdet_noevalua').focus();
+      }
+    }
 
     function save(estatus)
     { 
@@ -1047,7 +1188,7 @@
       showCancelButton: true,
         cancelButtonText:  '<i class="fas fa-arrow-left"></i> Cancelar',
         confirmButtonText: '<i class="fas fa-save pr-2"></i> Si, guardar',
-      icon: "question",
+        icon: "question",
       }).then((result) => {
         /* Read more about isConfirmed, isDenied below */
         if (result.isConfirmed) 
@@ -1317,8 +1458,9 @@
             
             nrows=0;
             if(status<3)
-            {  $('#estatus').val(status);
+            { $('#estatus').val(status);
               $('#bto_print').addClass('visually-hidden');
+              $('#bto_no_evalua').removeClass('visually-hidden');
               // LISTANDO COMPETENCIAS A EVALUAR
               if(data.competencias.length>0)
               { document.getElementById('div_competencias').style.display="block";  
@@ -1422,21 +1564,30 @@
                 $("#counthab").val(x);
               }
 
-              // LISTADO CURSOS OPTENIDOS EN UBITS
+              // LISTADO CURSOS OPTENIDOS EN UBITS 
               if(data.res_cursos.length>0)
-              {
-                  document.getElementById('div_cumplimiento_pid').style.display="block";  
+                {
+                     
 
-                  $("#tbody_cumplimiento_pid").html('');
-                  x=0;
-                  jQuery(data.res_cursos).each(function(i, item){ 
-                  contendor  = $("#tbody_cumplimiento_pid").html();
-                  x++;
-                  nuevaFila   = '<tr><td class="ps-4 text-secondary text-start align-middle"><span id="nom_curso_cumpli_'+x+'">'+item.nom_curso+'</span><input type="hidden" id="id_curso_cumpli_'+x+'" value="'+item.id_curso+'"></td><td class="align-middle text-center"><span id="nota_curso_cumpli_'+x+'">'+item.nota+'</span></td></tr>';
-                  $("#tbody_cumplimiento_pid").append(nuevaFila);
-                  });
-                  $("#countcursos").val(x);
-              }
+                    $("#tbody_cumplimiento_pid").html('');
+                    x=0;
+                    jQuery(data.res_cursos).each(function(i, item){ 
+                    contendor  = $("#tbody_cumplimiento_pid").html();
+                    x++;
+                    nuevaFila   = '<tr><td class="ps-4 text-secondary text-start align-middle"><span id="nom_curso_cumpli_'+x+'">'+item.nom_curso+'</span><input type="hidden" id="id_curso_cumpli_'+x+'" value="'+item.id_curso+'"></td><td class="align-middle text-center"><span id="nota_curso_cumpli_'+x+'">'+item.nota+'</span></td></tr>';
+                    $("#tbody_cumplimiento_pid").append(nuevaFila);
+                    });
+                    $("#countcursos").val(x);
+                  if(data.cursos_stand==0)
+                  { $('#alert_cursos').addClass('visually-hidden');
+                    $('#bto_guarda').removeClass('visually-hidden');
+                    document.getElementById('div_cumplimiento_pid').style.display="block"; 
+                  }
+                  else{ $('#alert_cursos').removeClass('visually-hidden');
+                    $('#bto_guarda').addClass('visually-hidden');
+                    document.getElementById('div_cumplimiento_pid').style.display="none"; 
+                  }
+                }
 
               // LISTANDO KPI SI LOS TIENE
               $("#promedio_kpi_cumpli").html('');
@@ -1541,6 +1692,7 @@
                 $('#div_f_evaluacion').removeClass('visually-hidden');
                 $('#bto_continuar').addClass('visually-hidden');
                 $('#bto_print').removeClass('visually-hidden');
+                $('#bto_no_evalua').addClass('visually-hidden');
                 $('#bto_guarda').addClass('visually-hidden');
                 $('#lb_resultado').html(data.resultado+"%");
                 $('#lb_calificacion').html("<div style=color:"+data.color+">"+data.categoria+"</div>");
@@ -2040,8 +2192,16 @@
                 });
               }
               else{
+                
+                if(data.comentarios.slice(0,5)=='Otra.')
+                { comentarios=data.comentarios.slice(6)}
+                else{ comentarios=data.comentarios}
                 $('#lb_comet__noevaluado').removeClass('visually-hidden');
-                $('#lb_comet__noevaluado').html("<b>Observación:</b> "+data.comentarios.replace(/\n/g, "<br>"));
+                $('#lb_comet__noevaluado').html("<b>Observación:</b> <span class='text-danger'> <i class='fas fa-exclamation-triangle'></i> No será evaluado.</span><br> "+comentarios.replace(/\n/g, "<br>"));
+                $('#bto_continuar').addClass('visually-hidden');
+                $('#bto_print').addClass('visually-hidden');
+                $('#bto_no_evalua').addClass('visually-hidden');
+                $('#bto_guarda').addClass('visually-hidden');
               }
             }
           }
@@ -2370,6 +2530,11 @@
       $('#div_pid_cursos_com').addClass('visually-hidden');
       $('#div_pid_cursos_hab').addClass('visually-hidden');
       $('#div_pid_cursos_adi').addClass('visually-hidden');
+      
+      $('#alert_cursos').addClass('visually-hidden');
+      $('#coment_noeval').addClass('visually-hidden');
+      $('#div_msn_detallar').addClass('visually-hidden');
+      $('#txtdet_noevalua').html('');
     }
 
     function bien(msn)

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
 
 class ConfevalController extends Controller
@@ -132,12 +133,14 @@ class ConfevalController extends Controller
             FROM eval_evaluado_evaluador e 
             WHERE e.id_evaluacion = $id
             GROUP BY e.id_evaluador) 
-            SELECT eval.id_evaluador, emp.prinombre, emp.priapellido, pos.descpue, pos.iduni, est.nameund, eval.pendiente+eval.en_proceso as por_evaluar,
-            eval.evaluado+eval.rechazado as por_evaluados
+            SELECT eval.id_evaluador, emp.prinombre, emp.priapellido, pos.descpue, est.nameund, eval.pendiente+eval.en_proceso as por_evaluar,
+            eval.evaluado+eval.rechazado as por_evaluados,
+            DATE_FORMAT(u.last_login, '%d-%m-%Y') AS last_login
             from evaluadores eval 
-            left join m_empleados as emp on (emp.id=eval.id_evaluador) 
-            left join posiciones as pos on (pos.id=emp.id_posicion) 
-            left join estructuras as est on (est.id=pos.iduni)");
+            left JOIN m_empleados as emp on (emp.id=eval.id_evaluador) 
+            left JOIN posiciones as pos on (pos.id=emp.id_posicion) 
+            left JOIN estructuras as est on (est.id=pos.idue)
+            LEFT JOIN users AS u ON u.codigo = eval.id_evaluador;");
 
             $salidaJson=array(
                 "evaluacion"=>$query_evaluacion,
@@ -304,8 +307,8 @@ class ConfevalController extends Controller
             /*$id_escala="";$query_habilidades="";$query_res_cursos="";$query_tareas="";$query_respon = "";$data_competencias="";$query_resp_comp="";$query_resp_gap="";$query_resp_curcomp="";$query_resp_curhab="";$query_resp_curadic="";$query_resp_respon="";$query_resp_tar="";
             $query_resp_hab="";$query_resp_cursos="";$query_res_kpi="";$query_res_kpi_cumpli="";
             $prom_metas=0;*/
-
-
+            $puesto_evaldor="-";
+            $nom_evaluador="-";
             $query_resp_evaluador= DB::select("SELECT emp.id, emp.prinombre, emp.priapellido, pos.descpue FROM m_empleados emp 
             LEFT JOIN posiciones pos on (pos.id=emp.id_posicion) where emp.id=$id_evaluador");
             foreach ($query_resp_evaluador as $r)
@@ -395,7 +398,7 @@ class ConfevalController extends Controller
             WHERE e.id_evaluacion = $id_eval
             GROUP BY up.id, up.nameund, u.id, u.nameund
             ORDER BY up.id ASC, cumplimiento DESC;");
-    //        echo(json_encode($query_grupos));
+        //        echo(json_encode($query_grupos));
 
             $query_grp_consolidado= DB::select("SELECT 
                 up.nameund AS undsup, 
@@ -425,6 +428,144 @@ class ConfevalController extends Controller
         }
         else
         {   return view('auth.login');}
+    }
+
+
+    public function print(Request $request)
+    {
+        /*if (isset(Auth::user()->id)) 
+        { */  $data= request()->except('_token');
+            $id_evdo= $data['id_evdo_rpt'];
+            $eval_id= $data['eval_id_rpt'];
+            
+            $imgData =  $data['image'];
+            $feval="";
+            $data_evaluado=DB::select("SELECT eval.status, eval.resultado, eval.categoria, eval.color, eval.logros, eval.comentarios_evaldor, eval.carrera, eval.updated_at, eval.id_evaluador FROM eval_evaluado_evaluador eval WHERE eval.id_evaluado=$id_evdo and eval.id_evaluacion=$eval_id");
+            foreach ($data_evaluado as $r)
+            {   $status=$r->status;
+                $resultado=$r->resultado;
+                $categoria=$r->categoria;
+                $color=$r->color;
+                $logros=$r->logros;
+                $comentarios=$r->comentarios_evaldor;
+                $carrera=$r->carrera;
+                $id_evaluador = $r->id_evaluador;
+                $feval= \Carbon\Carbon::parse($r->updated_at)->isoFormat('DD \d\e MMM  Y');}
+    
+                $data_evaluado=DB::select("SELECT 
+                emp.id,
+                emp.prinombre,         
+                emp.segnombre,     
+                emp.priapellido,
+                emp.genero,
+                emp.finicio,            
+                emp.id_posicion,
+                pos.descpue,
+                est.nameund,
+                pos.iddf
+    
+                FROM m_empleados AS emp 
+                LEFT JOIN posiciones as pos ON (pos.id=emp.id_posicion)
+                LEFT JOIN estructuras as est ON (est.id=pos.iduni)
+                WHERE emp.id=$id_evdo");
+                foreach ($data_evaluado as $r)
+                {   $nom_evaluado=$r->prinombre;
+                    if(($r->segnombre!=null)&&($r->segnombre!=NULL))
+                    {   $nom_evaluado.=" ".$r->segnombre;}
+                    $nom_evaluado.=" ".$r->priapellido;
+                    $code_evaluado=$r->id;
+                    $finicio= \Carbon\Carbon::parse($r->finicio)->isoFormat('DD \d\e MMM  Y');
+                    $iddf=$r->iddf;
+                }
+
+                $puesto_evaldor="-";
+                $nom_evaluador="-";
+                $query_resp_evaluador= DB::select("SELECT emp.id, emp.prinombre, emp.priapellido, pos.descpue FROM m_empleados emp 
+                LEFT JOIN posiciones pos on (pos.id=emp.id_posicion) where emp.id=$id_evaluador");
+                foreach ($query_resp_evaluador as $r)
+                {   $nom_evaluador=$r->id." - ".$r->prinombre." ".$r->priapellido;
+                    $puesto_evaldor=$r->descpue;                
+                }
+
+                $query = DB::select("SELECT photo FROM m_empleados WHERE id=$id_evdo");
+                foreach ($query as $res)
+                {   if($res->photo!=null)
+                    {   $photo= '<img src="data:image/png;base64,'.base64_encode($res->photo).'" class="rounded-circle" id="img_photo" width="100" height="100"/>';}
+                    else
+                    { $photo=$res->photo;  }
+                }
+                $query_resp_comp= DB::select("SELECT id_comp, comp, opt, prf, peso, obtenido, gap  FROM eval_res_comp WHERE id_eval=$eval_id and id_evaluado=$id_evdo  order by prf desc, gap desc");
+
+                $query_resp_respon= DB::select("SELECT id_respon, respon, sum(peso) as peso, sum(obtenido) as obtenido, sum(gap) as gap FROM eval_res_tar WHERE id_eval=$eval_id and id_evaluado=$id_evdo GROUP BY id_respon, respon");
+                $query_resp_tar= DB::select("SELECT id_respon, tar, opt, peso, obtenido, gap FROM eval_res_tar WHERE id_eval=$eval_id and id_evaluado=$id_evdo  ");
+                $query_resp_hab= DB::select("SELECT hab, opt, peso, obtenido, gap FROM eval_res_hab WHERE id_eval=$eval_id and id_evaluado=$id_evdo  ");
+                $query_resp_cursos= DB::select("SELECT curso, opt, peso, obtenido, (peso-obtenido) as gap FROM eval_res_cursos_cumpli WHERE id_eval=$eval_id and id_evaluado=$id_evdo ");
+    
+                $query_res_kpi_cumpli= DB::select("SELECT cumplimiento_promedio, peso, obtenido FROM eval_res_kpi_cumpli WHERE id_eval=$eval_id and id_evaluado=$id_evdo");
+                $query_res_kpi= DB::select("SELECT metas.id, metas.nom_kpi, metas.real FROM eval_kpi_metas as metas WHERE metas.id_eval=$eval_id and metas.id_evaluado=$id_evdo");
+
+                $query_resp_gap= DB::select("SELECT gap_ci, gap_na, gap_comp, gap_conhab, gap  FROM eval_res_gap WHERE id_eval=$eval_id and id_evaluado=$id_evdo ");
+                $query_resp_curcomp= DB::select("SELECT id_comp, comp, curso, fecha  FROM eval_res_cursos_pid_comp WHERE id_eval=$eval_id and id_evaluado=$id_evdo  ");
+                $query_resp_curhab= DB::select("SELECT  id_curso, curso, fecha  FROM eval_res_cursos_pid_hab WHERE id_eval=$eval_id and id_evaluado=$id_evdo ");
+                $query_resp_curadic= DB::select("SELECT area, curso, accion  FROM eval_res_cursos_pid_adic WHERE id_eval=$eval_id and id_evaluado=$id_evdo ");
+
+                // Eliminar el prefijo de base64
+                $imgData = str_replace('data:image/png;base64,', '', $imgData);
+                $imgData = base64_decode($imgData);
+        
+                // Crear una imagen temporal para guardarla en el servidor
+                $imagePath = storage_path('app/public/grafica.png');
+                file_put_contents($imagePath, $imgData);             
+
+                $data=json_encode(array(
+                "feval"=>$feval,
+                "id_evdo"=>$id_evdo,
+                "id_evdor"=>$id_evaluador,
+                "nom_evaldor"=>$nom_evaluador,
+                "puesto_evaldor"=>$puesto_evaldor,
+                "eval_id"=>$eval_id,
+                "status"=>$status,
+                "nom_evaluado"=>$nom_evaluado,
+                "finicio"=>$finicio,
+                "evaluado"=>$data_evaluado,
+                "resultado"=>round($resultado,1),
+                "categoria"=>$categoria,
+                "color"=>$color,
+                "logros"=>$logros,
+                "comentarios"=>$comentarios,
+                "carrera"=>$carrera,
+                "photo"=>$photo,
+               /* "competencias"=>$data_competencias,
+                "respons"=>$query_respon,
+                "tareas"=>$query_tareas,
+                "habilidades"=>$query_habilidades,
+                "res_cursos"=>$query_res_cursos,
+                "escala"=>$id_escala,*/
+                
+                "res_kpi"=>$query_res_kpi,
+                "resp_kpi_cumpli"=>$query_res_kpi_cumpli,
+                "resp_comp"=>$query_resp_comp,
+                "resp_respon"=>$query_resp_respon,
+                "resp_tar"=>$query_resp_tar,
+                "resp_hab"=>$query_resp_hab,
+                "resp_cursos"=>$query_resp_cursos,
+                "resp_gap"=>$query_resp_gap,    
+                "resp_curcomp"=>$query_resp_curcomp,
+                "resp_resp_curhab"=>$query_resp_curhab,
+                "resp_curadic"=>$query_resp_curadic,
+                "imgData"=>'<img src="data:image/png;base64,'.base64_encode($imgData).'" id="graf" width="100%" />',
+            ));
+    
+            
+
+            $pdf = Pdf::setPaper('letter')->loadView('gd.print', compact('data'));                
+            $safe_nom_evaluado = preg_replace('/[^a-zA-Z0-9_\-]/', '', $nom_evaluado);
+            return $pdf->stream('Evaluación '.$safe_nom_evaluado.'.pdf');
+
+
+
+       /* }
+        else{   return view('auth.login');}*/
     }
 
 }

@@ -13,6 +13,7 @@ use App\Http\Controllers\re\OfertasController;
 use App\Http\Controllers\re\EntrevistasController;
 use App\Http\Controllers\gd\EvaluacionController;
 use App\Http\Controllers\gd\ConfevalController;
+use App\Http\Controllers\gd\GapController;
 
 
 use App\Http\Controllers\me\EmpleadosController;
@@ -23,8 +24,10 @@ use App\Http\Controllers\conf\RolesController;
 use App\Http\Controllers\emails\ContactanosController;
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\gd\GapDirController;
 use App\Http\Controllers\go\ProcedimientosController;
 use App\Http\Controllers\re\CartapdfController;
+use App\Http\Controllers\re\EscalasController;
 use App\Mail\ContactanosMailable;
 use App\Models\re\Entrevistas;
 use App\Models\re\Ofertas;
@@ -144,6 +147,13 @@ Auth::routes();
         Route::post('vacantes/ceco','ceco')->name('solvacantes.ceco');
     });
     
+    Route::controller(EscalasController::class)
+    ->middleware(['auth', 'session.expired'])
+    ->group(function(){
+        Route::get('tiemporespuesta','index')->name('escalas');
+        
+    });
+
     Route::controller(OfertasController::class)
     ->middleware(['auth', 'session.expired'])
     ->group(function(){
@@ -176,7 +186,6 @@ Auth::routes();
         Route::post('ofertas/pruebaspsico','pruebaspsico')->name('ofertas.pruebaspsico');
         Route::post('ofertas/destroypruebapsico','destroypruebapsico')->name('ofertas.destroypruebapsico');
         Route::post('ofertas/descarte','descarte')->name('ofertas.descarte');
-        
     });
 
     Route::controller(ContworkController::class)
@@ -250,9 +259,25 @@ Auth::routes();
         Route::post('evaluados/evaluadores','evaluadores')->name('evaluacion.evaluadores');
         Route::post('evaluados/updateevaldor','updateevaldor')->name('evaluacion.updateevaldor');
         Route::post('evaluados','editstatus')->name('evaluacion.editstatus');
+        Route::post('evaluados/print','print')->name('evaluados.print');    
         Route::post('evaluador','informe')->name('evaluacion.informe');
         Route::post('evaluacion/avances','avances')->name('evaluacion.avances');   
     });
+
+    Route::controller(GapController::class)
+    ->middleware(['auth', 'session.expired'])
+    ->group(function(){
+        Route::get('Gap','index')->name('gap');       
+    });
+
+    Route::controller(GapDirController::class)
+    ->middleware(['auth', 'session.expired'])
+    ->group(function(){
+        Route::get('gapunidad','index')->name('gapu'); 
+        Route::post('gapunidad/show','show')->name('gapunidad.show');   
+        Route::post('gapunidad/pid','pid')->name('gapunidad.pid');       
+    });
+
 // ENVIO DE EMAIL
 
 /*Route::get('contactanos', function(){

@@ -67,6 +67,8 @@
         $logros= $item->logros;
         $comentarios= $item->comentarios;
         $carrera= $item->carrera;
+        $nom_evaldor= $item->nom_evaldor;
+        $puesto_evaldor= $item->puesto_evaldor;
 
         $resp_curcomp = $item->resp_curcomp;    
         $resp_curhab  = $item->resp_resp_curhab;
@@ -118,11 +120,12 @@
                     <div class="row">
                       <div class="col text-secondary small ml-2"><b>F. Evaluación:</b><span class="text-uppercase ml-2">{{ $feval }} </span></div>  
                       <div class="col text-secondary small ml-2"><b>Código:</b><span class="text-uppercase ml-2">{{ $id_evdo }} </span></div>            
-                      <div class="col text-secondary small ml-2"><b>Posición:</b><span class="text-uppercase ml-2">{{ $despue }}</span></div>
+                      <div class="col text-secondary small ml-2"><b>Puesto:</b><span class="text-uppercase ml-2">{{ $despue }}</span></div>
                       <div class="col text-secondary small ml-2"><b>Departamento:</b><span class="text-uppercase ml-2">{{ $nameund }}</span></div>
-                      <div class="col text-secondary small ml-2"><b>Fecha de Ingreso:</b><span class="text-uppercase ml-2"> {{ $finicio }}</span></div>
                       <div class="col text-secondary small ml-2"><b>Resultado:</b><span class="text-uppercase ml-2 text-primary"> {{ $resultado }}%</span></div>
                       <div class="col text-secondary small ml-2"><b>Categoría:</b><span style="color:{{ $color }}" class="ml-2"> {{ $categoria }}</span></div>
+                      <div class="col text-secondary small ml-2"><b>Evaluador:</b><span class="text-uppercase ml-2"> {{ $nom_evaldor }}</span></div>
+                      <div class="col text-secondary small ml-2"><b>Puesto Evaluador:</b><span class="text-uppercase ml-2"> {{ $puesto_evaldor }}</span></div>
                     </div>
                   </td>
                 </tr>

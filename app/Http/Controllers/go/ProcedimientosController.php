@@ -111,7 +111,7 @@ class ProcedimientosController extends Controller
         if($opt==3)
         {   $id_uni=$data['id_uni'];
             $result= DB::table('estructuras')
-                ->select( 'id','codigo','nameund','id_sup','id_tipo','status')
+                ->select( 'id','codigo','nameund','id_sup','id_tipo','status','tienda as chk_tienda')
                 ->where('id', '=', $id_uni)
                 ->orderby('nameund')
                 ->get();
@@ -130,11 +130,14 @@ class ProcedimientosController extends Controller
         if($data['status']=='false')
         { $status='false';}
 
+        $chk_tienda=1;
+        if($data['chk_tienda']=='false')
+        { $chk_tienda=0;}
 
 
         DB::table('estructuras')
         ->where('id','=', $idund)
-        ->update(['codigo' => $codigo,'nameund' => $nameund,'id_sup' => $id_sup,'id_tipo' => $id_tipo,'status' => $status]);
+        ->update(['codigo' => $codigo,'nameund' => $nameund,'id_sup' => $id_sup,'id_tipo' => $id_tipo,'status' => $status, 'tienda' => $chk_tienda]);
 
             $result= DB::table('estructuras as est')
                 ->select('est.id AS IDUND', 
@@ -145,7 +148,8 @@ class ProcedimientosController extends Controller
                 'estsup.nameund AS UNDSUP', 
                 'est.id_tipo AS IDTIPO', 
                 'tipos.name as NTIPO', 
-                'est.status AS STATUS')
+                'est.status AS STATUS', 
+                'est.tienda AS chk_tienda')
                 
                 ->leftjoin('tipoestructuras as tipos','tipos.id','=','est.id_tipo')
                 ->leftjoin('estructuras as estsup','estsup.id','=','est.id_sup')     
@@ -173,7 +177,8 @@ class ProcedimientosController extends Controller
                 'estsup.nameund AS UNDSUP', 
                 'est.id_tipo AS IDTIPO', 
                 'tipos.name as NTIPO', 
-                'est.status AS STATUS')
+                'est.status AS STATUS', 
+                'est.tienda AS chk_tienda')
                 
                 ->leftjoin('tipoestructuras as tipos','tipos.id','=','est.id_tipo')
                 ->leftjoin('estructuras as estsup','estsup.id','=','est.id_sup')                
@@ -190,7 +195,7 @@ class ProcedimientosController extends Controller
 
     ### INSERTANDO NUEVA UNIDAD
     if($opt==6)
-    {   $data= request()->except('opt');
+    {   $data= request()->except('_token');
 
         DB::beginTransaction();
         try {
@@ -200,6 +205,9 @@ class ProcedimientosController extends Controller
             $data['id_tipo'] = $data["id_tipo"];
             $data['status'] = $data["status"];
             DB::table('estructuras')->insert($data);*/
+            $chk_tienda=1;
+            if($data['chk_tienda']=='false')
+            { $chk_tienda=0;}
 
         $new = new Estructura();
                     $new->codigo = $data["codigo"];
@@ -207,6 +215,7 @@ class ProcedimientosController extends Controller
                     $new->id_sup	=  $data["id_sup"];
                     $new->id_tipo	=  $data["id_tipo"];
                     $new->status	=  $data["status"];
+                    $new->tienda	=  $chk_tienda;
                     $new->save();
 
             $result= DB::table('estructuras as est')
@@ -216,7 +225,8 @@ class ProcedimientosController extends Controller
                 'estsup.codigo AS CODUNDSUP', 
                 'estsup.nameund AS UNDSUP', 
                 'tipos.name as NTIPO', 
-                'est.status AS STATUS')            
+                'est.status AS STATUS', 
+                'est.tienda AS chk_tienda')            
                 ->leftjoin('tipoestructuras as tipos','tipos.id','=','est.id_tipo')
                 ->leftjoin('estructuras as estsup','estsup.id','=','est.id_sup')
                 ->get();

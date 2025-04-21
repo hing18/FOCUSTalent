@@ -116,6 +116,7 @@ class EvaluacionController extends Controller
         $id_evdo= $data['id_evdo'];
         $eval_id=0;
         $status=0;
+        $cursos_stand=0;
         $nom_evaluado='-';$photo="-";$iddf=0;$resultado=0;$logros=""; $comentarios="";$carrera="";
 
         $query_evaluaciones = DB::select("SELECT eval.id FROM evaluaciones eval WHERE eval.status=1 ");//0 pausada, 1 abierta, 2 cerrada
@@ -216,6 +217,10 @@ class EvaluacionController extends Controller
                 foreach( $query_res_cursos as $rescursos )
                 { $escala_cursos=1;}
 
+                $query_res_cursos_stand= DB::select("SELECT id_evaluado FROM eval_res_cursos_stand as res WHERE id_evaluado=$id_evdo");
+                foreach( $query_res_cursos_stand as $rescursos_stand )
+                { $cursos_stand=1;}
+
                 $cont_meta=0;$prom_metas=0;
                 $query_res_kpi= DB::select("SELECT metas.id, metas.nom_kpi, metas.real FROM eval_kpi_metas as metas WHERE metas.id_eval=$eval_id and metas.id_evaluado=$id_evdo");
                 foreach( $query_res_kpi as $kpis )
@@ -289,6 +294,7 @@ class EvaluacionController extends Controller
             "resp_resp_curhab"=>$query_resp_curhab,
             "resp_curadic"=>$query_resp_curadic,
             "feval"=>$feval,
+            "cursos_stand"=>$cursos_stand,
         );
 
         echo(json_encode($salidaJson));
@@ -345,6 +351,9 @@ class EvaluacionController extends Controller
     {
        /* if (isset(Auth::user()->id)) 
         { */ $data= request()->except('_token');
+
+        if($data['estatus']<4)
+        {
            $competencias= $data['competencias'];
            $tareas=  $data['tareas'];
            $hab=  $data['hab'];           
@@ -500,18 +509,27 @@ class EvaluacionController extends Controller
                 if(($escala_peso->id_seccion==5)&&($data['countkpi_cumpli']>0))
                 {   $promedio=0;
                     $obtenido=0;
-                    $peso= $escala_peso->peso;
+                    $peso= $escala_peso->peso;                    
 
                     $eval_id = $data['eval_id'];
                     $id_evdo = $data['cod_evaluado'];
 
                     $query_res_kpi= DB::select("SELECT AVG(metas.real) as prom FROM eval_kpi_metas as metas WHERE metas.id_eval=$eval_id and metas.id_evaluado=$id_evdo");
                     foreach( $query_res_kpi as $r )
-                    { $promedio= $r->prom; }
+                    { $promedio= $r->prom; 
+                        if(($promedio<100)&&($promedio>0))
+                        {   $obtenido= ($promedio/100) * $escala_peso->peso;}
+                        
+                        if($promedio<=0 or $promedio==null)
+                        {   $obtenido= 0;}
+                        
+                        if($promedio>=100)
+                        {    $obtenido= $escala_peso->peso;}
+                    }
 
-                    $query= DB::select("SELECT esc.porcentaje FROM eval_escala_x_seccion AS esc WHERE esc.id_seccion=5 and $promedio>=esc.minimo_mayor_igual and  $promedio<=esc.maximo_menor_que");
+                    /*$query= DB::select("SELECT esc.porcentaje FROM eval_escala_x_seccion AS esc WHERE esc.id_seccion=5 and $promedio>=esc.minimo_mayor_igual and  $promedio<=esc.maximo_menor_que");
                     foreach( $query as $r )
-                    { $obtenido= ($r->porcentaje/100) * $escala_peso->peso; }
+                    { $obtenido= ($r->porcentaje/100) * $escala_peso->peso; }*/
 
                     $new = new eval_res_kpi_cumpli();
                     $new->id_eval = $data['eval_id'];
@@ -597,6 +615,12 @@ class EvaluacionController extends Controller
             $new->id_eval = $data['eval_id'];
             $new->id_evaluado = $data['cod_evaluado'];
         
+            $new->pts_ci = round($coef_intelectual,7);
+            $new->pts_na = round($niv_academico,7);
+            $new->pts_comp = round($cumplimiento_comp,7);
+            $new->pts_hab = round($cumplimiento_hab,7);
+            $new->pts_tar = round($cumplimiento_tar,7);
+
             $new->ci = round(($coef_intelectual * 20),7);
             $new->na = round(($niv_academico * 20),7);
             $new->comp = round(($cumplimiento_comp * 30),7);
@@ -654,8 +678,20 @@ class EvaluacionController extends Controller
     
             echo(json_encode($salidaJson));
 
-       /* }
-        else{   return view('auth.login');}*/
+        }
+        else{ 
+            
+            
+            DB::table('eval_evaluado_evaluador')
+            ->where('id_evaluacion','=', $data['eval_id'])
+            ->where('id_evaluado','=', $data['cod_evaluado'])
+            ->where('id_evaluador','=', $data['cod_evaluador'])
+            ->update(['status' => $data['estatus'],'comentarios_evaldor' => trim($data['comentarios']),]);
+
+            $salidaJson=array("id_evaluado"=>$data['cod_evaluado'],"status"=>$data['estatus'] );
+            echo(json_encode($salidaJson));
+            
+        }
     }
     
     public function print(Request $request)
@@ -706,6 +742,16 @@ class EvaluacionController extends Controller
 
                 }
 
+                $puesto_evaldor="-";
+                $nom_evaluador="-";
+                $query_resp_evaluador= DB::select("SELECT emp.id, emp.prinombre, emp.priapellido, pos.descpue FROM m_empleados emp 
+                LEFT JOIN posiciones pos on (pos.id=emp.id_posicion) where emp.id=$id_evaluador");
+                foreach ($query_resp_evaluador as $r)
+                {   $nom_evaluador=$r->id." - ".$r->prinombre." ".$r->priapellido;
+                    $puesto_evaldor=$r->descpue;                
+                }
+
+
                 $query = DB::select("SELECT photo FROM m_empleados WHERE id=$id_evdo");
                 foreach ($query as $res)
                 {   if($res->photo!=null)
@@ -740,6 +786,8 @@ class EvaluacionController extends Controller
                 "feval"=>$feval,
                 "id_evdo"=>$id_evdo,
                 "id_evdor"=>$id_evaluador,
+                "nom_evaldor"=>$nom_evaluador,
+                "puesto_evaldor"=>$puesto_evaldor,
                 "eval_id"=>$eval_id,
                 "status"=>$status,
                 "nom_evaluado"=>$nom_evaluado,

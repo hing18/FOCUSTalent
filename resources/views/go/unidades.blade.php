@@ -110,10 +110,17 @@
                   <input type="text" class="form-control form-control-sm" name="nameund" id="nameund">
                   <input type="hidden" id="idund" value="0">
                 </div>
-                <div class="mb-3">
                 
+                <div class="mb-3">
+                  <input class="form-check-input" type="checkbox" id="chk_tienda" name="chk_tienda">
+                  <label class="form-check-label" for="chk_tienda">
+                    Tienda
+                  </label>
+                </div>
+
+                <div class="mb-3">                
                   <label for="id_tipo" class="col-form-label col-form-label-sm">Tipo de Unidad</label>
-                  
+                 
                   <select class="form-select form-select-sm" name="id_tipo" id="id_tipo" aria-label="Default select example">
                     <option value='0' selected>Seleccione</option>               
                       @foreach( $data_tipos as $tipo )
@@ -151,7 +158,6 @@
           </div>
         </div>
       </div>
-  
   @endsection
 
 <script type='text/javascript'>
@@ -162,6 +168,7 @@
       document.getElementById('id_tipo').value=0; 
       document.getElementById('id_sup').value=0; 
       document.getElementById('status').checked=false;
+      document.getElementById('chk_tienda').checked=false;
       document.getElementById('idund').value=0;
 
       document.getElementById('bto_guarda').style.display="none";
@@ -192,7 +199,8 @@
                   document.getElementById('nameund').value=item.nameund; 
                   document.getElementById('id_tipo').value=item.id_tipo; 
                   document.getElementById('id_sup').value=item.id_sup; 
-                  if(item.status!='true'){document.getElementById('status').checked=false;}else{document.getElementById('status').checked=true;}
+                  if(item.status!='true'){  document.getElementById('status').checked=false;}else{document.getElementById('status').checked=true;}
+                  if(item.chk_tienda==1){ document.getElementById('chk_tienda').checked=true;}
               });
           }
         });
@@ -242,6 +250,7 @@
               "id_tipo": document.getElementById('id_tipo').value, 
               "id_sup": document.getElementById('id_sup').value,
               "status": document.getElementById('status').checked,
+              "chk_tienda": document.getElementById('chk_tienda').checked,
               "_token" : _token};
               $.ajax({
                   data:  parametros,
@@ -257,6 +266,7 @@
                     document.getElementById('id_tipo').value=0; 
                     document.getElementById('id_sup').value=0; 
                     document.getElementById('status').checked=false;
+                    document.getElementById('chk_tienda').checked=false;
                     document.getElementById('idund').value=0;
                     $('#Modal').modal('hide');
                   }
@@ -274,6 +284,7 @@
               "id_tipo": document.getElementById('id_tipo').value, 
               "id_sup": document.getElementById('id_sup').value,
               "status": document.getElementById('status').checked,
+              "chk_tienda": document.getElementById('chk_tienda').checked,
               "_token" : _token};
         $.ajax({
           data:  parametros,
@@ -289,6 +300,7 @@
                   document.getElementById('id_tipo').value=0; 
                   document.getElementById('id_sup').value=0; 
                   document.getElementById('status').checked=true;
+                  document.getElementById('chk_tienda').checked=false;
                   document.getElementById('idund').value=0;
                   $('#Modal').modal('hide');
           }

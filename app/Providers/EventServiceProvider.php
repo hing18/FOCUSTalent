@@ -5,7 +5,9 @@ namespace App\Providers;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Illuminate\Auth\Events\Login;
 use Illuminate\Support\Facades\Event;
+use App\Models\User;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -23,9 +25,16 @@ class EventServiceProvider extends ServiceProvider
     /**
      * Register any events for your application.
      */
-    public function boot(): void
+    public function boot()
     {
-        //
+        parent::boot();
+    
+        Event::listen(Login::class, function ($event) {
+            // Actualiza el campo last_login con la fecha y hora actual
+            $event->user->update([
+                'last_login' => now()->setTimezone('America/Panama'),
+            ]);
+        });
     }
 
     /**

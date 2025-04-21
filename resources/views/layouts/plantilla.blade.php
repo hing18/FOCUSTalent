@@ -12,11 +12,6 @@
         <link href="{{ asset('assets/img/favicon.png')}}" rel="icon">
 
 
-        <!-- Google Fonts -->
-       <!-- <link href="https://fonts.gstatic.com" rel="preconnect">
-        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
-         Vendor CSS Files -->
-
         <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
         <link href="{{ asset('assets/vendor/bootstrap-icons/bootstrap-icons.css')}}" rel="stylesheet">
 
@@ -29,6 +24,9 @@
         <link href="https://cdn.datatables.net/buttons/3.0.1/css/buttons.dataTables.css"rel="stylesheet">
 
 
+
+
+<link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
 
     </head>
     <body>        

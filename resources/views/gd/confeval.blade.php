@@ -137,13 +137,14 @@
                   <table  id="MyTable2" class="display MyTable compact table table-sm table-striped table-hover" style="width:100%">
                     <thead>
                       <tr>
-                        <th class="text-light text-center bg-primary" width="25%" >EVALUADOR</th>
-                        <th class="text-light text-center bg-primary" width="25%" >PUESTO</th>
-                        <th class="text-light text-center bg-primary" width="25%" >UNIDAD</th>
+                        <th class="text-light text-center bg-primary" width="15%" >EVALUADOR</th>
+                        <th class="text-light text-center bg-primary" width="30%" >PUESTO</th>
+                        <th class="text-light text-center bg-primary" width="30%" >UNIDAD</th>
                         <th class="text-light text-center bg-primary" width="5%" >POR EVALUAR</th>
                         <th class="text-light text-center bg-primary" width="5%" >EVALUADOS</th>
                         <th class="text-light text-center bg-primary" width="5%" >%</th>
-                        <th class="text-light text-center bg-primary" width="10%" ><i class="fas fa-cogs fa-lg"></i></th>
+                        <th class="text-light text-center bg-primary" width="5%" >ULT. INGRESO</th>
+                        <th class="text-light text-center bg-primary" width="5%" ><i class="fas fa-cogs fa-lg"></i></th>
                       </tr>
                     </thead>
                     <tbody class="text-dark" id="tbody_list_evaluadores">
@@ -330,7 +331,7 @@
     </div>
   </div>
 
-
+  <div id="rpt"></div>
   <div id="div_informe"  class="visually-hidden" >
     <div id="resp_gap"> 
       <div class="row row-cols-5">  
@@ -454,7 +455,7 @@
                       </div>                 
 
                       <div class="row mb-2">
-                        <div class="col-auto label fw-bold text-secondary">Posición:</div>
+                        <div class="col-auto label fw-bold text-secondary">Puesto:</div>
                         <div id="lb_nom_puesto_evaluado" class="col-lg-9 col-md-8 text-secondary text-uppercase"></div>
                       </div>   
 
@@ -463,7 +464,7 @@
                         <div id="lb_nom_depto_evaluado" class="col-lg-9 col-md-8 text-secondary text-uppercase"></div>
                       </div>
 
-                      <div class="row mb-2">
+                      <div class="row mb-2 visually-hidden">
                         <div class="col-auto label fw-bold text-secondary">Fecha de Ingreso:</div>
                         <div id="lb_finicio" class="col-lg-9 col-md-8 text-secondary text-uppercase"> </div>
                       </div>
@@ -472,6 +473,9 @@
                         <div class="col-auto label fw-bold text-secondary">Resultado:</div>
                         <div id="lb_resultado" class="col-lg-9 col-md-8 text-primary text-uppercase fw-bold"> </div>
                         <input type="hidden" id="estatus" value="">
+                        <input type="hidden" id="lb_code_evaluado_rpt" value="">
+                        <input type="hidden" id="ideval_rpt" value="">
+                        <input type="hidden" id="estatus_rpt" value="">
                       </div>
 
                       <div class="row mb-2" id="div_calificacion">
@@ -483,11 +487,12 @@
                         <div class="col-auto label fw-bold text-secondary">Evaluador:</div>
                         <div id="lb_code_evaluador" class="col-lg-9 col-md-8 text-secondary text-uppercase"> </div>
                       </div>
-                      
+
                       <div class="row mb-2">
                         <div class="col-auto label fw-bold text-secondary">Puesto Evaluador:</div>
                         <div id="lb_puesto_evaluador" class="col-lg-9 col-md-8 text-secondary text-uppercase"> </div>
                       </div>
+
                     </div>
                   </div>
                 </div>
@@ -810,6 +815,7 @@
       </div>
 
       </div>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 @endsection
 
 
@@ -875,6 +881,28 @@
         });
   }
   
+  function print()
+    { 
+        $("#rpt").html('');
+        var form = $("<form/>", 
+        {   action:"{{ route('evaluados.print') }}" , 
+            method : 'POST',
+            target:'_blank',
+            id:'from_rpt'}
+          );
+          html2canvas(document.querySelector("#container-graf")).then(function(canvas) {
+          var imgData = canvas.toDataURL('image/png');
+       // form.append('image', imgData);
+        form.append( $("<input>", { type :'hidden', id  :  'image',  name :'image',  value:  imgData }));
+        form.append( $("<input>", { type :'hidden', id  :  'id_evdo_rpt',  name :'id_evdo_rpt',  value:  $("#lb_code_evaluado_rpt").val() } ));
+        form.append( $("<input>", { type :'hidden', id  :  'eval_id_rpt',  name :'eval_id_rpt',  value:  $('#ideval_rpt').val() } ));
+        form.append('@csrf');
+        $("#rpt").append(form);
+        from_rpt.submit();
+      });
+      
+    }
+
   function levaldores(cod)
   { $('#div_evaluadores').removeClass('visually-hidden');
     $('#nom_eval_evaldores').html($('#eval_sel_'+cod).html());
@@ -889,7 +917,7 @@
           cache: false,
           dataType: "json",
           beforeSend: function () {
-            $('#tbody_list_evaluadores').html('<tr><td colspan="7"><div class="text-center  text-primary"><div class="spinner-border spinner-border-sm" role="status"></div><span class="ps-2">Cargando...</span></div></td></tr>');
+            $('#tbody_list_evaluadores').html('<tr><td colspan="8"><div class="text-center  text-primary"><div class="spinner-border spinner-border-sm" role="status"></div><span class="ps-2">Cargando...</span></div></td></tr>');
           },
           success:  function (data) {
               const table = new DataTable('#MyTable2');
@@ -900,7 +928,7 @@
                 x++;
 
                 var nombre=item.prinombre + " " + item.priapellido;  
-
+                if(item.last_login==null){ult="Nunca";}else{ult=item.last_login;}
                 table.row.add([
                   '<span id="code_evaldor_'+x+'">'+item.id_evaluador+ '</span> - <span id="nom_evaldor_'+x+'">'+nombre+ "</span>",
                   item.descpue,
@@ -908,6 +936,7 @@
                   '<div class="text-center" id="res_'+x+'">'+item.por_evaluar+'</div>',
                   '<div class="text-center" id="res_'+x+'">'+item.por_evaluados+'</div>',
                   '<div class="text-center" id="res_'+x+'">'+Number((item.por_evaluados/(item.por_evaluar+item.por_evaluados))*100).toFixed(0)+'%</div>',
+                  '<div class="text-center" id="res_'+x+'">'+ult+'</div>',
                   '<div class="dropdown py-0">'+
                     '<button class="btn btn-sm btn-sm dropdown-toggle btn-outline-primary" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">Acciones</button>'+
                       '<ul class="dropdown-menu p-0" aria-labelledby="dropdownMenu2">'+
@@ -1255,6 +1284,10 @@
 
   function eval(eval,evaldo,evaldor)
   { 
+    $('#lb_code_evaluado_rpt').val(evaldo);
+    $('#ideval_rpt').val(eval);
+  
+
     $('#div_informe').removeClass('visually-hidden');
     $('#div_evaluados').addClass('visually-hidden');
     $('#div_conf_eval').addClass('visually-hidden');
@@ -1907,7 +1940,11 @@
               tot_evaluado= tot_evaluado + Number(item.evaluado);
               tot_rechazado= tot_rechazado + Number(item.rechazado);
             });
-
+            Highcharts.setOptions({
+                accessibility: {
+                    enabled: false  // Deshabilita la accesibilidad
+                }
+            });
             Highcharts.chart('container', {
               chart: {
                 type: 'column'
@@ -1952,11 +1989,11 @@
               series: [{
                 name: 'Pendientes',
                 data: v_pendiente,
-                color: '#64A6E3'
+                color: '#79A8D5'
               }, {
                 name: 'En Proceso',
                 data: v_en_proceso,
-                color: '#3E8FD8'
+                color: '#3D84C4'
               }, {
                 name: 'Evaluados',
                 data: v_evaluados,
@@ -1979,12 +2016,15 @@
                         const chart = this,
                             series = chart.series[0];
                         let customLabel = chart.options.chart.custom.label;
+                        let avance=0;
+                        if(Number(tot_evaluado + tot_rechazado)>0)
+                        { avance=(Number(tot_evaluado + tot_rechazado)/Number(tot_pendiente + tot_proceso + tot_evaluado + tot_rechazado))*100;}
 
                         if (!customLabel) {
                             customLabel = chart.options.chart.custom.label =
                             chart.renderer.label(
-                                'HeadCount<br/>' +
-                                '<strong>' + (new Intl.NumberFormat('es-PA').format(Number(tot_pendiente + tot_proceso + tot_evaluado + tot_rechazado))) + '</strong>'
+                              'HC <strong>' + (new Intl.NumberFormat('es-PA').format(Number(tot_pendiente + tot_proceso + tot_evaluado + tot_rechazado))) + '</strong><br/>' +
+                                'Avance <span style="color:blue"><strong>'+Number(avance).toFixed(0)+ '%</strong></span>'
                             )
                                     .css({
                                         color: '#000',
@@ -2051,11 +2091,11 @@
                 data: [{
                     name: 'Pendientes',
                     y: tot_pendiente,
-                    color: '#64A6E3'
+                    color: '#79A8D5'
                 }, {
                     name: 'En Proceso',
                     y: tot_proceso,
-                    color: '#3E8FD8'
+                    color: '#3D84C4'
                 }, {
                     name: 'Evaluados',
                     y: tot_evaluado,
