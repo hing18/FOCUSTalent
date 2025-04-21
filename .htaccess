@@ -1,0 +1,25 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Redirigir todas las solicitudes al directorio public
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteRule ^(.*)$ /FOCUSTalent/public/$1 [L]
+
+    # Handle Authorization Header
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Redirigir trailing slashes si no es un directorio
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} (.+)/$
+    RewriteRule ^ %1 [L,R=301]
+
+    # Redirigir si se accede a index.php
+    RewriteCond %{REQUEST_URI} ^/index\.php$ [NC]
+    RewriteRule ^(.*)$ /login [L,R=301]
+
+    # Enviar todas las solicitudes al Front Controller
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [L]
+</IfModule>
