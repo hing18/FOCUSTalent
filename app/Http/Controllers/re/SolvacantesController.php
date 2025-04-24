@@ -180,7 +180,7 @@ class SolvacantesController extends Controller
                 $id_jer=$r->idjer;
                 $id_ue=$r->idue;
                 $id_secc=$r->iduni;}
-            
+            $tiempo=0;
             $query = DB::select("SELECT esc.id_escala, esc.tiempo
             FROM 
             escalas_unidades_rel rel INNER JOIN 

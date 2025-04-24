@@ -151,6 +151,11 @@ Auth::routes();
     ->middleware(['auth', 'session.expired'])
     ->group(function(){
         Route::get('tiemporespuesta','index')->name('escalas');
+        Route::post('tiemporespuesta/store','store')->name('escalas.store');
+        Route::post('tiemporespuesta/destroy','destroy')->name('escalas.destroy');
+        Route::post('tiemporespuesta/show','show')->name('escalas.show');
+        Route::post('tiemporespuesta/update','update')->name('escalas.update');
+        
         
     });
 

@@ -271,8 +271,8 @@
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#d33",
-        cancelButtonText: "Cancelar",
-        confirmButtonText: "Si, Eliminar!"
+        cancelButtonText:  '<i class="fas fa-arrow-left"></i> Cancelar',
+        confirmButtonText: '<i class="fas fa-trash-alt"></i> Si, eliminar',
       }).then((result) => { if (result.isConfirmed) {su(opt);} });
     }
   }
@@ -490,8 +490,8 @@
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#d33",
-      cancelButtonText: "Cancelar",
-      confirmButtonText: "Si, Eliminar!"
+      cancelButtonText:  '<i class="fas fa-arrow-left"></i> Cancelar',
+      confirmButtonText: '<i class="fas fa-trash-alt"></i> Si, eliminar',
     }).then((result) => { 
       if (result.isConfirmed) 
       { $.ajax({
