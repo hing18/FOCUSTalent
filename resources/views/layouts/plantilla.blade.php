@@ -26,9 +26,13 @@
 
 
 
+
+
+
 <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
 
     </head>
+    
     <body>        
         <link href="https://cdn.jsdelivr.net/npm/trix@1.3.1/dist/trix.css" rel="stylesheet">
         <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
@@ -114,9 +118,9 @@
             </div>
             </div>
         </div>
-
+<!--
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>-->
 
         @endauth        
  
@@ -129,11 +133,12 @@
        
         <script src="{{ asset('assets/vendor/tinymce/tinymce.min.js')}}"></script>
         <script src="{{ asset('assets/vendor/php-email-form/validate.js')}}"></script>
-        <script src="{{ asset('vendor/jquery/jquery.min.js')}}"></script>
+      <!--  
         <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
-        <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+        <script src="https://code.jquery.com/jquery-3.7.1.js"></script>-->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
         <script src="https://cdn.datatables.net/2.0.2/js/dataTables.js"></script>
         <script src="https://cdn.datatables.net/2.0.2/js/dataTables.bootstrap5.js"></script>
@@ -143,24 +148,20 @@
         
         <script src="{{ asset('assets/js/main.js')}}"></script>
         <script> 
-            $(document).ready(function() {
+
+            $(document).ready(function () {
                 $('#MyTable').DataTable({
                     "language": {
-                    "url": "https://cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"
+                        "url": "https://cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"
                     },
                     "columnDefs": [
-                    {
-                        "className": "align-middle", "targets": "_all"
-                    }],
-                });
-                $('.MyTable').DataTable({
-                    "language": {
-                    "url": "https://cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"
-                    },
-                    "columnDefs": [
-                    {
-                        "className": "align-middle", "targets": "_all"
-                    }],
+                        { "className": "align-middle", "targets": "_all" }
+                    ],
+                    "paging": true,       // asegúrate de que esté activado
+                    "searching": true,    // habilita búsqueda
+                    "info": true,         // muestra info tipo "Mostrando X de Y"
+                    "lengthChange": true, // permite cambiar cantidad de registros por página
+                    "order": [], // desactiva ordenamiento por defecto
                 });
 
                 $image_crop = $('#image_demo').croppie({
@@ -220,13 +221,10 @@
                 $('.corp_back').click(function(event){
                     $('#insert_image').val('');
                 });
-
             });
 
-
-
             $(document).ready(function() {
-            $image_crop_emplo = $('#image_demo_emplo').croppie({
+                $image_crop_emplo_me = $('#image_demo_emplo').croppie({
                     enableExif: true,
                     viewport: {
                     width:200,
@@ -240,55 +238,104 @@
                 });
 
                 $('#insert_image_emplo').on('change', function(){
-                       var reader = new FileReader();
-                        reader.onload = function (event) {
-                            $image_crop_emplo.croppie('bind', {
+                       var reader_me = new FileReader();
+                        reader_me.onload = function (event) {
+                            $image_crop_emplo_me.croppie('bind', {
                                 url: event.target.result
                             }).then(function(){
                                 console.log('jQuery bind complete');
                             });
                         }
-                        reader.readAsDataURL(this.files[0]);
+                        reader_me.readAsDataURL(this.files[0]);
                         $('#insertimageModal').modal('show');
                     
                 });          
 
-
-
                 $('.crop_image_emplo').click(function(event){                    
-                    $image_crop_emplo.croppie('result', {
+                    $image_crop_emplo_me.croppie('result', {
                     type: 'canvas',
                     size: 'viewport'
                     }).then(function(response){
-
                     $.ajax({
                         url:"{{ route('empleados.subirfoto') }}",
                         type:'POST',
                         data:{"image":response,"cod":$('#lb_codigo').html(),"_token":$('input[name="_token"]').val()},
                         success:function(data){
                             $('#insertimageModal').modal('hide');
-                   // load_images();
-                   
-                        //document.getElementById('img_photo').setAttribute("src", data);
-                        
-                        $('#insert_image_emplo').val('');
-                        $('#space_photo').html(data);                       
-                        
+                            $('#insert_image_emplo').val('');
+                            $('#space_photo').html(data);
                         }
                     })
                     });
                 });
+
+
 
                 $('.corp_back').click(function(event){
                     $('#insert_image_emplo').val('');
                 });
 
             });
+
+
+            $(document).ready(function() {
+                $image_crop_emplo = $('#image_bd').croppie({
+                    enableExif: true,
+                    viewport: {
+                    width:200,
+                    height:200,
+                    type:'square' //circle
+                    },
+                    boundary:{
+                    width:300,
+                    height:300
+                    }    
+                });
+
+                $('#insert_image_bd').on('change', function(){
+                    var reader = new FileReader();
+                    reader.onload = function (event) {
+                        $image_crop_emplo.croppie('bind', {
+                            url: event.target.result
+                        }).then(function(){
+                            console.log('jQuery bind complete');
+                        });
+                    }
+                    reader.readAsDataURL(this.files[0]);
+                    $('#insertimageModal').modal('show');
+                });          
+
+                $('.crop_image_bd').click(function(event){                    
+                    $image_crop_emplo.croppie('result', {
+                    type: 'canvas',
+                    size: 'viewport'
+                    }).then(function(response){
+                        $.ajax({
+                            url:"{{ route('bd.subirfoto') }}",
+                            type:'POST',
+                            data:{"image":response,
+                            "_token":$('input[name="_token"]').val()},
+                           success: function(data){
+                                $('#insertimageModal').modal('hide');
+                                $('#insert_image_bd').val('');
+                                $('#space_photo').html(data.html);
+                                // Guardar ruta temporal para el formulario                                
+                                $('#foto_temp_path').val(data.temp_path);                                
+                            }
+                        })
+                    });
+                });
+                $('.corp_back').click(function(event){
+                    $('#insert_image_bd').val('');
+                });
+            });
+document.addEventListener('DOMContentLoaded', function () {
+  var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+  tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+    new bootstrap.Tooltip(tooltipTriggerEl)
+  })
+})
         </script>
-    
-
-
-
 
     <!-- SCRIPT DE REDIRECCIONAMIENTO POR TIMEPO DE INACTIVIDAD -->
 
@@ -334,13 +381,54 @@
         $(document).ready(function () {
             startInactivityTimer();
         });
+
+
+          $(document).ready(function() {
+            $('#sw_verperfil').on('change', function() {
+            if ($(this).is(':checked')) {
+                // Mostrar perfil
+                $('#div_form_perfil').removeClass('d-none');
+                $('#div_form_solicitud').addClass('d-none');
+
+                // Ocultar botones
+                $('#bto_cancelar, #bto_guarda').addClass('d-none');
+                $('#div_modalsoli').addClass('modal-xl');
+                $('#div_modalsoli').removeClass('modal-lg');
+                $('#lb_verperfil').addClass('text-primary');
+            } else {
+                // Mostrar solicitud
+                $('#div_form_solicitud').removeClass('d-none');
+                $('#div_form_perfil').addClass('d-none');
+
+                // Mostrar botones
+                $('#bto_cancelar, #bto_guarda').removeClass('d-none');
+                $('#div_modalsoli').addClass('modal-lg');
+                $('#div_modalsoli').removeClass('modal-xl');
+                $('#lb_verperfil').removeClass('text-primary');
+            }
+            });
+        });
+        
+        document.getElementById('filtroBtn').addEventListener('click', function(e) {
+            e.stopPropagation();
+            document.getElementById('filtroDropdown').classList.toggle('show');
+        });
+
+        window.addEventListener('click', function() {
+            document.getElementById('filtroDropdown').classList.remove('show');
+        });
+
     </script>
 
 <script src="https://cdn.jsdelivr.net/npm/trix@1.3.1/dist/trix.js"></script>
 
 
+
+
+
+
+
 </body>
-    
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.css"  />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.js"></script>

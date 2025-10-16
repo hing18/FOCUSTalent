@@ -821,46 +821,85 @@
 
 <script src="{{ asset('assets/js/code/modules/drilldown.js')}}"></script>
 <script>
-  function levaldos(cod)
-  { $('#div_evaluados').removeClass('visually-hidden');
-    $('#nom_eval_evaldo').html($('#eval_sel_'+cod).html());
-    $('#lista_eval').addClass('visually-hidden');
-      var parametros = {
-        "id_eval":cod,
-        "_token": $('input[name="_token"]').val()};
-        $.ajax({
-          data:  parametros,
-          url:   "{{ route('evaluacion.levaldos') }}",
-          type:  'POST',
-          cache: false,
-          dataType: "json",
-          beforeSend: function () {
-            $('#tbody_list_evaluados').html('<tr><td colspan="6"><div class="text-center  text-primary"><div class="spinner-border spinner-border-sm" role="status"></div><span class="ps-2">Cargando...</span></div></td></tr>');
+
+function levaldos(cod) {
+ 
+  $('#div_evaluados').removeClass('visually-hidden');
+  $('#nom_eval_evaldo').html($('#eval_sel_' + cod).html());
+  $('#lista_eval').addClass('visually-hidden');
+
+  var parametros = {
+    "id_eval": cod,
+    "_token": $('input[name="_token"]').val()
+  };
+
+  $.ajax({
+    data: parametros,
+    url: "{{ route('evaluacion.levaldos') }}",
+    type: 'POST',
+    cache: false,
+    dataType: "json",
+    beforeSend: function () {
+      $('#tbody_list_evaluados').html(
+        `<tr><td colspan="6">
+          <div class="text-center text-primary">
+            <div class="spinner-border spinner-border-sm" role="status"></div>
+            <span class="ps-2">Cargando...</span>
+          </div>
+        </td></tr>`
+      );
+    },
+    success: function (data) {
+
+       if ($.fn.DataTable.isDataTable('#MyTable')) {
+        $('#MyTable').DataTable().clear().destroy();
+      }
+
+      // Re-crear la tabla y guardar instancia en variable
+      var table = $('#MyTable').DataTable({
+          ajax: false, // no usamos DataTables AJAX aquí
+          language: {
+              url: "https://cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"
           },
-          success:  function (data) {
-              const table = new DataTable('#MyTable');
-              table.clear().draw();
-              x=0;
-              jQuery(data.evaluados).each(function(i, item){
-                var status=""; var resultado="";var estado_eval="";
-                x++;
-                link_evaluado='';
-                if(item.status==1){
-                  status='<span class="badge bg-secondary">Pendiente</span>';
-                  estado_eval='';
-                }
-                if(item.status==2){ status='<span class="badge bg-warning">En Proceso</span>';}
-                if(item.status==3){ status='<span class="badge bg-primary">Evaluado</span>';
-                  resultado=Number(item.resultado).toFixed(1)+ "%";
-                  //link_evaluado='<span class="text-primary fw-bold"><i class="fas fa-search fa-lg pe-2"></i>Evaluado</span>';
-                  link_evaluado='<li><button class="dropdown-item pb-0 edit" type="button" onclick="eval('+cod+','+item.id_evaluado+','+item.id_evaluador+')"><i class="fas fa-search pe-1 text-primary  fa-lg "></i> Ver Informe</button></li>';
-                }
+          columnDefs: [
+              { className: "align-middle", targets: "_all" }
+          ],
+          paging: true,
+          searching: true,
+          info: true,
+          lengthChange: true
+      });
 
-                if(item.status==4){ status='<span class="badge bg-danger">Rechazado</span>';}
-                var nombre=item.prinombre + " " + item.priapellido;
-                var evaldor=item.nom_evaldor + " " + item.ape_evaldor;
+      table.clear();
 
-                table.row.add([
+      const rows = [];
+      var x=0;
+      jQuery(data.evaluados).each(function(i, item) {
+        let status = "";
+        let resultado = "";
+        let link_evaluado = "";
+
+        if (item.status == 1) {
+          status = '<span class="badge bg-secondary">Pendiente</span>';
+        } else if (item.status == 2) {
+          status = '<span class="badge bg-warning">En Proceso</span>';
+        } else if (item.status == 3) {
+          status = '<span class="badge bg-primary">Evaluado</span>';
+          resultado = Number(item.resultado).toFixed(1) + "%";
+          link_evaluado = `<li>
+            <button class="dropdown-item pb-0 edit" type="button" onclick="eval(${cod},${item.id_evaluado},${item.id_evaluador})">
+              <i class="fas fa-search pe-1 text-primary fa-lg"></i> Ver Informe
+            </button>
+          </li>`;
+        } else if (item.status == 4) {
+          status = '<span class="badge bg-danger">Rechazado</span>';
+        }
+
+        const nombre = item.prinombre + " " + item.priapellido;
+        const evaldor = item.nom_evaldor + " " + item.ape_evaldor;
+
+
+        /*          table.row.add([
                   '<span id="code_evaldo_'+x+'">'+item.id_evaluado+ '</span> - <span id="nom_evaldo_'+x+'">'+nombre+ "</span>",
                   '<span id="descpue_'+x+'">'+item.descpue+'</span><input type="hidden"  id="code_puestoevaldo_'+x+'" value="'+item.id_posicion_evaluado+'"><input type="hidden"  id="code_ueevaldo_'+x+'" value="'+item.idue+'">',
                   '<span id="code_evaldor_'+x+'">'+item.id_evaluador+ "</span> - " + '<span id="nom_evaldor_'+x+'">'+evaldor+ "</span>",
@@ -876,11 +915,50 @@
                       '</ul>'+
                   '</div>'
                 ]).draw(false);
-              });
-          }
-        });
-  }
-  
+              });*/
+
+x++;
+        rows.push([
+          `<span id="code_evaldo_${x}">${item.id_evaluado}</span> - <span id="nom_evaldo_${x}">${nombre}</span>`,
+          `<span id="descpue_'${x}">${item.descpue}</span>
+            <input type="hidden" id="code_puestoevaldo_${x}" value="${item.id_posicion_evaluado}">
+            <input type="hidden" id="code_ueevaldo_${x}" value="${item.idue}">`,
+          `<span id="code_evaldor_${x}">${item.id_evaluador}</span> - <span id="nom_evaldor_${x}">${evaldor}</span>`,
+          `<div class="fw-bold text-center" id="res_${x}">${resultado}</div>`,
+          `<div class="row d-flex align-items-center justify-content-center text-center">
+            <div class="col" id="st_${x}">${status}</div>
+          </div>`,
+          `<div class="dropdown py-0">
+            <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Acciones
+            </button>
+            <ul class="dropdown-menu p-0">
+              ${link_evaluado}
+              <li>
+                <button class="dropdown-item pb-0 edit" data-bs-toggle="modal" data-bs-target="#cambiarpuesto" type="button" onclick="cambiapuesto(${cod},${x})">
+                  <i class="fa-solid fa-person-circle-check pe-1 text-primary fa-lg"></i> Cambiar Puesto
+                </button>
+              </li>
+              <li>
+                <button class="dropdown-item pb-0 edit" data-bs-toggle="modal" data-bs-target="#staticBackdrop" type="button" onclick="cambiaestado(${cod},${item.status},${x})">
+                  <i class="fas fa-sync pe-1 text-primary fa-lg"></i> Cambiar Estado
+                </button>
+              </li>
+              <li>
+                <button class="dropdown-item pb-0 edit" data-bs-toggle="modal" data-bs-target="#cambiaevaldor" type="button" onclick="cambiaevaldor(${cod},${x})">
+                  <i class="fas fa-people-arrows pe-1 text-primary fa-lg"></i> Cambiar Evaluador
+                </button>
+              </li>
+            </ul>
+          </div>`
+        ]);
+      });
+
+      table.rows.add(rows).draw();
+    }
+  });
+}
+
   function print()
     { 
         $("#rpt").html('');
@@ -903,52 +981,104 @@
       
     }
 
-  function levaldores(cod)
-  { $('#div_evaluadores').removeClass('visually-hidden');
-    $('#nom_eval_evaldores').html($('#eval_sel_'+cod).html());
-    $('#lista_eval').addClass('visually-hidden');
-      var parametros = {
-        "id_eval":cod,
-        "_token": $('input[name="_token"]').val()};
-        $.ajax({
-          data:  parametros,
-          url:   "{{ route('evaluacion.levaldores') }}",
-          type:  'POST',
-          cache: false,
-          dataType: "json",
-          beforeSend: function () {
-            $('#tbody_list_evaluadores').html('<tr><td colspan="8"><div class="text-center  text-primary"><div class="spinner-border spinner-border-sm" role="status"></div><span class="ps-2">Cargando...</span></div></td></tr>');
-          },
-          success:  function (data) {
-              const table = new DataTable('#MyTable2');
-              table.clear().draw();
-              x=0;
-              jQuery(data.evaluadores).each(function(i, item){
+  function levaldores(cod) {
+    var table = $('#MyTable2').DataTable({
+  language: {
+    url: "https://cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"
+  },
+  columnDefs: [
+    { className: "align-middle", targets: "_all" }
+  ],
+  paging: true,
+  searching: true,
+  info: true,
+  lengthChange: true,
+  columns: Array(8).fill(null) // 👈 8 columnas, igual que tu thead
+});
+  $('#div_evaluadores').removeClass('visually-hidden');
+  $('#nom_eval_evaldores').html($('#eval_sel_' + cod).html());
+  $('#lista_eval').addClass('visually-hidden');
 
-                x++;
+  const parametros = {
+    "id_eval": cod,
+    "_token": $('input[name="_token"]').val()
+  };
 
-                var nombre=item.prinombre + " " + item.priapellido;  
-                if(item.last_login==null){ult="Nunca";}else{ult=item.last_login;}
-                table.row.add([
-                  '<span id="code_evaldor_'+x+'">'+item.id_evaluador+ '</span> - <span id="nom_evaldor_'+x+'">'+nombre+ "</span>",
-                  item.descpue,
-                  '<div id="res_'+x+'">'+item.nameund+'</div>',
-                  '<div class="text-center" id="res_'+x+'">'+item.por_evaluar+'</div>',
-                  '<div class="text-center" id="res_'+x+'">'+item.por_evaluados+'</div>',
-                  '<div class="text-center" id="res_'+x+'">'+Number((item.por_evaluados/(item.por_evaluar+item.por_evaluados))*100).toFixed(0)+'%</div>',
-                  '<div class="text-center" id="res_'+x+'">'+ult+'</div>',
-                  '<div class="dropdown py-0">'+
-                    '<button class="btn btn-sm btn-sm dropdown-toggle btn-outline-primary" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">Acciones</button>'+
-                      '<ul class="dropdown-menu p-0" aria-labelledby="dropdownMenu2">'+
 
-                        '<li><button class="dropdown-item pb-0 edit" data-bs-toggle="modal" data-bs-target="#cambia-pass" type="button" onclick="cambiapass('+cod+','+x+')"><i class="fas fa-sync pe-1"></i> Cambiar Contraseña</button></li>'+
-                      '</ul>'+
-                  '</div>'
-                ]).draw(false);
-              });
-          }
-        });
-  }
+
+  $.ajax({
+    data: parametros,
+    url: "{{ route('evaluacion.levaldores') }}",
+    type: 'POST',
+    cache: false,
+    dataType: "json",
+    beforeSend: function () {
+      $('#tbody_list_evaluadores').html(`
+        <tr>
+          <td colspan="8">
+            <div class="text-center text-primary">
+              <div class="spinner-border spinner-border-sm" role="status"></div>
+              <span class="ps-2">Cargando...</span>
+            </div>
+          </td>
+        </tr>
+      `);
+    },
+    success: function (data) {
+        // Verificar si ya existe una tabla inicializada
+      if ($.fn.DataTable.isDataTable('#MyTable2')) {
+        $('#MyTable2').DataTable().clear().destroy();
+      }
+
+      // Re-inicializar y guardar la nueva instancia
+      var table = $('#MyTable2').DataTable({
+        language: {
+          url: "https://cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"
+        },
+        columnDefs: [
+          { className: "align-middle", targets: "_all" }
+        ],
+        paging: true,
+        searching: true,
+        info: true,
+        lengthChange: true
+      });
+      table.clear();
+
+      jQuery(data.evaluadores).each(function (i, item) {
+        const x = i + 1;
+        const nombre = item.prinombre + " " + item.priapellido;
+        const ult = item.last_login === null ? "Nunca" : item.last_login;
+        const porcentaje = (item.por_evaluar + item.por_evaluados) > 0
+          ? Number((item.por_evaluados / (item.por_evaluar + item.por_evaluados)) * 100).toFixed(0) + "%"
+          : "0%";
+
+        table.row.add([
+          `<span id="code_evaldor_${x}">${item.id_evaluador}</span> - <span id="nom_evaldor_${x}">${nombre}</span>`,
+          item.descpue,
+          `<div id="res_${x}">${item.nameund}</div>`,
+          `<div class="text-center" id="res_${x}">${item.por_evaluar}</div>`,
+          `<div class="text-center" id="res_${x}">${item.por_evaluados}</div>`,
+          `<div class="text-center" id="res_${x}">${porcentaje}</div>`,
+          `<div class="text-center" id="res_${x}">${ult}</div>`,
+          `<div class="dropdown py-0">
+            <button class="btn btn-sm dropdown-toggle btn-outline-primary" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Acciones
+            </button>
+            <ul class="dropdown-menu p-0">
+              <li>
+                <button class="dropdown-item pb-0 edit" data-bs-toggle="modal" data-bs-target="#cambia-pass" type="button" onclick="cambiapass(${cod},${x})">
+                  <i class="fas fa-sync pe-1"></i> Cambiar Contraseña
+                </button>
+              </li> 
+            </ul>
+          </div>`
+        ]).draw(false);
+      });
+    }
+  });
+}
+
 
   function cambiaestado(eval,st,x)
   {
@@ -1196,8 +1326,6 @@
       mal('Debe seleccionar un evaluador.');
     }
 
-
-
     
   }
 
@@ -1272,14 +1400,13 @@
   }
     
   function bien(msn)
-  {
-        Swal.fire({
-            position: 'center',
-            icon: 'success',
-            text: msn,
-            showConfirmButton: false,
-            timer: 2000
-      })
+  { Swal.fire({
+      position: 'center',
+      icon: 'success',
+      text: msn,
+      showConfirmButton: false,
+     timer: 2000
+    })
   }
 
   function eval(eval,evaldo,evaldor)
@@ -2113,5 +2240,6 @@
           }          
         });
   }
+
 </script>
 

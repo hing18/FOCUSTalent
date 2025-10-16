@@ -82,15 +82,34 @@ class ConfevalController extends Controller
 
     public function levaldos(Request $request)
     {
-        if (isset(Auth::user()->id)) 
-        {   $data= request()->except('_token');
-            $id= $data['id_eval'];
-            $query_evaluacion = Db::select("SELECT id,desde, hasta, observacion, status, activo, proceso, finalizado, rechazado, total FROM vw_evaluaciones where id=$id");
-            $query_evaluados = DB::table('eval_evaluado_evaluador as eval')
-            ->select('eval.id_evaluado',               
-                'emp.prinombre',      
-                'emp.priapellido',           
-                'eval.id_posicion_evaluado',   
+        // ✅ Verificamos si el usuario está autenticado
+        if (!Auth::check()) {
+            return view('auth.login');
+        }
+
+        // ✅ Validamos el input recibido
+        $validated = $request->validate([
+            'id_eval' => 'required|integer|exists:vw_evaluaciones,id',
+        ]);
+
+        $id = $validated['id_eval'];
+
+        // ✅ Consulta segura a la vista usando parámetros
+        $query_evaluacion = DB::select("
+            SELECT 
+                id, desde, hasta, observacion, status, 
+                activo, proceso, finalizado, rechazado, total 
+            FROM vw_evaluaciones 
+            WHERE id = ?
+        ", [$id]);
+
+        // ✅ Consulta con Query Builder (también segura)
+        $query_evaluados = DB::table('eval_evaluado_evaluador as eval')
+            ->select(
+                'eval.id_evaluado',
+                'emp.prinombre',
+                'emp.priapellido',
+                'eval.id_posicion_evaluado',
                 'pos.descpue',
                 'pos.iduni',
                 'pos.idue',
@@ -98,25 +117,22 @@ class ConfevalController extends Controller
                 'pos.iddf',
                 'eval.status',
                 'eval.resultado',
-                'eval.id_evaluador',               
-                'emp_evaldor.prinombre as nom_evaldor',      
-                'emp_evaldor.priapellido as ape_evaldor')
-            ->leftjoin('posiciones as pos','pos.id','=','eval.id_posicion_evaluado') 
-            ->leftjoin('m_empleados as emp','emp.id','=','eval.id_evaluado') 
-            ->leftjoin('estructuras as est','est.id','=','pos.iduni')        
-            ->leftjoin('m_empleados as emp_evaldor','emp_evaldor.id','=','eval.id_evaluador') 
-            ->where('eval.id_evaluacion','=',$id)    
+                'eval.id_evaluador',
+                'emp_evaldor.prinombre as nom_evaldor',
+                'emp_evaldor.priapellido as ape_evaldor'
+            )
+            ->leftJoin('posiciones as pos', 'pos.id', '=', 'eval.id_posicion_evaluado')
+            ->leftJoin('m_empleados as emp', 'emp.id', '=', 'eval.id_evaluado')
+            ->leftJoin('estructuras as est', 'est.id', '=', 'pos.iduni')
+            ->leftJoin('m_empleados as emp_evaldor', 'emp_evaldor.id', '=', 'eval.id_evaluador')
+            ->where('eval.id_evaluacion', $id)
             ->get();
 
-            $salidaJson=array(
-                "evaluacion"=>$query_evaluacion,
-                "evaluados"=>$query_evaluados,               
-            );
-    
-            echo(json_encode($salidaJson));
-        }
-        else
-        {   return view('auth.login');}
+        // ✅ Respuesta JSON estructurada
+        return response()->json([
+            'evaluacion' => $query_evaluacion,
+            'evaluados'  => $query_evaluados
+        ]);
     }
 
     public function levaldores(Request $request)

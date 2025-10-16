@@ -16,11 +16,12 @@ return new class extends Migration
             $table->string('id_part_curriculum_alt',30)->nullable();
             $table->string('empresa',60)->nullable();
             $table->string('puesto',60)->nullable();
-            $table->string('area',60)->nullable();
+            $table->integer('id_subarea')->nullable();
+            $table->string('subarea',60)->nullable();
             $table->date('desde')->nullable();
             $table->date('hasta')->nullable();
             $table->text('logros')->nullable();
-            $table->text('motivo_Salida')->nullable();
+            $table->text('motivo_salida')->nullable();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrentOnUpdate();
         });

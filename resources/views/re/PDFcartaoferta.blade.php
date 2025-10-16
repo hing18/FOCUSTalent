@@ -1,154 +1,196 @@
-<!doctype html>
-<html lang="en">
-    <head>
-        <title>Title</title>
-        <!-- Required meta tags -->
-        <meta charset="utf-8" />
-        <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1, shrink-to-fit=no"
-        />
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <title>Carta Oferta</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-        <!-- Bootstrap CSS v5.2.1 -->
-        <link
-            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-            rel="stylesheet"
-            integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
-            crossorigin="anonymous"
-        />
-    </head>
-<style>
-    .font-arial{
-        
-        font-family: Arial, Helvetica, sans-serif;
-    }
-    .PAGADORA{
-        font-size: 36px;
-        color: #595959;
-        font-weight: bold;
-        text-align: center;
-    }
-    .apartado{
-        font-size: 14px;
-        color: #595959;
-        font-weight: bold;
-        text-align: center;
-    }
-    .b-s16{
-        font-size: 16px;
-        font-weight: bold;
-    }
-    
-    .s14{
-        font-size: 14px;
-    }.b-s14{
-        font-size: 14px;
-        font-weight: bold;
-       
-        
-    }
-</style>
-@php    $array[] =  json_decode($data); @endphp
-@foreach ($array as $item)
-@php
-    $nombre_memb= $item->nombre_memb;
-    $apartado= $item->apartado;
-    $email= $item->email;
-    $tel= $item->tel;
-    $fecha_actual= $item->fecha_actual;
-    $sr= $item->sr;
-    $estimado= $item->estimado;
+    <style>
+        @page {
+            size: Letter;
+            margin: 4cm 2.5cm 2.5cm 2.5cm;
+        }
+        header {
+                position: fixed;
+                top: -1.5cm;
+                left: 0;
+                right: 0;
+                height: 1.5cm;
+            }
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #000;
+        }
 
-    $descpue= $item->descpue;
-    $prinombre= $item->prinombre;
-    $segnombre= $item->segnombre;
-    $priapellido= $item->priapellido;
-    $segapellido= $item->segapellido;
-    $salario= $item->salario;
-    $finicio= $item->finicio;
-    $fterminacion= $item->fterminacion;
-    $firmante= $item->firmante;
-    $puestofirmante= $item->puestofirmante;
-    $emailfirmante= $item->emailfirmante;
+        .container {
+            padding: 0cm;
+        }
 
+        .empresa {
+            font-size: 25px;
+            color: #0d6efd;
+            font-weight: bold;
+            text-align: center;
+        }
 
-    if($item->sel_tipo_contrato=='T'){$sel_tipo_contrato='definido de once (11) meses';}
-    if($item->sel_tipo_contrato=='P'){$sel_tipo_contrato='indefinido';}
-    
-    $fecha_larga_inicio= $item->fecha_larga_inicio
-@endphp
+        .detalle-empresa {
+            font-size: 12px;
+            color: #0d6efd;
+            text-align: center;
+        }
 
-@endforeach
-    <body>
-        <header>
-            <div class="font-arial PAGADORA">@php echo $nombre_memb; @endphp</div>            
-            <div class="font-arial apartado">@php echo $apartado; @endphp</div>            
-            <div class="font-arial apartado">@php echo $email; @endphp</div>          
-            <div class="font-arial apartado">@php echo $tel; @endphp</div>
-        </header>
-        <main>
-            <div class="font-arial b-s16" style="text-align: center;padding-top: 30px;">CARTA OFERTA DE TRABAJO</div>
-            <div class="font-arial s14" style="text-align: right;padding-top: 40px;padding-right: 50px;">@php echo "Panamá, ".$fecha_actual; @endphp</div> 
-            <p>
-            <div class="font-arial s14" style="text-align: left;padding-top: 30px;">@php echo $sr @endphp</div>
-            <div class="font-arial b-s14" style="text-align: left;">@php echo $prinombre." ".$segnombre." ".$priapellido." ".$segapellido; @endphp</div> 
-            <div class="font-arial s14" style="text-align: left;">E.    S.     M.</div></p>
+        .titulo {
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            padding-top: 10px;
+        }
 
-            <p class="font-arial s14" style="text-align: left; padding-top: 20px;">@php echo $estimado." ".$sr." ".$priapellido @endphp</p>
-            <p class="font-arial s14" style="text-align: justify; ">
-                Tengo el agrado de ofrecer a usted, en nombre de <strong>@php echo $nombre_memb; @endphp</strong>, el puesto de <strong>@php echo $descpue; @endphp</strong> bajo las condiciones que se detallan a continuación:
-            </p> 
-            <p class="font-arial s14" style="text-align: left;">
-                <ol>
-                    <li><strong>Fecha de inicio: @php echo $fecha_larga_inicio; @endphp</strong></li><br>
-                    <li><strong>Remuneración</strong></li>Su salario será de B/. <strong>@php echo number_format($salario, 2, '.', ','); @endphp  mensual</strong><br><br>
-                    <li><strong>Plazo del nombramiento</strong></li><p style="text-align: justify;">El presente contrato será por tiempo @php echo $sel_tipo_contrato; @endphp, con un periodo probatorio de tres (3) meses. Es entendido que la compañía podrá ofrecerle en el futuro, otra posición compatible con su carrera de servicios.</p>
-                </ol> 
-            </p> 
-<p style=" padding-top: 30px">Atentamente,</p>
+        .fecha {
+            font-size: 13px;
+            text-align: right;
+            padding-top: 20px;
+        }
 
+        .s14 {
+            font-size: 13px;
+        }
 
-<table style="border:1px" width="100%">
-<tr>
-    <td rowspan="2" style="width: 50%; text-align: center;">
-        <div style="padding-top: 50px;">_______________________________</div>
-        <div>@php echo $firmante; @endphp</div>
-        <div>@php echo $puestofirmante; @endphp</div>
-    </td>
-    <td style="width: 50%;text-align: center;">    
-        <div style="padding-top: 50px;text-align: center;">___________________________</div>
-        <div style="text-align: center;">Firma de aceptación</div>
-    </td>
-    
-    
-</tr>
-<tr>
-    
-    
-    <td style="text-align: center;">
+        .b-s14 {
+            font-size: 13px;
+            font-weight: bold;
+        }
 
-        <div style="padding-top: 20px;">___________________________</div>
-        <div>Cédula</div>
-    </td>
-</tr>
-</table>
+        .pt-4 { padding-top: 0.5rem; }
+        .pe-5 { padding-right: 2rem; }
+        .text-justify { text-align: justify; }
+        .text-end { text-align: right; }
+        .text-left { text-align: left; }
+        .text-center { text-align: center; }
+        .w-100 { width: 100%; }
 
+        ol {
+            padding-left: 5px;
+        }
 
-        </main>
-        <footer>
-            <div style="font-size: 11px;padding-top: 80px;">CC.:	Expediente Personal</div>
-        </footer>
-        <!-- Bootstrap JavaScript Libraries -->
-        <script
-            src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-            integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-            crossorigin="anonymous"
-        ></script>
+        ol li {
+            margin-bottom: 5px;
+        }
 
-        <script
-            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
-            integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
-            crossorigin="anonymous"
-        ></script>
-    </body>
+        table {
+            width: 100%;
+            margin-top: 30px;
+        }
+
+        table td {
+            vertical-align: top;
+            text-align: center;
+        }
+        firmas { 
+            position: fixed;
+            bottom: -1.5cm;
+            left: 0;
+            right: 0;
+            text-align: center;
+        }
+
+        footer {
+            position: fixed;
+            bottom: -2.5cm;
+            left: 0;
+            right: 0;
+            height: 1cm;
+            text-align: left;
+            font-size: 8pt;
+            color: #777;
+        }
+
+        @media print {
+            .no-print { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="titulo">CARTA OFERTA DE TRABAJO</div>
+    <div class="fecha">Panamá, {{ $data['fecha_actual'] }}</div>
+
+    <div class="s14 pt-4">{{ $data['sr'] }}</div>
+    <div class="b-s14">{{ $data['prinombre'] }} {{ $data['segnombre'] }} {{ $data['priapellido'] }} {{ $data['segapellido'] }}</div>
+    <div class="s14">E. S. M.</div>
+
+    <p class="s14 pt-4">{{ $data['sr'] }} {{ $data['priapellido'] }},</p>
+
+    <p class="s14 text-justify">
+        Tengo el agrado de ofrecer a usted, en nombre de <strong>{{ $data['nombre_memb'] }}</strong>, el puesto de
+        <strong>{{ $data['puesto'] }}</strong> bajo las condiciones que se detallan a continuación:
+    </p>
+
+    <ol class="s14">
+        <li><strong>Fecha de inicio:</strong> {{ $data['fecha_larga_inicio'] }}</li>
+        <li><strong>Remuneración:</strong><br>
+            <ul>
+                <li>Su salario será de B/. <strong>{{ $data['salario'] }} mensual</strong></li>
+                @if (!empty($data['texto_beneficios']))
+                    @foreach ($data['texto_beneficios'] as $beneficio)
+                        @if($beneficio['tipo'] == 'b')
+                            <li>{!! $beneficio['text'] !!}</li>
+                        @endif
+                    @endforeach
+                @endif
+            </ul>
+        </li>
+        @if (!empty($data['texto_beneficios']))
+        <li><strong>Herramientas de trabajo y bineficios:</strong><br>
+            <ul>
+                @foreach ($data['texto_beneficios'] as $beneficio)
+                    @if($beneficio['tipo'] == 'h')
+                        <li>{!! $beneficio['text'] !!}</li>
+                    @endif
+                @endforeach
+            </ul>
+        </li>
+        @endif
+        @if (!empty($data['plazo_nombramiento']))
+        <li><strong>Plazo del nombramiento:</strong><br>
+            <p class="text-justify" style="margin: 0;">
+                {!! nl2br($data['plazo_nombramiento']) !!}
+            </p>
+        </li>
+        @endif
+    </ol>
+
+    <firmas>   
+        <div class="s14 text-left">Atentamente,</div>
+        <table class="s14">
+            <tr>
+                <td style="width: 50%;">
+                    <div >_______________________________</div>
+                    <div class="s14">{{ $data['firmante'] }}</div>
+                    <div>{{ $data['puestofirmante'] }}</div>
+                </td>
+                <td style="width: 50%;">
+                    <div >___________________________</div>
+                    <div class="s14">Firma de aceptación</div>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <div >___________________________</div>
+                    <div class="s14">Cédula</div>
+                </td>
+            </tr>
+        </table>
+    </firmas>
+    <footer>
+        CC.: Expediente Personal
+    </footer>
+</div>
+
+</body>
 </html>

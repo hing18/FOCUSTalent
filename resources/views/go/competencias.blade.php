@@ -36,6 +36,8 @@
             border: 1px solid #ccc; /* Puedes agregar borde si lo deseas */
             padding: 10px;          /* Espaciado dentro del editor */
             font-size: 14px;        /* Tamaño de fuente más pequeño */
+            overflow-y: auto;   /* Barra de scroll vertical */
+            white-space: pre-wrap; /* Para que el texto se envuelva en líneas */
         }
 
         /* Opción para ocultar el área de entrada (input hidden) */
@@ -252,7 +254,6 @@
     { var urls="{{ route('competencias.update') }}";}
     if(opt==3)
     { var urls="{{ route('competencias.destroy') }}";}
-
       if(nombre.length>0)
       { if(definicion.length>0)
         {

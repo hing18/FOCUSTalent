@@ -3,9 +3,7 @@
 @section('title','GAP de Desarrollo por Dirección')
 <script src="{{ asset('assets/js/code/highcharts.js')}}"></script>
 <script src="{{ asset('assets/js/code/highcharts-more.js')}}"></script>
-<script src="https://code.highcharts.com/modules/polar.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://code.highcharts.com/highcharts-3d.js"></script>
 
 @section('content')
 <!-- JavaScript -->
@@ -193,9 +191,9 @@
                 </div>
               </div>
 
-              <div class="row m-0 p-0">
-                <div class="col-8 m-0 p-0">
-                  <div class="card m-0">
+              <div class="row">
+                <div class="col-8">
+                  <div class="card">
                     <div class="card-body p-0">
                       <h5 class="card-title text-secondary ms-4 text-uppercase"style="font-size: 15px">GAP de cada Variable por Jerarquías</h5>
                       <div id="container" style="height: 350px;" class="p-4"></div>
@@ -203,7 +201,7 @@
                   </div>
                 </div>
                 
-                <div class="col-4 m-0 ">
+                <div class="col-4">
                   <div class="card">
                     <div class="card-body p-0">              
                       <small>
@@ -224,6 +222,7 @@
                       <thead>
                         <tr class="fw-bold">
                           <td class="table-primary text-center" style="color: #4B6EAD; ">Jerarquías</td>
+                          <td class="table-primary text-center" style="color: #4B6EAD; ">Personas</td>
                           <td class="table-primary text-center" style="color: #4B6EAD; ">Coef. Intelectual</td>
                           <td class="table-primary text-center" style="color: #4B6EAD; ">Niv. Académico</td>
                           <td class="table-primary text-center" style="color: #4B6EAD; ">Competencias</td>
@@ -235,6 +234,7 @@
                         <thead>
                           <tr class="text-center table-primary">
                             <th class="table-primary" style="color: #4B6EAD">GAP TOTAL</th>
+                            <th style="color: #4B6EAD"><span id="hc_1"></span></th>
                             <th style="color: #4B6EAD"><span id="totci_1"></span>%</th>
                             <th style="color: #4B6EAD"><span id="totna_1"></span>%</th>
                             <th style="color: #4B6EAD"><span id="totcom_1"></span>%</th>
@@ -246,6 +246,186 @@
                   </small>
                 </div>
               </div>
+
+              <div class="row">
+                <div class="col-6">
+                  <div class="card">
+                    <div class="card-body">
+                      <h5 class="card-title text-secondary text-uppercase"style="font-size: 15px">Resultados Clasificados Según Escala de Desempeño</h5>
+                        <div id="container-escala" style="height: 360px;">
+                          <div class="row w-100" class=" d-flex align-items-center" style="height: 280px;">
+                            <div class="col">                
+
+                              <div class="d-flex justify-content-center align-items-center mb-3">
+                                <div class="col-10">
+                                  <div class="row border bg-white" 
+                                      style="border-color: #2F526F; height: 34px; position: relative; 
+                                              border-bottom-left-radius: 50px; border-top-left-radius: 50px; 
+                                              border-bottom-right-radius: 20px; border-top-right-radius: 20px;">
+                                    
+                                    <div class="col-2 ms-0 ps-0">
+                                      <div class="rounded-circle d-flex justify-content-center align-items-center fw-semibold" 
+                                          style="background-color: #2F526F; width: 32px; height: 32px; color: white; position: absolute; top: 0px;">
+                                        05
+                                      </div>
+                                    </div>
+
+                                    <div class="col-10 d-flex justify-content-center align-items-center fw-bold">
+                                      <div class="col-8 ps-0" style="font-size: 12px; color: #2F526F;">
+                                        Excelentes
+                                      </div>
+                                      <div class="col-4 text-secondary text-end" style="font-size: 14px;">
+                                        <span style="color: #2F526F;" id="escala_excelente">0%</span>
+                                      </div>
+                                    </div>
+
+                                  </div>  
+                                </div>
+                              </div>
+                            
+                              <div class="d-flex justify-content-center align-items-center mb-3">
+                                <div class="col-10">
+                                  <div class="row border bg-white" 
+                                      style="border-color: #366A9A; height: 34px; position: relative; 
+                                              border-bottom-left-radius: 50px; border-top-left-radius: 50px; 
+                                              border-bottom-right-radius: 20px; border-top-right-radius: 20px;">
+                                    
+                                    <div class="col-2 ms-0 ps-0">
+                                      <div class="rounded-circle d-flex justify-content-center align-items-center fw-semibold" 
+                                          style="background-color: #366A9A; width: 32px; height: 32px; color: white; position: absolute; top: 0px;">
+                                        04
+                                      </div>
+                                    </div>
+
+                                    <div class="col-10 d-flex justify-content-center align-items-center fw-bold">
+                                      <div class="col-8 ps-0" style="font-size: 12px; color: #366A9A;">
+                                        Muy Buenos
+                                      </div>
+                                      <div class="col-4 text-secondary text-end" style="font-size: 14px;">
+                                        <span style="color: #366A9A;" id="escala_muybueno">0%</span>
+                                      </div>
+                                    </div>
+
+                                  </div>  
+                                </div>
+                              </div>                          
+                          
+                              <div class="d-flex justify-content-center align-items-center mb-3">
+                                <div class="col-10">
+                                  <div class="row border bg-white" 
+                                      style="border-color: #447BAC; height: 34px; position: relative; 
+                                              border-bottom-left-radius: 50px; border-top-left-radius: 50px; 
+                                              border-bottom-right-radius: 20px; border-top-right-radius: 20px;">
+                                    
+                                    <div class="col-2 ms-0 ps-0">
+                                      <div class="rounded-circle d-flex justify-content-center align-items-center fw-semibold" 
+                                          style="background-color: #447BAC; width: 32px; height: 32px; color: white; position: absolute; top: 0px;">
+                                        03
+                                      </div>
+                                    </div>
+
+                                    <div class="col-10 d-flex justify-content-center align-items-center fw-bold">
+                                      <div class="col-8 ps-0" style="font-size: 12px; color: #447BAC;">
+                                        Buenos
+                                      </div>
+                                      <div class="col-4 text-secondary text-end" style="font-size: 14px;">
+                                        <span  style="color: #447BAC;" id="escala_bueno">0%</span>
+                                      </div>
+                                    </div>
+
+                                  </div>  
+                                </div>
+                              </div>                          
+                            
+                              <div class="d-flex justify-content-center align-items-center mb-3">
+                                <div class="col-10">
+                                  <div class="row border bg-white" 
+                                      style="border-color: #538CBF; height: 34px; position: relative; 
+                                              border-bottom-left-radius: 50px; border-top-left-radius: 50px; 
+                                              border-bottom-right-radius: 20px; border-top-right-radius: 20px;">
+                                    
+                                    <div class="col-2 ms-0 ps-0">
+                                      <div class="rounded-circle d-flex justify-content-center align-items-center fw-semibold" 
+                                          style="background-color: #538CBF; width: 32px; height: 32px; color: white; position: absolute; top: 0px;">
+                                        02
+                                      </div>
+                                    </div>
+
+                                    <div class="col-10 d-flex justify-content-center align-items-center fw-bold">
+                                      <div class="col-8 ps-0" style="font-size: 12px; color: #538CBF;">
+                                        Regulares
+                                      </div>
+                                      <div class="col-4 text-secondary text-end" style="font-size: 14px;">
+                                        <span style="color: #538CBF;" id="escala_regular">0%</span>
+                                      </div>
+                                    </div>
+
+                                  </div>  
+                                </div>
+                              </div>                          
+                            
+                              <div class="d-flex justify-content-center align-items-center mb-3">
+                                <div class="col-10">
+                                  <div class="row border bg-white" 
+                                      style="border-color: #629DD1 ; height: 34px; position: relative; 
+                                              border-bottom-left-radius: 50px; border-top-left-radius: 50px; 
+                                              border-bottom-right-radius: 20px; border-top-right-radius: 20px;">
+                                    
+                                    <div class="col-2 ms-0 ps-0">
+                                      <div class="rounded-circle d-flex justify-content-center align-items-center fw-semibold" 
+                                          style="background-color: #629DD1 ; width: 32px; height: 32px; color: white; position: absolute; top: 0px;">
+                                        01
+                                      </div>
+                                    </div>
+
+                                    <div class="col-10 d-flex justify-content-center align-items-center fw-bold">
+                                      <div class="col-9 ps-0" style="font-size: 12px; color: #629DD1;">
+                                        Deficientes
+                                      </div>
+                                      <div class="col-3 text-secondary text-end" style="font-size: 14px;">
+                                        <span style="color: #629DD1;" id="escala_deficiente">0%</span>
+                                      </div>
+                                    </div>
+
+                                  </div>  
+                                </div>
+                              </div>
+
+                            </div>
+                            <div class="col text-end">
+                              <img src="{{ asset('assets/img/escala.jpg') }}" style="height: 90%;">
+                            </div>
+                          </div>  
+                          <h6 class=" text-secondary text-uppercase"style="font-size: 14px">Desempeño de <span id="desempeno_seccion"></span> Según Escala</h6>
+
+                          <div class="row border px-4 border-primary bg-light rounded-pill d-flex justify-content-between align-items-center mb-2 fw-bold  text-secondary" style=" height: 40px; font-size: 16px;">
+                            <div class="col d-flex justify-content-center">
+                              Promedio
+                            </div>
+                            <div class="col d-flex justify-content-center" style="font-size: 16px;">
+                              <span id="prom_desemp_promedio">0%</span>
+                            </div>
+                            <div class="col d-flex justify-content-center">
+                              <i class="fa-solid fa-arrow-right-long fa-lg"></i>
+                            </div>
+                            <div class="col d-flex justify-content-center">
+                              <span id="prom_desemp_categoria"></span>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="card">
+                    <div class="card-body">   
+                      <h5 class="card-title text-secondary text-uppercase"style="font-size: 15px">CUMPLIMIENTO VS. GAP de la Unidad</h5>
+                      <div id="container-donuts" style="height: 350px;"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
 
               <div class="pagetitle pt-4 pb-0 mb-0">
                 <div class="row pb-0 mb-0">
@@ -263,12 +443,12 @@
 
                <div class="pt-0 mt-0" id="list_colab">
 
-            </div>                     
+              </div>                     
               
 
       </div>
     </div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
 
 
     <!-- Modal PID -->
@@ -389,6 +569,18 @@
   
               </div>
               <div class="col-8">           
+                
+              <div class="row">
+                <div class="col-auto">
+                  <h5 class="text-secondary" id="id_div_res_ano">Resultado de Evaluación</h5>
+                </div>
+                <div class="col-auto h5 text-primary" id="id_div_res">
+                  
+                </div>
+                <div class="col-4 fw-bold h5" id="id_div_clas">
+                  
+                </div>
+              </div>
                 <div class="pagetitle pb-0 mb-0">
                   <div class="row pb-0 mb-0">
                     <div class="col-8 my-0 py-0">
@@ -591,6 +783,7 @@
           var selectedValue = selectElement.value;
           $('#ano').html('');$('#ano2').html('');
           $('#nom_unidad').html('');
+          $('#desempeno_seccion').html('');
           $('#dash').addClass('visually-hidden');
       
           // Verificar si el valor seleccionado no es '-'
@@ -613,26 +806,29 @@
                   success: function (response) {
                       var id_eval=response.id_eval
                       // Inicializando las variables de totales
+                      var totalHc = "";
                       var totalCoefInt = 0;
                       var totalNivelAcad = 0;
                       var totalCompetencias = 0;
                       var totalHabilidades = 0;
                       var totalGap = 0;
                       var totalRows = 0;
-      
+                      var Gap_PASTEL=0;
+                      var Cumplimiento_PASTEL=0;
                       // Ocultar el spinner cuando termine la carga
                       $('#div_spinner').addClass('visually-hidden');
-      
                       // Verificar si 'response.gapund' es un arreglo válido
                       if (Array.isArray(response.gapund)) {
-      
                           $('#dash').removeClass('visually-hidden'); // Mostrar los datos
                           $.each(response.gapund, function (i, item) {
+                              totalHc +=item.hc;
                               totalCoefInt += parseFloat(item.COEFICIENTE_INTELECTUAL);
                               totalNivelAcad += parseFloat(item.NIVEL_ACADEMICO);
                               totalCompetencias += parseFloat(item.COMPETENCIAS);
                               totalHabilidades += parseFloat(item.HABILIDADES);
                               totalGap += parseFloat(item.GAP);
+                              Gap_PASTEL += parseFloat(item.GAP);
+                              Cumplimiento_PASTEL += parseFloat(item.CUMPLIMIENTO);
                               totalRows++;
                           });
       
@@ -658,6 +854,7 @@
                               $('#barra_hab_1').css("width", (100 - (totalHabilidades / totalRows)).toFixed(1) + '%');
                               $('#barra_gap_1').css("width", (100 - (totalGap / totalRows)).toFixed(1) + '%');
       
+                              $('#hc_1').html(totalHc);  // Promedio de Coef. Intelectual
                               $('#totci_1').html((totalCoefInt / totalRows).toFixed(1));  // Promedio de Coef. Intelectual
                               $('#totna_1').html((totalNivelAcad / totalRows).toFixed(1)); // Promedio de Nivel Académico
                               $('#totcom_1').html((totalCompetencias / totalRows).toFixed(1)); // Promedio de Competencias
@@ -676,6 +873,7 @@
                           if (response.ano) {
                               $('#ano').html(response.ano);
                               $('#ano2').html(response.ano);
+                              $('#id_div_res_ano').html('Resultado de Evaluación '+response.ano);
                           } else {
                               $('#ano').html("No disponible");
                               $('#ano2').html("No disponible");
@@ -683,6 +881,7 @@
       
                           if (response.unidad) {
                               $('#nom_unidad').html(response.unidad);
+                              $('#desempeno_seccion').html(response.unidad);
                           } else {
                               $('#nom_unidad').html("No disponible");
                           }
@@ -692,6 +891,25 @@
                           $('#nom_unidad').html("No se han realizado evaluaciones en esta unidad.");
                           clean();
                       }
+                      $('#escala_excelente').html('0%');
+                      $('#escala_muybueno').html('0%');
+                      $('#escala_bueno').html('0%');
+                      $('#escala_regular').html('0%');
+                      $('#escala_deficiente').html('0%');
+                     
+                        $.each(response.data_escalas, function (i, item) {
+                          if(item.categoria.trim()=='Excelente'){$('#escala_excelente').html(item.porcentaje+"%");}
+                          if(item.categoria.trim()=='Muy Bueno'){$('#escala_muybueno').html(item.porcentaje+"%");}
+                          if(item.categoria.trim()=='Bueno'){$('#escala_bueno').html(item.porcentaje+"%");}
+                          if(item.categoria.trim()=='Regular'){$('#escala_regular').html(item.porcentaje+"%");}
+                          if(item.categoria.trim()=='Deficiente'){$('#escala_deficiente').html(item.porcentaje+"%");}
+
+                        })
+                        
+                          $('#prom_desemp_promedio').html(response.prom_desemp.promedio+'%');
+                          $('#prom_desemp_categoria').html('<span style="color:' + response.prom_desemp.color + ';">' + response.prom_desemp.categoria + '</span>');
+                     
+                      
                     // Crear las filas de la tabla dinámicamente
                     let fila = "";
                     //let totalCoefInt = 0, totalNivelAcad = 0, totalCompetencias = 0, totalHabilidades = 0, totalGap = 0;
@@ -715,6 +933,7 @@
 
                           fila += `<tr>
                             <td class="ps-2">${item.jerarquia}</td>
+                            <td class="text-center">${item.hc}</td>
                             <td class="text-center">${parseFloat(item.gap_ci).toFixed(1)}%</td>
                             <td class="text-center">${parseFloat(item.gap_na).toFixed(1)}%</td>
                             <td class="text-center">${parseFloat(item.gap_com).toFixed(1)}%</td>
@@ -759,9 +978,6 @@
                                   enabled: false  // Desactivar la escala del eje Y
                               }
                           },
-                          tooltip: {
-                              valueSuffix: null
-                          },
                           plotOptions: {
                               series: {
                                   borderRadius: '25%',
@@ -798,6 +1014,8 @@
                           }]
                       });
                       
+
+
                       Highcharts.chart('container_jer', {
                         chart: {
                             type: 'bar'
@@ -861,6 +1079,70 @@
 
                         }]
                       });
+
+                      Cumplimiento_PASTEL=parseFloat(Cumplimiento_PASTEL.toFixed(1));
+                      Gap_PASTEL=parseFloat(Gap_PASTEL.toFixed(1));
+
+                          Highcharts.chart('container-donuts', {
+                            chart: {
+                                type: 'pie',
+                                options3d: {
+                                    enabled: true,
+                                    alpha: 40,
+                                    beta: 0
+                                }
+                            },
+                            title: {
+                                text: null,
+                                style: {
+                                    color: '#aaaaaa',
+                                    fontSize: '16px'
+                                }
+                            },
+                            tooltip: {
+                                pointFormat: '<b>{point.percentage:.1f}%</b>'
+                            },
+                            plotOptions: {
+                                pie: {
+                                    innerSize: 100,
+                                    depth: 45,
+                                    allowPointSelect: true,
+                                    cursor: 'pointer',
+                                    slicedOffset: 30,
+                                    dataLabels: {
+                                        enabled: true,
+                                        distance: -10, // dentro de la rebanada
+                                        format: '<div class="text-center" style="text-align:center;font-size:18px; font-weight:bold;">{point.y}%</div><br><div class="text-center" style="text-align:center;font-size:13px; color:#fff;">{point.name}</div>' ,
+                                        style: {
+                                            color: '#fff',
+                                            fontWeight: 'bold',
+                                            fontSize: '14px'
+                                        }
+                                    }
+                                }
+                            },
+                            series: [{
+                                name: 'Porcentaje',
+                                data: [
+                                    {
+                                        name: 'GAP',
+                                        y: Gap_PASTEL,
+                                        color: '#909D8E',
+                                        sliced: true,
+                                        selected: true
+                                    },
+                                    {
+                                        name: 'Cumplimiento',
+                                        y: Cumplimiento_PASTEL,
+                                        color: '#0267CC',
+                                        sliced: true,
+                                        selected: true
+                                    }
+                                ]                      
+                                              
+                                              
+                            }]
+                        });
 
                       let jerarquia = ""; // Inicializar jerarquía fuera del ciclo
                       $('#list_colab').html(''); // Limpiar el contenido al inicio
@@ -999,7 +1281,7 @@
       
               $.ajax({
                   data: parametros,
-                  url: "{{ route('gapunidad.pid') }}",  // Asegúrate de que esta ruta sea correcta
+                  url: "{{ route('gapunidad.pid') }}", 
                   type: 'POST',
                   dataType: "json",
                   cache: true,
@@ -1009,6 +1291,9 @@
                     $('#curso_pid').html('');
                     $('#curso_pid_ad').html('');
                     nfecha="-";
+                    jQuery(response.pid_res).each(function(x, item) {
+                      $('#id_div_res').html(parseFloat(item.resultado).toFixed(1)+'%');
+                      $('#id_div_clas').html('<span style="color:'+item.color+'">'+item.categoria+'</span>');});
                     jQuery(response.pidcomp).each(function(x, item) { 
                       cad+='<li><i class="bi bi-check-circle text-primary"></i> <span class="text-secondary">'+item.comp+'</span></li>';
                       $('#div_pid_cursos_com').removeClass('visually-hidden');

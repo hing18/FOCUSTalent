@@ -4,6 +4,7 @@
 <script src="{{ asset('assets/js/code/highcharts.js')}}"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://code.highcharts.com/highcharts-3d.js"></script>
 
 @section('content')
 <!-- JavaScript -->
@@ -61,6 +62,7 @@
               $g_na[] = $data->NIVEL_ACADEMICO;
               $g_com[] = $data->COMPETENCIAS;
               $g_hab[] = $data->HABILIDADES;
+              $g_hc[] = $data->HC;
           @endphp
       @endforeach
 
@@ -70,6 +72,72 @@
           $gap_jer_tot[] = $data->gap;
         @endphp
       @endforeach
+
+      @php
+          $escala_excelente = 0;
+          $escala_muybueno = 0;
+          $escala_bueno = 0;
+          $escala_regular = 0;
+          $escala_deficiente = 0;
+      @endphp
+
+      @foreach ($data_escalas as $escala)
+          @php
+              if ($escala->categoria == 'Excelente') {
+                  $escala_excelente = $escala->porcentaje;
+              } elseif ($escala->categoria == 'Muy Bueno') {
+                  $escala_muybueno = $escala->porcentaje;
+              } elseif ($escala->categoria == 'Bueno') {
+                  $escala_bueno = $escala->porcentaje;
+              } elseif ($escala->categoria == 'Regular') {
+                  $escala_regular = $escala->porcentaje;
+              } elseif ($escala->categoria == 'Deficiente') {
+                  $escala_deficiente = $escala->porcentaje;
+              }
+          @endphp
+      @endforeach
+      
+
+
+@php
+    $escalas = [
+        1 => [],
+        93 => [],
+        106 => [],
+    ];    
+    $escalas_grp = [
+      
+    ];
+@endphp
+
+@foreach ($data_escalas_grp as $escalagr)
+    @php
+        $id = $escalagr->idgrupo;
+        $categoria = $escalagr->categoria;
+        $porcentaje = $escalagr->porcentaje;
+
+        if (isset($escalas[$id])) {
+            $escalas[$id][$categoria] = $porcentaje;
+        }
+    @endphp
+@endforeach
+
+@foreach ($prom_desemp_grp as $item)
+    @php
+        $idgrupo_grp = $item->idgrupo;
+        $categoria_grp = $item->categoria;
+        $pormedio_grp = $item->promedio;
+        $color_grp = $item->color;
+
+       
+        
+            $escalas_grp[$idgrupo_grp]["categoria"] = $categoria_grp;
+            $escalas_grp[$idgrupo_grp]["promedio"] = $pormedio_grp;
+            $escalas_grp[$idgrupo_grp]["color"] = $color_grp;
+       
+    @endphp
+@endforeach
+                              
       
         <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
           <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
@@ -317,18 +385,19 @@
                   <table class="table table-sm small table-striped-columns table-hover table-auto" >
                     <thead>
                       <tr class="fw-bold">
-                        <td class="table-primary text-center" style="color: #4B6EAD; ">GAP - Segmentos</td>
-                        <td class="table-primary text-center" style="color: #4B6EAD; ">Coef. Intelectual</td>
-                        <td class="table-primary text-center" style="color: #4B6EAD; ">Niv. Académico</td>
-                        <td class="table-primary text-center" style="color: #4B6EAD; ">Competencias</td>
-                        <td class="table-primary text-center" style="color: #4B6EAD; ">Habilidades</td>
-                        <td class="table-primary text-center fw-bold" style="color: #4B6EAD; ">GAP TOTAL</td>
+                        <td class="table-primary text-center" style="color: #4B6EAD; width: 22%">GAP - Segmentos</td>
+                        <td class="table-primary text-center" style="color: #4B6EAD; width: 8%">Pers.</td>
+                        <td class="table-primary text-center" style="color: #4B6EAD; width: 12%">Coef. Intelectual</td>
+                        <td class="table-primary text-center" style="color: #4B6EAD; width: 12%">Niv. Académico</td>
+                        <td class="table-primary text-center" style="color: #4B6EAD; width: 12%">Competencias</td>
+                        <td class="table-primary text-center" style="color: #4B6EAD; width: 12%">Habilidades</td>
+                        <td class="table-primary text-center fw-bold" style="color: #4B6EAD; width: 10%">GAP TOTAL</td>
                       </tr>
                     </thead>
                     <tbody>
                       @php
                         $grupos = []; $g_tot = []; $g_cum = [];
-                        $s_ci=0;$s_na=0;$s_com=0;$s_hab=0;$s_tot=0;
+                        $s_ci=0;$s_na=0;$s_com=0;$s_hab=0;$s_tot=0;$tot_hc=0
                       @endphp
                       @foreach ($gap_grupos as $data)
                         @php
@@ -341,10 +410,12 @@
                             $s_com+=$data->COMPETENCIAS;
                             $s_hab+=$data->HABILIDADES;
                             $s_tot+=$data->TOTAL;
+                            $tot_hc+=$data->HC;
 
                         @endphp
                       <tr>
                         <td class="ps-2">{{ $data->grupo }}</td>
+                        <td class="text-center">{{ $data->HC}}</td>
                         <td class="text-center">{{ $data->COEFICIENTE_INTELECTUAL }}%</td>
                         <td class="text-center">{{ $data->NIVEL_ACADEMICO }}%</td>
                         <td class="text-center">{{ $data->COMPETENCIAS }}%</td>
@@ -356,6 +427,7 @@
                     <thead>
                       <tr class="text-center table-primary">
                         <th class="table-primary" style="color: #4B6EAD">GAP TOTAL</th>
+                        <th style="color: #4B6EAD">{{ $tot_hc}}</th>
                         <th style="color: #4B6EAD">@php echo $ci; @endphp%</th>
                         <th style="color: #4B6EAD">@php echo $na; @endphp%</th>
                         <th style="color: #4B6EAD">@php echo $com; @endphp%</th>
@@ -381,7 +453,190 @@
           </div>
         </div>
       </div>
+      <!---------------Resultados Total Compañia Clasificados Según Escala de Desempeño----------------->
+              <div class="row">
+                <div class="col-6 h-100">
+                  <div class="card">
+                    <div class="card-body">
+                      <h5 class="card-title text-secondary text-uppercase"style="font-size: 14px">Distribución del Talento, según escala de desempeño</h5>
 
+                        <div id="container-escala" style="height: 360px;">
+
+                          <div class="row w-100" class=" d-flex align-items-center" style="height: 280px;">
+
+                            <div class="col">
+                              
+                              <div class="d-flex justify-content-center align-items-center mb-3">
+                                <div class="col-10">
+                                  <div class="row border bg-white" 
+                                      style="border-color: #2F526F; height: 34px; position: relative; 
+                                              border-bottom-left-radius: 50px; border-top-left-radius: 50px; 
+                                              border-bottom-right-radius: 20px; border-top-right-radius: 20px;">
+                                    
+                                    <div class="col-2 ms-0 ps-0">
+                                      <div class="rounded-circle d-flex justify-content-center align-items-center fw-semibold" 
+                                          style="background-color: #2F526F; width: 32px; height: 32px; color: white; position: absolute; top: 0px;">
+                                        05
+                                      </div>
+                                    </div>
+
+                                    <div class="col-10 d-flex justify-content-center align-items-center fw-bold">
+                                      <div class="col-8 ps-0" style="font-size: 12px; color: #2F526F;">
+                                        Excelentes
+                                      </div>
+                                      <div class="col-4 text-secondary text-end" style="font-size: 14px;">
+                                        <span style="color: #2F526F;" >{{ $escala_excelente }}%</span>
+                                      </div>
+                                    </div>
+
+                                  </div>  
+                                </div>
+                              </div>
+                            
+                              <div class="d-flex justify-content-center align-items-center mb-3">
+                                <div class="col-10">
+                                  <div class="row border bg-white" 
+                                      style="border-color: #366A9A; height: 34px; position: relative; 
+                                              border-bottom-left-radius: 50px; border-top-left-radius: 50px; 
+                                              border-bottom-right-radius: 20px; border-top-right-radius: 20px;">
+                                    
+                                    <div class="col-2 ms-0 ps-0">
+                                      <div class="rounded-circle d-flex justify-content-center align-items-center fw-semibold" 
+                                          style="background-color: #366A9A; width: 32px; height: 32px; color: white; position: absolute; top: 0px;">
+                                        04
+                                      </div>
+                                    </div>
+
+                                    <div class="col-10 d-flex justify-content-center align-items-center fw-bold">
+                                      <div class="col-8 ps-0" style="font-size: 12px; color: #366A9A;">
+                                        Muy Buenos
+                                      </div>
+                                      <div class="col-4 text-secondary text-end" style="font-size: 14px;">
+                                        <span style="color: #366A9A;">{{ $escala_muybueno }}%</span>
+                                      </div>
+                                    </div>
+
+                                  </div>  
+                                </div>
+                              </div>                          
+                          
+                              <div class="d-flex justify-content-center align-items-center mb-3">
+                                <div class="col-10">
+                                  <div class="row border bg-white" 
+                                      style="border-color: #447BAC; height: 34px; position: relative; 
+                                              border-bottom-left-radius: 50px; border-top-left-radius: 50px; 
+                                              border-bottom-right-radius: 20px; border-top-right-radius: 20px;">
+                                    
+                                    <div class="col-2 ms-0 ps-0">
+                                      <div class="rounded-circle d-flex justify-content-center align-items-center fw-semibold" 
+                                          style="background-color: #447BAC; width: 32px; height: 32px; color: white; position: absolute; top: 0px;">
+                                        03
+                                      </div>
+                                    </div>
+
+                                    <div class="col-10 d-flex justify-content-center align-items-center fw-bold">
+                                      <div class="col-8 ps-0" style="font-size: 12px; color: #447BAC;">
+                                        Buenos
+                                      </div>
+                                      <div class="col-4 text-secondary text-end" style="font-size: 14px;">
+                                        <span  style="color: #447BAC;">{{ $escala_bueno }}%</span>
+                                      </div>
+                                    </div>
+
+                                  </div>  
+                                </div>
+                              </div>                          
+                            
+                              <div class="d-flex justify-content-center align-items-center mb-3">
+                                <div class="col-10">
+                                  <div class="row border bg-white" 
+                                      style="border-color: #538CBF; height: 34px; position: relative; 
+                                              border-bottom-left-radius: 50px; border-top-left-radius: 50px; 
+                                              border-bottom-right-radius: 20px; border-top-right-radius: 20px;">
+                                    
+                                    <div class="col-2 ms-0 ps-0">
+                                      <div class="rounded-circle d-flex justify-content-center align-items-center fw-semibold" 
+                                          style="background-color: #538CBF; width: 32px; height: 32px; color: white; position: absolute; top: 0px;">
+                                        02
+                                      </div>
+                                    </div>
+
+                                    <div class="col-10 d-flex justify-content-center align-items-center fw-bold">
+                                      <div class="col-8 ps-0" style="font-size: 12px; color: #538CBF;">
+                                        Regulares
+                                      </div>
+                                      <div class="col-4 text-secondary text-end" style="font-size: 14px;">
+                                        <span style="color: #538CBF;">{{ $escala_regular }}%</span>
+                                      </div>
+                                    </div>
+
+                                  </div>  
+                                </div>
+                              </div>                          
+                            
+                              <div class="d-flex justify-content-center align-items-center mb-3">
+                                <div class="col-10">
+                                  <div class="row border bg-white" 
+                                      style="border-color: #629DD1 ; height: 34px; position: relative; 
+                                              border-bottom-left-radius: 50px; border-top-left-radius: 50px; 
+                                              border-bottom-right-radius: 20px; border-top-right-radius: 20px;">
+                                    
+                                    <div class="col-2 ms-0 ps-0">
+                                      <div class="rounded-circle d-flex justify-content-center align-items-center fw-semibold" 
+                                          style="background-color: #629DD1 ; width: 32px; height: 32px; color: white; position: absolute; top: 0px;">
+                                        01
+                                      </div>
+                                    </div>
+
+                                    <div class="col-10 d-flex justify-content-center align-items-center fw-bold">
+                                      <div class="col-9 ps-0" style="font-size: 12px; color: #629DD1;">
+                                        Deficientes
+                                      </div>
+                                      <div class="col-3 text-secondary text-end" style="font-size: 14px;">
+                                        <span style="color: #629DD1;">{{ $escala_deficiente }}%</span>
+                                      </div>
+                                    </div>
+
+                                  </div>  
+                                </div>
+                              </div>
+
+                            </div>
+                            <div class="col text-end">
+                              <img src="{{ asset('assets/img/escala.jpg') }}" style="height: 90%;">
+                            </div>
+                          </div>  
+                          <h6 class=" text-secondary text-uppercase"style="font-size: 14px">Desempeño Global de la Compañía Según Escala</h6>
+
+                          <div class="row border px-4 border-primary bg-light rounded-pill d-flex justify-content-between align-items-center mb-2 fw-bold  text-secondary" style=" height: 40px; font-size: 16px;">
+                            <div class="col d-flex justify-content-center">
+                              Promedio
+                            </div>
+                            <div class="col d-flex justify-content-center" style="font-size: 16px;">
+                              {{ $prom_desemp->promedio }}%
+                            </div>
+                            <div class="col d-flex justify-content-center">
+                              <i class="fa-solid fa-arrow-right-long fa-lg"></i>
+                            </div>
+                            <div class="col d-flex justify-content-center" style="color: {{ $prom_desemp->color }};">
+                              {{ $prom_desemp->categoria }}
+                            </div>
+                          </div>
+                        </div>
+
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6 h-100">
+                  <div class="card">
+                    <div class="card-body">   
+                      <h5 class="card-title text-secondary text-uppercase"style="font-size: 15px">CUMPLIMIENTO VS. GAP total compañia<br></h5>
+                      <div id="container-donuts" style="height: 360px;"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+      <!-------------------------------------------------->
         <hr>
         
         <div class="pagetitle">
@@ -389,7 +644,7 @@
           <nav>
             <ol class="breadcrumb">
               <li class="breadcrumb-item"style="font-weight: normal;">Evaluación y Desarrollo</li>
-              <li class="breadcrumb-item" style="color: #4B6EAD">GAP - <span id="nom_seccion_1"><span></li>
+              <li class="breadcrumb-item" style="color: #4B6EAD">GAP - <span id="nom_seccion_1"></span></li>
             </ol>
           </nav>
         </div><!-- End Page Title -->
@@ -524,18 +779,20 @@
             <table class="table table-sm small table-striped-columns table-hover mx-auto" style="width: 90%">
               <thead>
                 <tr class="fw-bold">
-                  <td class="table-primary text-center" style="color: #4B6EAD; width: 30%">GAP - <span id="nom_grp_1"><span></td>
-                  <td class="table-primary text-center" style="color: #4B6EAD; width: 12%">Coef. Intelectual</td>
-                  <td class="table-primary text-center" style="color: #4B6EAD; width: 12%">Niv. Académico</td>
-                  <td class="table-primary text-center" style="color: #4B6EAD; width: 12%">Competencias</td>
-                  <td class="table-primary text-center" style="color: #4B6EAD; width: 12%">Habilidades</td>
-                  <td class="table-primary text-center fw-bold" style="color: #4B6EAD; width: 12%">GAP TOTAL</td>
+                  <td class="table-primary text-center" style="color: #4B6EAD; width: 40%">GAP - <span id="nom_grp_1"><span></td>
+                  <td class="table-primary text-center" style="color: #4B6EAD; width: 10%">Personas</td>
+                  <td class="table-primary text-center" style="color: #4B6EAD; width: 10%">Coef. Intelectual</td>
+                  <td class="table-primary text-center" style="color: #4B6EAD; width: 10%">Niv. Académico</td>
+                  <td class="table-primary text-center" style="color: #4B6EAD; width: 10%">Competencias</td>
+                  <td class="table-primary text-center" style="color: #4B6EAD; width: 10%">Habilidades</td>
+                  <td class="table-primary text-center fw-bold" style="color: #4B6EAD; width: 10%">GAP TOTAL</td>
                 </tr>
               </thead>
               <tbody id="tbody_1"> </tbody>
               <thead>
                 <tr class="text-center table-primary">
                   <th class="table-primary" style="color: #4B6EAD">GAP TOTAL</th>
+                  <th style="color: #4B6EAD"><span id="tothc_1"></span></th>
                   <th style="color: #4B6EAD"><span id="totci_1"></span>%</th>
                   <th style="color: #4B6EAD"><span id="totna_1"></span>%</th>
                   <th style="color: #4B6EAD"><span id="totcom_1"></span>%</th>
@@ -547,13 +804,196 @@
           </div>
         </div>
 
+
+      <!-------------------------------->
+              <div class="row">
+                <div class="col-6 h-100">
+                  <div class="card">
+                    <div class="card-body">
+                      <h5 class="card-title text-secondary text-uppercase"style="font-size: 14px">Distribución del Talento, según escala de desempeño</h5>
+                        <div id="container-escala" style="height: 360px;">
+                          <div class="row w-100" class=" d-flex align-items-center" style="height: 280px;">
+                            <div class="col">                              
+                              <div class="d-flex justify-content-center align-items-center mb-3">
+                                <div class="col-10">
+                                  <div class="row border bg-white" 
+                                      style="border-color: #2F526F; height: 34px; position: relative; 
+                                              border-bottom-left-radius: 50px; border-top-left-radius: 50px; 
+                                              border-bottom-right-radius: 20px; border-top-right-radius: 20px;">
+                                    
+                                    <div class="col-2 ms-0 ps-0">
+                                      <div class="rounded-circle d-flex justify-content-center align-items-center fw-semibold" 
+                                          style="background-color: #2F526F; width: 32px; height: 32px; color: white; position: absolute; top: 0px;">
+                                        05
+                                      </div>
+                                    </div>
+
+                                    <div class="col-10 d-flex justify-content-center align-items-center fw-bold">
+                                      <div class="col-8 ps-0" style="font-size: 12px; color: #2F526F;">
+                                        Excelentes
+                                      </div>
+                                      <div class="col-4 text-secondary text-end" style="font-size: 14px;">
+                                        <span style="color: #2F526F;" >{{ $escalas[1]['Excelente'] ?? 0 }}%</span>
+                                      </div>
+                                    </div>
+
+                                  </div>  
+                                </div>
+                              </div>
+                            
+                              <div class="d-flex justify-content-center align-items-center mb-3">
+                                <div class="col-10">
+                                  <div class="row border bg-white" 
+                                      style="border-color: #366A9A; height: 34px; position: relative; 
+                                              border-bottom-left-radius: 50px; border-top-left-radius: 50px; 
+                                              border-bottom-right-radius: 20px; border-top-right-radius: 20px;">
+                                    
+                                    <div class="col-2 ms-0 ps-0">
+                                      <div class="rounded-circle d-flex justify-content-center align-items-center fw-semibold" 
+                                          style="background-color: #366A9A; width: 32px; height: 32px; color: white; position: absolute; top: 0px;">
+                                        04
+                                      </div>
+                                    </div>
+
+                                    <div class="col-10 d-flex justify-content-center align-items-center fw-bold">
+                                      <div class="col-8 ps-0" style="font-size: 12px; color: #366A9A;">
+                                        Muy Buenos
+                                      </div>
+                                      <div class="col-4 text-secondary text-end" style="font-size: 14px;">
+                                        <span style="color: #366A9A;">{{ $escalas[1]['Muy Bueno'] ?? 0 }}%</span>
+                                      </div>
+                                    </div>
+
+                                  </div>  
+                                </div>
+                              </div>                          
+                          
+                              <div class="d-flex justify-content-center align-items-center mb-3">
+                                <div class="col-10">
+                                  <div class="row border bg-white" 
+                                      style="border-color: #447BAC; height: 34px; position: relative; 
+                                              border-bottom-left-radius: 50px; border-top-left-radius: 50px; 
+                                              border-bottom-right-radius: 20px; border-top-right-radius: 20px;">
+                                    
+                                    <div class="col-2 ms-0 ps-0">
+                                      <div class="rounded-circle d-flex justify-content-center align-items-center fw-semibold" 
+                                          style="background-color: #447BAC; width: 32px; height: 32px; color: white; position: absolute; top: 0px;">
+                                        03
+                                      </div>
+                                    </div>
+
+                                    <div class="col-10 d-flex justify-content-center align-items-center fw-bold">
+                                      <div class="col-8 ps-0" style="font-size: 12px; color: #447BAC;">
+                                        Buenos
+                                      </div>
+                                      <div class="col-4 text-secondary text-end" style="font-size: 14px;">
+                                        <span  style="color: #447BAC;">{{ $escalas[1]['Bueno'] ?? 0 }}%</span>
+                                      </div>
+                                    </div>
+
+                                  </div>  
+                                </div>
+                              </div>                          
+                            
+                              <div class="d-flex justify-content-center align-items-center mb-3">
+                                <div class="col-10">
+                                  <div class="row border bg-white" 
+                                      style="border-color: #538CBF; height: 34px; position: relative; 
+                                              border-bottom-left-radius: 50px; border-top-left-radius: 50px; 
+                                              border-bottom-right-radius: 20px; border-top-right-radius: 20px;">
+                                    
+                                    <div class="col-2 ms-0 ps-0">
+                                      <div class="rounded-circle d-flex justify-content-center align-items-center fw-semibold" 
+                                          style="background-color: #538CBF; width: 32px; height: 32px; color: white; position: absolute; top: 0px;">
+                                        02
+                                      </div>
+                                    </div>
+
+                                    <div class="col-10 d-flex justify-content-center align-items-center fw-bold">
+                                      <div class="col-8 ps-0" style="font-size: 12px; color: #538CBF;">
+                                        Regulares
+                                      </div>
+                                      <div class="col-4 text-secondary text-end" style="font-size: 14px;">
+                                        <span style="color: #538CBF;">{{ $escalas[1]['Regular'] ?? 0 }}%</span>
+                                      </div>
+                                    </div>
+
+                                  </div>  
+                                </div>
+                              </div>                          
+                            
+                              <div class="d-flex justify-content-center align-items-center mb-3">
+                                <div class="col-10">
+                                  <div class="row border bg-white" 
+                                      style="border-color: #629DD1 ; height: 34px; position: relative; 
+                                              border-bottom-left-radius: 50px; border-top-left-radius: 50px; 
+                                              border-bottom-right-radius: 20px; border-top-right-radius: 20px;">
+                                    
+                                    <div class="col-2 ms-0 ps-0">
+                                      <div class="rounded-circle d-flex justify-content-center align-items-center fw-semibold" 
+                                          style="background-color: #629DD1 ; width: 32px; height: 32px; color: white; position: absolute; top: 0px;">
+                                        01
+                                      </div>
+                                    </div>
+
+                                    <div class="col-10 d-flex justify-content-center align-items-center fw-bold">
+                                      <div class="col-9 ps-0" style="font-size: 12px; color: #629DD1;">
+                                        Deficientes
+                                      </div>
+                                      <div class="col-3 text-secondary text-end" style="font-size: 14px;">
+                                        <span style="color: #629DD1;">{{ $escalas[1]['Deficiente'] ?? 0 }}%</span>
+                                      </div>
+                                    </div>
+
+                                  </div>  
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col text-end">
+                              <img src="{{ asset('assets/img/escala.jpg') }}" style="height: 90%;">
+                            </div>
+                          </div>  
+                          <h6 class=" text-secondary text-uppercase"style="font-size: 14px">Desempeño <span id="desempeno_seccion_1"></span> Según Escala</h6>
+
+                          <div class="row border px-4 border-primary bg-light rounded-pill d-flex justify-content-between align-items-center mb-2 fw-bold  text-secondary" style=" height: 40px; font-size: 16px;">
+                            <div class="col d-flex justify-content-center">
+                              Promedio
+                            </div>
+                            <div class="col d-flex justify-content-center" style="font-size: 16px;">
+                              {{ $escalas_grp[1]['promedio'] ?? 0 }}%
+                            </div>
+                            <div class="col d-flex justify-content-center">
+                              <i class="fa-solid fa-arrow-right-long fa-lg"></i>
+                            </div>
+                            <div class="col d-flex justify-content-center" style="color: {{ $escalas_grp[1]['color'] ?? '#2F526F' }};">
+                              {{ $escalas_grp[1]['categoria'] ?? 0 }}
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6 h-100">
+                  <div class="card">
+                    <div class="card-body">   
+                      <h5 class="card-title text-secondary text-uppercase"style="font-size: 15px">CUMPLIMIENTO VS. GAP Corporativo<br></h5>
+                      <div id="container-donuts_1" style="height: 360px;"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+      <!--------------------------------->
+
+
+
+
         <hr>
         <div class="pagetitle">
           <h1 class="text-secondary">Gap de Desarrollo - {{ $ano }}</h1>
           <nav>
             <ol class="breadcrumb">
               <li class="breadcrumb-item"style="font-weight: normal;">Evaluación y Desarrollo</li>
-              <li class="breadcrumb-item" style="color: #4B6EAD">GAP - <span id="nom_seccion_2"><span></li>
+              <li class="breadcrumb-item" style="color: #4B6EAD">GAP - <span id="nom_seccion_2"></span></li>
             </ol>
           </nav>
         </div><!-- End Page Title -->
@@ -684,18 +1124,20 @@
             <table class="table table-sm small table-striped-columns table-hover mx-auto" style="width: 90%">
               <thead>
                 <tr class="fw-bold">
-                  <td class="table-primary text-center" style="color: #4B6EAD; width: 30%">GAP - <span id="nom_grp_2"><span></td>
-                  <td class="table-primary text-center" style="color: #4B6EAD; width: 12%">Coef. Intelectual</td>
-                  <td class="table-primary text-center" style="color: #4B6EAD; width: 12%">Niv. Académico</td>
-                  <td class="table-primary text-center" style="color: #4B6EAD; width: 12%">Competencias</td>
-                  <td class="table-primary text-center" style="color: #4B6EAD; width: 12%">Habilidades</td>
-                  <td class="table-primary text-center fw-bold" style="color: #4B6EAD; width: 12%">GAP TOTAL</td>
+                  <td class="table-primary text-center" style="color: #4B6EAD; width: 40%">GAP - <span id="nom_grp_2"><span></td>
+                  <td class="table-primary text-center" style="color: #4B6EAD; width: 10%">Personas</td>
+                  <td class="table-primary text-center" style="color: #4B6EAD; width: 10%">Coef. Intelectual</td>
+                  <td class="table-primary text-center" style="color: #4B6EAD; width: 10%">Niv. Académico</td>
+                  <td class="table-primary text-center" style="color: #4B6EAD; width: 10%">Competencias</td>
+                  <td class="table-primary text-center" style="color: #4B6EAD; width: 10%">Habilidades</td>
+                  <td class="table-primary text-center fw-bold" style="color: #4B6EAD; width: 10%">GAP TOTAL</td>
                 </tr>
               </thead>
               <tbody id="tbody_2"> </tbody>
               <thead>
                 <tr class="text-center table-primary">
                   <th class="table-primary" style="color: #4B6EAD">GAP TOTAL</th>
+                  <th style="color: #4B6EAD"><span id="tothc_2"></span></th>
                   <th style="color: #4B6EAD"><span id="totci_2"></span>%</th>
                   <th style="color: #4B6EAD"><span id="totna_2"></span>%</th>
                   <th style="color: #4B6EAD"><span id="totcom_2"></span>%</th>
@@ -708,13 +1150,195 @@
         </div>    
         
         
+
+      <!-------------------------------->
+              <div class="row">
+                
+                <div class="col-6 h-100">
+                  <div class="card">
+                    <div class="card-body">
+                      <h5 class="card-title text-secondary text-uppercase"style="font-size: 14px">Distribución del Talento, según escala de desempeño</h5>
+                        <div id="container-escala" style="height: 360px;">
+                          <div class="row w-100" class=" d-flex align-items-center" style="height: 280px;">
+                            <div class="col">                              
+                              <div class="d-flex justify-content-center align-items-center mb-3">
+                                <div class="col-10">
+                                  <div class="row border bg-white" 
+                                      style="border-color: #2F526F; height: 34px; position: relative; 
+                                              border-bottom-left-radius: 50px; border-top-left-radius: 50px; 
+                                              border-bottom-right-radius: 20px; border-top-right-radius: 20px;">
+                                    
+                                    <div class="col-2 ms-0 ps-0">
+                                      <div class="rounded-circle d-flex justify-content-center align-items-center fw-semibold" 
+                                          style="background-color: #2F526F; width: 32px; height: 32px; color: white; position: absolute; top: 0px;">
+                                        05
+                                      </div>
+                                    </div>
+
+                                    <div class="col-10 d-flex justify-content-center align-items-center fw-bold">
+                                      <div class="col-8 ps-0" style="font-size: 12px; color: #2F526F;">
+                                        Excelentes
+                                      </div>
+                                      <div class="col-4 text-secondary text-end" style="font-size: 14px;">
+                                        <span style="color: #2F526F;" >{{ $escalas[93]['Excelente'] ?? 0 }}%</span>
+                                      </div>
+                                    </div>
+
+                                  </div>  
+                                </div>
+                              </div>
+                            
+                              <div class="d-flex justify-content-center align-items-center mb-3">
+                                <div class="col-10">
+                                  <div class="row border bg-white" 
+                                      style="border-color: #366A9A; height: 34px; position: relative; 
+                                              border-bottom-left-radius: 50px; border-top-left-radius: 50px; 
+                                              border-bottom-right-radius: 20px; border-top-right-radius: 20px;">
+                                    
+                                    <div class="col-2 ms-0 ps-0">
+                                      <div class="rounded-circle d-flex justify-content-center align-items-center fw-semibold" 
+                                          style="background-color: #366A9A; width: 32px; height: 32px; color: white; position: absolute; top: 0px;">
+                                        04
+                                      </div>
+                                    </div>
+
+                                    <div class="col-10 d-flex justify-content-center align-items-center fw-bold">
+                                      <div class="col-8 ps-0" style="font-size: 12px; color: #366A9A;">
+                                        Muy Buenos
+                                      </div>
+                                      <div class="col-4 text-secondary text-end" style="font-size: 14px;">
+                                        <span style="color: #366A9A;">{{ $escalas[93]['Muy Bueno'] ?? 0 }}%</span>
+                                      </div>
+                                    </div>
+
+                                  </div>  
+                                </div>
+                              </div>                          
+                          
+                              <div class="d-flex justify-content-center align-items-center mb-3">
+                                <div class="col-10">
+                                  <div class="row border bg-white" 
+                                      style="border-color: #447BAC; height: 34px; position: relative; 
+                                              border-bottom-left-radius: 50px; border-top-left-radius: 50px; 
+                                              border-bottom-right-radius: 20px; border-top-right-radius: 20px;">
+                                    
+                                    <div class="col-2 ms-0 ps-0">
+                                      <div class="rounded-circle d-flex justify-content-center align-items-center fw-semibold" 
+                                          style="background-color: #447BAC; width: 32px; height: 32px; color: white; position: absolute; top: 0px;">
+                                        03
+                                      </div>
+                                    </div>
+
+                                    <div class="col-10 d-flex justify-content-center align-items-center fw-bold">
+                                      <div class="col-8 ps-0" style="font-size: 12px; color: #447BAC;">
+                                        Buenos
+                                      </div>
+                                      <div class="col-4 text-secondary text-end" style="font-size: 14px;">
+                                        <span  style="color: #447BAC;">{{ $escalas[93]['Bueno'] ?? 0 }}%</span>
+                                      </div>
+                                    </div>
+
+                                  </div>  
+                                </div>
+                              </div>                          
+                            
+                              <div class="d-flex justify-content-center align-items-center mb-3">
+                                <div class="col-10">
+                                  <div class="row border bg-white" 
+                                      style="border-color: #538CBF; height: 34px; position: relative; 
+                                              border-bottom-left-radius: 50px; border-top-left-radius: 50px; 
+                                              border-bottom-right-radius: 20px; border-top-right-radius: 20px;">
+                                    
+                                    <div class="col-2 ms-0 ps-0">
+                                      <div class="rounded-circle d-flex justify-content-center align-items-center fw-semibold" 
+                                          style="background-color: #538CBF; width: 32px; height: 32px; color: white; position: absolute; top: 0px;">
+                                        02
+                                      </div>
+                                    </div>
+
+                                    <div class="col-10 d-flex justify-content-center align-items-center fw-bold">
+                                      <div class="col-8 ps-0" style="font-size: 12px; color: #538CBF;">
+                                        Regulares
+                                      </div>
+                                      <div class="col-4 text-secondary text-end" style="font-size: 14px;">
+                                        <span style="color: #538CBF;">{{ $escalas[93]['Regular'] ?? 0 }}%</span>
+                                      </div>
+                                    </div>
+
+                                  </div>  
+                                </div>
+                              </div>                          
+                            
+                              <div class="d-flex justify-content-center align-items-center mb-3">
+                                <div class="col-10">
+                                  <div class="row border bg-white" 
+                                      style="border-color: #629DD1 ; height: 34px; position: relative; 
+                                              border-bottom-left-radius: 50px; border-top-left-radius: 50px; 
+                                              border-bottom-right-radius: 20px; border-top-right-radius: 20px;">
+                                    
+                                    <div class="col-2 ms-0 ps-0">
+                                      <div class="rounded-circle d-flex justify-content-center align-items-center fw-semibold" 
+                                          style="background-color: #629DD1 ; width: 32px; height: 32px; color: white; position: absolute; top: 0px;">
+                                        01
+                                      </div>
+                                    </div>
+
+                                    <div class="col-10 d-flex justify-content-center align-items-center fw-bold">
+                                      <div class="col-9 ps-0" style="font-size: 12px; color: #629DD1;">
+                                        Deficientes
+                                      </div>
+                                      <div class="col-3 text-secondary text-end" style="font-size: 14px;">
+                                        <span style="color: #629DD1;">{{ $escalas[93]['Deficiente'] ?? 0 }}%</span>
+                                      </div>
+                                    </div>
+
+                                  </div>  
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col text-end">
+                              <img src="{{ asset('assets/img/escala.jpg') }}" style="height: 90%;">
+                            </div>
+                          </div>  
+                          <h6 class=" text-secondary text-uppercase"style="font-size: 14px">Desempeño <span id="desempeno_seccion_2"></span> Según Escala</h6>
+
+                          <div class="row border px-4 border-primary bg-light rounded-pill d-flex justify-content-between align-items-center mb-2 fw-bold  text-secondary" style=" height: 40px; font-size: 16px;">
+                            <div class="col d-flex justify-content-center">
+                              Promedio
+                            </div>
+                            <div class="col d-flex justify-content-center" style="font-size: 16px;">
+                              {{ $escalas_grp[93]['promedio'] ?? 0 }}%
+                            </div>
+                            <div class="col d-flex justify-content-center">
+                              <i class="fa-solid fa-arrow-right-long fa-lg"></i>
+                            </div>
+                            <div class="col d-flex justify-content-center" style="color: {{ $escalas_grp[93]['color'] ?? '#2F526F' }};">
+                              {{ $escalas_grp[93]['categoria'] ?? 0 }}
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6 h-100">
+                  <div class="card">
+                    <div class="card-body">   
+                      <h5 class="card-title text-secondary text-uppercase"style="font-size: 15px">CUMPLIMIENTO VS. GAP Unidades de Negocios<br></h5>
+                      <div id="container-donuts_2" style="height: 360px;"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+      <!--------------------------------->
+
+
         <hr>
         <div class="pagetitle">
           <h1 class="text-secondary">Gap de Desarrollo - {{ $ano }}</h1>
           <nav>
             <ol class="breadcrumb">
               <li class="breadcrumb-item"style="font-weight: normal;">Evaluación y Desarrollo</li>
-              <li class="breadcrumb-item" style="color: #4B6EAD">GAP - <span id="nom_seccion_3"><span></li>
+              <li class="breadcrumb-item" style="color: #4B6EAD">GAP - <span id="nom_seccion_3"></span></li>
             </ol>
           </nav>
         </div><!-- End Page Title -->
@@ -845,18 +1469,20 @@
             <table class="table table-sm small table-striped-columns table-hover mx-auto" style="width: 90%">
               <thead>
                 <tr class="fw-bold">
-                  <td class="table-primary text-center" style="color: #4B6EAD; width: 30%">GAP - <span id="nom_grp_3"><span></td>
-                  <td class="table-primary text-center" style="color: #4B6EAD; width: 12%">Coef. Intelectual</td>
-                  <td class="table-primary text-center" style="color: #4B6EAD; width: 12%">Niv. Académico</td>
-                  <td class="table-primary text-center" style="color: #4B6EAD; width: 12%">Competencias</td>
-                  <td class="table-primary text-center" style="color: #4B6EAD; width: 12%">Habilidades</td>
-                  <td class="table-primary text-center fw-bold" style="color: #4B6EAD; width: 12%">GAP TOTAL</td>
+                  <td class="table-primary text-center" style="color: #4B6EAD; width: 40%">GAP - <span id="nom_grp_3"><span></td>
+                  <td class="table-primary text-center" style="color: #4B6EAD; width: 10%">Personas</td>
+                  <td class="table-primary text-center" style="color: #4B6EAD; width: 10%">Coef. Intelectual</td>
+                  <td class="table-primary text-center" style="color: #4B6EAD; width: 10%">Niv. Académico</td>
+                  <td class="table-primary text-center" style="color: #4B6EAD; width: 10%">Competencias</td>
+                  <td class="table-primary text-center" style="color: #4B6EAD; width: 10%">Habilidades</td>
+                  <td class="table-primary text-center fw-bold" style="color: #4B6EAD; width: 10%">GAP TOTAL</td>
                 </tr>
               </thead>
               <tbody id="tbody_3"> </tbody>
               <thead>
                 <tr class="text-center table-primary">
                   <th class="table-primary" style="color: #4B6EAD">GAP TOTAL</th>
+                  <th style="color: #4B6EAD"><span id="tothc_3"></span></th>
                   <th style="color: #4B6EAD"><span id="totci_3"></span>%</th>
                   <th style="color: #4B6EAD"><span id="totna_3"></span>%</th>
                   <th style="color: #4B6EAD"><span id="totcom_3"></span>%</th>
@@ -868,6 +1494,186 @@
           </div>
         </div>        
 
+        
+      <!-------------------------------->
+              <div class="row">
+                <div class="col-6 h-100">
+
+                  <div class="card">
+                    <div class="card-body">
+                      <h5 class="card-title text-secondary text-uppercase"style="font-size: 14px">Distribución del Talento, según escala de desempeño</h5>
+                        <div id="container-escala" style="height: 360px;">
+                          <div class="row w-100" class=" d-flex align-items-center" style="height: 280px;">
+                            <div class="col">                              
+                              <div class="d-flex justify-content-center align-items-center mb-3">
+                                <div class="col-10">
+                                  <div class="row border bg-white" 
+                                      style="border-color: #2F526F; height: 34px; position: relative; 
+                                              border-bottom-left-radius: 50px; border-top-left-radius: 50px; 
+                                              border-bottom-right-radius: 20px; border-top-right-radius: 20px;">
+                                    
+                                    <div class="col-2 ms-0 ps-0">
+                                      <div class="rounded-circle d-flex justify-content-center align-items-center fw-semibold" 
+                                          style="background-color: #2F526F; width: 32px; height: 32px; color: white; position: absolute; top: 0px;">
+                                        05
+                                      </div>
+                                    </div>
+
+                                    <div class="col-10 d-flex justify-content-center align-items-center fw-bold">
+                                      <div class="col-8 ps-0" style="font-size: 12px; color: #2F526F;">
+                                        Excelentes
+                                      </div>
+                                      <div class="col-4 text-secondary text-end" style="font-size: 14px;">
+                                        <span style="color: #2F526F;" >{{ $escalas[106]['Excelente'] ?? 0 }}%</span>
+                                      </div>
+                                    </div>
+
+                                  </div>  
+                                </div>
+                              </div>
+                            
+                              <div class="d-flex justify-content-center align-items-center mb-3">
+                                <div class="col-10">
+                                  <div class="row border bg-white" 
+                                      style="border-color: #366A9A; height: 34px; position: relative; 
+                                              border-bottom-left-radius: 50px; border-top-left-radius: 50px; 
+                                              border-bottom-right-radius: 20px; border-top-right-radius: 20px;">
+                                    
+                                    <div class="col-2 ms-0 ps-0">
+                                      <div class="rounded-circle d-flex justify-content-center align-items-center fw-semibold" 
+                                          style="background-color: #366A9A; width: 32px; height: 32px; color: white; position: absolute; top: 0px;">
+                                        04
+                                      </div>
+                                    </div>
+
+                                    <div class="col-10 d-flex justify-content-center align-items-center fw-bold">
+                                      <div class="col-8 ps-0" style="font-size: 12px; color: #366A9A;">
+                                        Muy Buenos
+                                      </div>
+                                      <div class="col-4 text-secondary text-end" style="font-size: 14px;">
+                                        <span style="color: #366A9A;">{{ $escalas[106]['Muy Bueno'] ?? 0 }}%</span>
+                                      </div>
+                                    </div>
+
+                                  </div>  
+                                </div>
+                              </div>                          
+                          
+                              <div class="d-flex justify-content-center align-items-center mb-3">
+                                <div class="col-10">
+                                  <div class="row border bg-white" 
+                                      style="border-color: #447BAC; height: 34px; position: relative; 
+                                              border-bottom-left-radius: 50px; border-top-left-radius: 50px; 
+                                              border-bottom-right-radius: 20px; border-top-right-radius: 20px;">
+                                    
+                                    <div class="col-2 ms-0 ps-0">
+                                      <div class="rounded-circle d-flex justify-content-center align-items-center fw-semibold" 
+                                          style="background-color: #447BAC; width: 32px; height: 32px; color: white; position: absolute; top: 0px;">
+                                        03
+                                      </div>
+                                    </div>
+
+                                    <div class="col-10 d-flex justify-content-center align-items-center fw-bold">
+                                      <div class="col-8 ps-0" style="font-size: 12px; color: #447BAC;">
+                                        Buenos
+                                      </div>
+                                      <div class="col-4 text-secondary text-end" style="font-size: 14px;">
+                                        <span  style="color: #447BAC;">{{ $escalas[106]['Bueno'] ?? 0 }}%</span>
+                                      </div>
+                                    </div>
+
+                                  </div>  
+                                </div>
+                              </div>                          
+                            
+                              <div class="d-flex justify-content-center align-items-center mb-3">
+                                <div class="col-10">
+                                  <div class="row border bg-white" 
+                                      style="border-color: #538CBF; height: 34px; position: relative; 
+                                              border-bottom-left-radius: 50px; border-top-left-radius: 50px; 
+                                              border-bottom-right-radius: 20px; border-top-right-radius: 20px;">
+                                    
+                                    <div class="col-2 ms-0 ps-0">
+                                      <div class="rounded-circle d-flex justify-content-center align-items-center fw-semibold" 
+                                          style="background-color: #538CBF; width: 32px; height: 32px; color: white; position: absolute; top: 0px;">
+                                        02
+                                      </div>
+                                    </div>
+
+                                    <div class="col-10 d-flex justify-content-center align-items-center fw-bold">
+                                      <div class="col-8 ps-0" style="font-size: 12px; color: #538CBF;">
+                                        Regulares
+                                      </div>
+                                      <div class="col-4 text-secondary text-end" style="font-size: 14px;">
+                                        <span style="color: #538CBF;">{{ $escalas[106]['Regular'] ?? 0 }}%</span>
+                                      </div>
+                                    </div>
+
+                                  </div>  
+                                </div>
+                              </div>                          
+                            
+                              <div class="d-flex justify-content-center align-items-center mb-3">
+                                <div class="col-10">
+                                  <div class="row border bg-white" 
+                                      style="border-color: #629DD1 ; height: 34px; position: relative; 
+                                              border-bottom-left-radius: 50px; border-top-left-radius: 50px; 
+                                              border-bottom-right-radius: 20px; border-top-right-radius: 20px;">
+                                    
+                                    <div class="col-2 ms-0 ps-0">
+                                      <div class="rounded-circle d-flex justify-content-center align-items-center fw-semibold" 
+                                          style="background-color: #629DD1 ; width: 32px; height: 32px; color: white; position: absolute; top: 0px;">
+                                        01
+                                      </div>
+                                    </div>
+
+                                    <div class="col-10 d-flex justify-content-center align-items-center fw-bold">
+                                      <div class="col-9 ps-0" style="font-size: 12px; color: #629DD1;">
+                                        Deficientes
+                                      </div>
+                                      <div class="col-3 text-secondary text-end" style="font-size: 14px;">
+                                        <span style="color: #629DD1;">{{ $escalas[106]['Deficiente'] ?? 0 }}%</span>
+                                      </div>
+                                    </div>
+
+                                  </div>  
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col text-end">
+                              <img src="{{ asset('assets/img/escala.jpg') }}" style="height: 90%;">
+                            </div>
+                          </div>  
+                          <h6 class=" text-secondary text-uppercase"style="font-size: 14px">Desempeño <span id="desempeno_seccion_3"></span> Según Escala</h6>
+
+                          <div class="row border px-4 border-primary bg-light rounded-pill d-flex justify-content-between align-items-center mb-2 fw-bold  text-secondary" style=" height: 40px; font-size: 16px;">
+                            <div class="col d-flex justify-content-center">
+                              Promedio
+                            </div>
+                            <div class="col d-flex justify-content-center" style="font-size: 16px;">
+                              {{ $escalas_grp[106]['promedio'] ?? 0 }}%
+                            </div>
+                            <div class="col d-flex justify-content-center">
+                              <i class="fa-solid fa-arrow-right-long fa-lg"></i>
+                            </div>
+                            <div class="col d-flex justify-content-center" style="color: {{ $escalas_grp[106]['color'] ?? '#2F526F' }};">
+                              {{ $escalas_grp[106]['categoria'] ?? 0 }}
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6 h-100">
+                  <div class="card">
+                    <div class="card-body">   
+                      <h5 class="card-title text-secondary text-uppercase"style="font-size: 15px">CUMPLIMIENTO VS. GAP Centro de Distribución<br></h5>
+                      <div id="container-donuts_3" style="height: 360px;"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+      <!--------------------------------->
 
     </div>
 <script>
@@ -1034,6 +1840,76 @@
 
       }]
     });
+
+    var Gap_PASTEL = @php echo $gap; @endphp;
+    var Cumplimiento_PASTEL = @php echo $cump_gap; @endphp;
+
+    Cumplimiento_PASTEL = parseFloat(Cumplimiento_PASTEL.toFixed(1));
+    Gap_PASTEL = parseFloat(Gap_PASTEL.toFixed(1));
+
+    Highcharts.chart('container-donuts', {
+        chart: {
+            type: 'pie',
+            options3d: {
+                enabled: true,
+                alpha: 40,
+                beta: 0
+            }
+        },
+        title: {
+            text: null,
+            style: {
+                color: '#aaaaaa',
+                fontSize: '16px'
+            }
+        },
+        tooltip: {
+            pointFormat: '<b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                innerSize: 100,
+                depth: 45,
+                allowPointSelect: true,
+                cursor: 'pointer',
+                slicedOffset: 30,
+                dataLabels: {
+                    enabled: true,
+                    distance: -10, // dentro de la rebanada
+                    format: '<div class="text-center" style="text-align:center;font-size:18px; font-weight:bold;">{point.y}%</div><br><div class="text-center" style="text-align:center;font-size:13px; color:#fff;">{point.name}</div>',
+                    style: {
+                        color: '#fff',
+                        fontWeight: 'bold',
+                        fontSize: '14px'
+                    }
+                }
+            }
+        },
+        series: [{
+            name: 'Porcentaje',
+            data: [
+                {
+                    name: 'GAP',
+                    y: Gap_PASTEL,
+                    color: '#909D8E',
+                    sliced: true,
+                    selected: true
+                },
+                {
+                    name: 'Cumplimiento',
+                    y: Cumplimiento_PASTEL,
+                    color: '#0267CC',
+                    sliced: true,
+                    selected: true
+                }
+            ]
+        }]
+    });
+
+
+    
+
+    
 </script>
 
 
@@ -1050,12 +1926,13 @@
       
       // Crear las filas de la tabla dinámicamente
       let fila = "";
-      let totalCoefInt = 0, totalNivelAcad = 0, totalCompetencias = 0, totalHabilidades = 0, totalGap = 0;
+      let totalCoefInt = 0, totalNivelAcad = 0, totalCompetencias = 0, totalHabilidades = 0, totalGap = 0; totalCumplimiento = 0; totalGap_donuts = 0;tot_hc=0;
 
       jQuery(gap_unidades).each(function(i, item){
           if(grupo === item.grupo) {
               fila += `<tr>
-                          <td class="ps-2">${item.unidad}</td>
+                          <td class="ps-2">${item.unidad}</td>                          
+                          <td class="text-center">${item.HC}</td>
                           <td class="text-center">${parseFloat(item.COEFICIENTE_INTELECTUAL).toFixed(1)}%</td>
                           <td class="text-center">${parseFloat(item.NIVEL_ACADEMICO).toFixed(1)}%</td>
                           <td class="text-center">${parseFloat(item.COMPETENCIAS).toFixed(1)}%</td>
@@ -1064,24 +1941,29 @@
                         </tr>`;
               
               // Sumar los valores para los totales
+              tot_hc+=item.HC;
               totalCoefInt += parseFloat(item.COEFICIENTE_INTELECTUAL);
               totalNivelAcad += parseFloat(item.NIVEL_ACADEMICO);
               totalCompetencias += parseFloat(item.COMPETENCIAS);
               totalHabilidades += parseFloat(item.HABILIDADES);
               totalGap += parseFloat(item.GAP);
+              totalCumplimiento 
           }
       });
 
       // Actualizar el contenido de la tabla con las filas generadas
       $("#tbody_" + x).html(fila);
 
-      // Actualizar los totales
+      // Actualizar los totales de la tabla
       let totalRows = jQuery(gap_unidades).filter(function(i, item) { return grupo === item.grupo }).length;
+      $('#tothc_' + x).html(tot_hc); // Promedio de Coef. Intelectual
       $('#totci_' + x).html((totalCoefInt / totalRows).toFixed(1)); // Promedio de Coef. Intelectual
       $('#totna_' + x).html((totalNivelAcad / totalRows).toFixed(1)); // Promedio de Nivel Académico
       $('#totcom_' + x).html((totalCompetencias / totalRows).toFixed(1)); // Promedio de Competencias
       $('#tothab_' + x).html((totalHabilidades / totalRows).toFixed(1)); // Promedio de Habilidades
       $('#tot_' + x).html((totalGap / totalRows).toFixed(1)); // Promedio de GAP
+      
+                  
 
       $('#gap_sec_ci_' + x).html((totalCoefInt / totalRows).toFixed(1)+'%'); // Promedio de Coef. Intelectual
       $('#gap_sec_na_' + x).html((totalNivelAcad / totalRows).toFixed(1)+'%'); // Promedio de Coef. Intelectual
@@ -1100,12 +1982,14 @@
       $('#barra_com_' + x).css("width", (100 - (totalCompetencias / totalRows).toFixed(1)) + '%');
       $('#barra_hab_' + x).css("width", (100 - (totalHabilidades / totalRows).toFixed(1)) + '%');
       $('#barra_gap_' + x).css("width", (100 - (totalGap / totalRows).toFixed(1)) + '%');
-      
+      totalGap_donuts += parseFloat(( (totalGap / totalRows).toFixed(1)));
+      totalCumplimiento += parseFloat((100 - (totalGap / totalRows).toFixed(1)));
 
       // Título del gráfico
       document.getElementById('tit_' + x).innerHTML = 'Cumplimiento vs. GAP - ' + grupo;
       document.getElementById('nom_grp_' + x).innerHTML = grupo;
       document.getElementById('nom_seccion_' + x).innerHTML = grupo;
+      document.getElementById('desempeno_seccion_' + x).innerHTML = grupo;
       
 
       Highcharts.setOptions({
@@ -1196,6 +2080,69 @@
               }
           }]
       });
+
+
+
+
+    Highcharts.chart('container-donuts_' + x, {
+        chart: {
+            type: 'pie',
+            options3d: {
+                enabled: true,
+                alpha: 40,
+                beta: 0
+            }
+        },
+        title: {
+            text: null,
+            style: {
+                color: '#aaaaaa',
+                fontSize: '16px'
+            }
+        },
+        tooltip: {
+            pointFormat: '<b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                innerSize: 100,
+                depth: 45,
+                allowPointSelect: true,
+                cursor: 'pointer',
+                slicedOffset: 30,
+                dataLabels: {
+                    enabled: true,
+                    distance: -10, // dentro de la rebanada
+                    format: '<div class="text-center" style="text-align:center;font-size:18px; font-weight:bold;">{point.y}%</div><br><div class="text-center" style="text-align:center;font-size:13px; color:#fff;">{point.name}</div>',
+                    style: {
+                        color: '#fff',
+                        fontWeight: 'bold',
+                        fontSize: '14px'
+                    }
+                }
+            }
+        },
+        series: [{
+            name: 'Porcentaje',
+            data: [
+                {
+                    name: 'GAP',
+                    y: totalGap_donuts,
+                    color: '#909D8E',
+                    sliced: true,
+                    selected: true
+                },
+                {
+                    name: 'Cumplimiento',
+                    y: totalCumplimiento,
+                    color: '#0267CC',
+                    sliced: true,
+                    selected: true
+                }
+            ]
+        }]
+    });
+
   }
 </script>
 

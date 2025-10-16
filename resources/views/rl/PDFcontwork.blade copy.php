@@ -78,14 +78,14 @@
     $anios = $item->anios;
     $tipo_doc = $item->tipo_doc;
     $tipo_doc_firma = $item->tipo_doc_firma;
-    $descpue = $item->descpue;
+    $descpue = $item->puesto;
     $proposito=$item->proposito;
 
     $tipo_contrato=$item->tipo_contrato;
     $fecha_larga_inicio= $item->fecha_larga_inicio;
     $fecha_larga_terminacion="";
     if($item->sel_tipo_contrato!='P')
-    { $fecha_larga_terminacion= " al <strong>".$item->fecha_larga_terminacion."</strong>";}
+    { $fecha_larga_terminacion= " al <strong>".$item->fterminacion_largo."</strong>";}
     $dependientes = $item->dependientes;
     $hrs_semanales= $item->hrs_semanales; 
     $hrs_mensuales= $item->hrs_mensuales; 
@@ -244,17 +244,6 @@
         </tr>
         </table>
         </main>
-        <!-- Bootstrap JavaScript Libraries -->
-        <script
-            src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-            integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-            crossorigin="anonymous"
-        ></script>
 
-        <script
-            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
-            integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
-            crossorigin="anonymous"
-        ></script>
     </body>
 </html>

@@ -33,7 +33,8 @@ class GapController extends Controller
                     FORMAT(AVG(r.NIVEL_ACADEMICO),1) AS na, 
                     FORMAT(AVG(r.COMPETENCIAS),1) AS com, 
                     FORMAT(AVG(r.HABILIDADES),1) AS hab, 
-                    FORMAT(AVG(r.TOTAL),1)  AS gap
+                    FORMAT(AVG(r.TOTAL),1)  AS gap,
+                    SUM(r.HC) HC
                 FROM 
                     rpt_gap_total r 
                 LEFT JOIN 
@@ -46,34 +47,62 @@ class GapController extends Controller
                     $id_eval=$r->max_id_eval;
                 }
 
-                $query_gap_grupos= Db::select("SELECT 
-                    MAX(r.id_eval) AS max_id_eval, 
-                    e.ano_corresp AS year_ano_corresp,
-                    r.idgrupo,
-                    r.grupo,
-                    FORMAT(r.COEFICIENTE_INTELECTUAL,1) COEFICIENTE_INTELECTUAL, 
-                    FORMAT(r.NIVEL_ACADEMICO,1) NIVEL_ACADEMICO, 
-                    FORMAT(r.COMPETENCIAS,1) COMPETENCIAS, 
-                    FORMAT(r.HABILIDADES,1) HABILIDADES, 
-                    FORMAT(r.TOTAL,1) TOTAL
-                FROM 
-                    rpt_gap_total r 
-                LEFT JOIN 
-                    evaluaciones e ON e.id = r.id_eval
-                    WHERE e.ano_corresp=$ano
-                GROUP BY 
-                    r.idgrupo, r.grupo, 
-                    r.COEFICIENTE_INTELECTUAL, 
-                    r.NIVEL_ACADEMICO, 
-                    r.COMPETENCIAS, 
-                    r.HABILIDADES, 
-                    r.TOTAL,
-                    e.ano_corresp 
-                order by r.idgrupo");
+                $query_prom_desemp= DB::select("
+                -- 1: Calcular el promedio
+                    WITH promedio_general AS (
+                        SELECT AVG(resultado) AS promedio FROM rpt_gap_consolidado where id_eval= ?
+                    )
+
+                -- 2: Buscar el rango correspondiente
+                    SELECT ROUND((p.promedio), 1) as promedio, e.categoria, e.color
+                    FROM promedio_general p
+                    JOIN eval_res_escala e ON p.promedio >= e.minimo AND p.promedio < e.maximo
+                    WHERE e.id_eval = ?", [ $id_eval,$id_eval ]);
+                $prom_desemp = $query_prom_desemp[0] ?? null;
+
+                $query_prom_desemp_grp = DB::select("
+                    WITH promedio_general AS (
+                        SELECT idgrupo, AVG(resultado) AS promedio 
+                        FROM rpt_gap_consolidado 
+                        WHERE id_eval = ? 
+                        GROUP BY idgrupo
+                    )
+                    SELECT 
+                        p.idgrupo, 
+                        ROUND(p.promedio, 1) AS promedio, 
+                        e.categoria, 
+                        e.color
+                    FROM promedio_general p
+                    JOIN eval_res_escala e 
+                        ON p.promedio >= e.minimo AND p.promedio < e.maximo
+                    WHERE e.id_eval = ?
+                ", [ $id_eval, $id_eval ]);
+
+                $prom_desemp_grp = $query_prom_desemp_grp;
+
+                $query_gap_grupos = DB::select("
+                    SELECT 
+                        MAX(r.id_eval) AS max_id_eval, 
+                        e.ano_corresp AS year_ano_corresp,
+                        r.idgrupo,
+                        r.grupo,
+                        ROUND(AVG(r.COEFICIENTE_INTELECTUAL), 1) AS COEFICIENTE_INTELECTUAL,
+                        ROUND(AVG(r.NIVEL_ACADEMICO), 1) AS NIVEL_ACADEMICO,
+                        ROUND(AVG(r.COMPETENCIAS), 1) AS COMPETENCIAS,
+                        ROUND(AVG(r.HABILIDADES), 1) AS HABILIDADES,
+                        ROUND(AVG(r.TOTAL), 1) AS TOTAL,
+                        SUM(r.HC) AS HC
+                    FROM rpt_gap_total r
+                    LEFT JOIN evaluaciones e ON e.id = r.id_eval
+                    WHERE e.ano_corresp = ?
+                    GROUP BY r.idgrupo, r.grupo, e.ano_corresp
+                    ORDER BY r.idgrupo
+                ", [ $ano ]);
+
 
                 $query_gap_total_jer= Db::select("SELECT jerarquia, gap_jer gap FROM rpt_gap_total_jer  where id_eval=$id_eval ORDER BY rpt_gap_total_jer.orden_jer ASC");
 
-                $query_gap_unidades=Db::select("SELECT idgrupo,grupo,unidad,COEFICIENTE_INTELECTUAL,NIVEL_ACADEMICO,COMPETENCIAS,HABILIDADES,GAP FROM rpt_gap_unidades WHERE id_eval=$id_eval ORDER BY idgrupo,GAP asc");
+                $query_gap_unidades=Db::select("SELECT idgrupo,grupo,unidad,COEFICIENTE_INTELECTUAL,NIVEL_ACADEMICO,COMPETENCIAS,HABILIDADES,GAP, HC FROM rpt_gap_unidades WHERE id_eval=$id_eval ORDER BY idgrupo,GAP,HC asc");
 
                 $query_gap_jer_unidades= Db::select("SELECT r.idgrupo, r.grupo, r.jerarquia, 
                     FORMAT((SUM(r.tot_gap) / total_gap_data.total_gap_sum) * MAX(t.TOTAL),1) AS gap_jer
@@ -89,6 +118,78 @@ class GapController extends Controller
                 GROUP BY r.idgrupo, r.grupo, r.jerarquia, total_gap_data.total_gap_sum
                 ORDER BY r.idgrupo, MAX(r.orden_jer) ASC; ");
 
+                $data_escalas = DB::select("
+                    SELECT 
+                        escala.categoria,
+                        COUNT(r.resultado) AS total_personas,
+                        COALESCE(
+                            ROUND(COUNT(r.resultado) * 100.0 / NULLIF(t.total_general, 0), 0),
+                            0
+                        ) AS porcentaje
+                    FROM 
+                        eval_res_escala escala
+                    LEFT JOIN 
+                        rpt_gap_consolidado r 
+                            ON r.resultado > escala.minimo 
+                            AND r.resultado <= escala.maximo 
+                            AND r.id_eval = ?
+                    JOIN (
+                        SELECT 
+                            COUNT(*) AS total_general
+                        FROM 
+                            rpt_gap_consolidado
+                        WHERE 
+                            id_eval = ? 
+                            AND resultado > 0 
+                            AND idarea_cadena NOT IN (129, 157)
+                    ) t
+                    WHERE 
+                        escala.id_eval = ?
+                    GROUP BY 
+                        escala.categoria, escala.maximo, t.total_general
+                    ORDER BY 
+                        escala.maximo DESC
+                ", [ $id_eval, $id_eval, $id_eval ]);
+
+
+                // Obtener total general aparte
+                $total_general = DB::table('rpt_gap_consolidado')
+                    ->where('id_eval', $id_eval)
+                    ->where('resultado', '>', 0)
+                    ->count();
+
+                // Evita dividir por cero
+                $total_general = $total_general ?: 1;
+
+                // Consulta principal usando el total como parámetro
+                $data_escalas_grp = DB::select("
+                    SELECT 
+                        r.idgrupo,
+                        r.grupo,
+                        escala.categoria,
+                        COUNT(r.resultado) AS total_personas,
+                        COALESCE(
+                            ROUND(COUNT(r.resultado) * 100.0 / ?, 0),
+                            0
+                        ) AS porcentaje
+                    FROM 
+                        eval_res_escala escala
+                    LEFT JOIN 
+                        rpt_gap_consolidado r 
+                        ON r.resultado > escala.minimo 
+                        AND r.resultado <= escala.maximo 
+                        AND r.id_eval = ?
+                    WHERE 
+                        escala.id_eval = ?
+                    GROUP BY 
+                        escala.categoria, escala.maximo, r.idgrupo, r.grupo
+                    ORDER BY 
+                        r.idgrupo ASC, 
+                        escala.maximo DESC
+                ", [$total_general, $id_eval, $id_eval]);
+
+
+
                 $meta_dap=20;
                 return view('gd.dashgap')
                 ->with('id_menu',$id_menu)
@@ -98,7 +199,11 @@ class GapController extends Controller
                 ->with('meta_dap',$meta_dap)
                 ->with('gap_total_jer',$query_gap_total_jer)
                 ->with('gap_unidades',$query_gap_unidades)
-                ->with('gap_jer_unidades',$query_gap_jer_unidades);
+                ->with('gap_jer_unidades',$query_gap_jer_unidades)
+                ->with('data_escalas',$data_escalas)
+                ->with('data_escalas_grp',$data_escalas_grp )
+                ->with('prom_desemp',$prom_desemp)
+                ->with('prom_desemp_grp',$prom_desemp_grp);
             }else{
                 return view('auth.login');
             }

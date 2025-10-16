@@ -1144,8 +1144,7 @@
               type:  'POST', 
               cache: false,    
               dataType: "json",      
-              success:  function (data) { 
-              
+              success:  function (data) {               
                 $('#modal_no_evaluado').modal('hide');
                 $('#link_eval_'+cod_evaluado).html('<div class="edit"  onclick="eval('+cod_evaluado+','+estatus+')">'+                    
                 '<span class="text-danger  fw-bold"><i class="fas fa-exclamation-triangle fa-lg pe-2"></i>No Evaluado</span>'); 
@@ -1158,14 +1157,9 @@
                 document.getElementById('div_cumplimiento_pid').style.display="none";
                 document.getElementById("div_pid").style.display='none';
                 document.getElementById('div_cumplimiento_kpi').style.display="none";
-                bien('La evaluación ha sido finalizada.');                
-                
-              }
-                
+                bien('La evaluación ha sido finalizada.');               
+              } 
             });
-
-
-
           }
           })
       }

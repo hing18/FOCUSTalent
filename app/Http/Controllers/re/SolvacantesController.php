@@ -3,207 +3,279 @@
 namespace App\Http\Controllers\re;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\EnviarSolicitudRecibidaJob;
+use App\Mail\SolicitudRecibidaMail;
+use App\Models\conf\Users;
 use App\Models\re\Solvacantes;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class SolvacantesController extends Controller
 {
  
     public function index()
-    {   $id_menu=3;
-        $id_menu_sup=2;
-        if (isset(Auth::user()->id)) 
-        {   $id_user = Auth::user()->id;
-            $data=0;
-            $query = DB::select("SELECT rm.id_menu 
-            FROM usr_rol ur INNER JOIN rol_menu rm ON (rm.id_rol=ur.id_rol AND rm.id_menu=$id_menu) 
-            WHERE ur.id_usr=$id_user ");
-            foreach ($query as $r)
-            {   $data=$r->id_menu;}
-            if($data!=0)
-            {   $data_sups=DB::select("SELECT es.id, es.nameund FROM rec_usr_ue rec INNER JOIN estructuras es ON (es.id=rec.id_ue) WHERE rec.id_usr=$id_user");
+    {
+        $id_menu = 3;
+        $id_menu_sup = 2;
 
-                $data_vacantes_motivo=DB::select("SELECT id, motivo FROM vacantes_motivo WHERE status='true'");
-                $data_vacantes_genero=DB::select("SELECT id, letra, genero FROM vacantes_genero");
-                $data_vacantes_edades=DB::select("SELECT id, rango FROM vacantes_edades WHERE status='true'");
-                $data_PAGADORAs=DB::select("SELECT COD_PAGADORA, PAGADORA FROM colab_planillera_ceco group by COD_PAGADORA, PAGADORA order by COD_PAGADORA");
-
-                return view('re.solvacantes')
-                ->with('data_sups',$data_sups)
-                ->with('id_menu',$id_menu)
-                ->with('id_menu_sup',$id_menu_sup)
-                ->with('data_vacantes_motivo',$data_vacantes_motivo)
-                ->with('data_vacantes_genero',$data_vacantes_genero)
-                ->with('data_vacantes_edades',$data_vacantes_edades)                
-                ->with('data_PAGADORAs',$data_PAGADORAs);
-            }
-            else{   return view('auth.login');}
+        $user = Auth::user();
+        if (!$user) {
+            return redirect()->route('login');
         }
-        else{   return view('auth.login');}
+
+        $id_user = $user->id;
+
+        // Verificar permisos del usuario
+        $rolMenu = DB::table('usr_rol as ur')
+            ->join('rol_menu as rm', function($join) use ($id_menu) {
+                $join->on('rm.id_rol', '=', 'ur.id_rol')
+                    ->where('rm.id_menu', $id_menu);
+            })
+            ->where('ur.id_usr', $id_user)
+            ->select('rm.id_menu', 'ur.id_rol')
+            ->first();
+
+        if (!$rolMenu) {
+            return redirect()->route('login');
+        }
+
+        $data_rol = $rolMenu->id_rol;
+
+        // Mostrar sección confidencial solo para roles 1 y 4
+        $show_conficencial = in_array($data_rol, [1, 4]) ? '' : 'd-none';
+
+        // Datos de unidades asignadas al usuario
+        $data_sups = DB::table('rec_usr_ue as r')
+            ->leftJoin('v_unidades_estructura_hc as v', function($join) {
+                $join->on('r.id_grupo', '=', 'v.idgrupo')
+                    ->on('r.tienda', '=', 'v.tienda');
+            })
+            ->where('r.id_usr', $id_user)
+            ->groupBy('v.idgrupo', 'v.grupo', 'v.tienda')
+            ->orderBy('v.idgrupo')
+            ->select('v.idgrupo', 'v.grupo', 'v.tienda')
+            ->get();
+
+        // Datos de motivos, género y edades para vacantes
+        $data_vacantes_motivo = DB::table('vacantes_motivo')
+            ->where('status', 'true')
+            ->select('id', 'motivo')
+            ->get();
+
+        $data_vacantes_genero = DB::table('vacantes_genero')
+            ->select('id', 'letra', 'genero')
+            ->get();
+
+        $data_vacantes_edades = DB::table('vacantes_edades')
+            ->where('status', 'true')
+            ->select('id', 'rango')
+            ->get();
+
+        return view('re.solvacantes', compact(
+            'data_sups',
+            'show_conficencial',
+            'id_menu',
+            'id_menu_sup',
+            'data_vacantes_motivo',
+            'data_vacantes_genero',
+            'data_vacantes_edades'
+        ));
     }
 
-    public function create()
+
+    public function unidades(Request $request)
     {
-        //
+        $data= request()->except('_token');
+        $idgrp= $data['idgrp'];
+        $id_user = Auth::user()->id;
+
+        [$idgrupo, $tienda] = explode('-', $data['idgrp']);
+            $data_unidades = DB::select("
+            SELECT DISTINCT 
+                v.idunidad, v.unidad, v.tienda 
+            FROM 
+                rec_usr_ue r 
+            LEFT JOIN 
+                v_unidades_estructura_hc v ON (r.id_grupo = v.idgrupo AND r.tienda = v.tienda)
+            WHERE 
+                r.id_usr = :id_user 
+                AND r.id_grupo = :idgrupo 
+                AND r.tienda = :tienda
+            ORDER BY 
+                v.unidad", ['id_user' => $id_user, 'idgrupo' => $idgrupo, 'tienda' => $tienda,
+            ]);
+
+        if (empty($data_unidades)) {
+            return response()->json([
+                'code' => 403,
+                'message' => 'No tiene acceso a las unidades del grupo indicado.'
+            ]);
+        }
+
+        return response()->json([
+            'code' => 200,
+            'message' => 'Unidades obtenidas correctamente.',
+            'data' => [
+                'data_unidades' => $data_unidades,
+                'tipogrp' => $tienda,
+            ]
+        ]);
     }
 
     public function store(Request $request)
-    { if (isset(Auth::user()->id)) 
-      { $data= request()->except('_token');
-        $id_puesto= $data['id_puesto'];
-        $codigo_puesto= $data['codigo_puesto'];
-        $cantidad= $data['cantidad'];
-        $genero= $data['genero'];
-        $rango_edad= $data['rango_edad'];
-        $comentarios= str_replace("/^[\w.\n\r\s]+$/", "", $data['comentarios']);
-        $id_secc= $data['id_secc'];
-        $id_ue= $data['id_ue'];
-        $id_jer= $data['id_jer'];
-        $id_escala= $data['id_escala'];
-        $tiemporeal= $data['tiemporeal'];
-        $tiempocalculado= $data['tiempocalculado'];
-        $id_motivo= $data['id_motivo'];
-        $fileToUpload= $data['fileToUpload'];
-        $sel_PAGADORA= $data['sel_PAGADORA'];
-        $sel_ceco= $data['sel_ceco'];
-        $id_user_solicitante= Auth::user()->id;
-        $newname='-';$sube=0;
-        $newnamecompleto='-';
-        if($fileToUpload!='-')
-        {
-            define("fileName", '');
-            $fileName = '';
-            $path="docs/";
-            if(isset($_FILES["fileToUpload"]["type"])){
-                $target_dir = $path;
-                $carpeta=$target_dir;
-                if (!file_exists($carpeta)) {
-                    mkdir($carpeta, 0777, true);
-                }
-
-                $extension = explode('.',$_FILES['fileToUpload']['name']);
-                $num = count($extension)-1;
-
-                // Creamos el nombre del archivo dependiendo la opción
-                $newname=fileName.time().'.'.$extension[$num];
-                $newnamecompleto = $target_dir.$newname;
-
-                $target_file = $carpeta . basename($_FILES["fileToUpload"]["name"]);
-                #$target_file = $carpeta . basename($_FILES["fileToUpload"]["name"]);
-                $uploadOk = 1;
-                $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
-            
-                // Check if file already exists
-                if (file_exists($target_file)) {
-                    $mensaje= ' El archivo ya existe.';$sube=2;
-                    $uploadOk = 0;
-                }
-                // Check file size
-            /*  if ($_FILES["fileToUpload"]["size"] > 92000000000) {
-                    echo ' El archivo es demasiado grande. Tamaño máximo admitido: 4 MB.';$sube=2;
-                    $uploadOk = 0;
-                }*/
-                // Allow certain file formats
-            /* if($imageFileType != "xls" && $imageFileType != "xlsx" ) {
-                    echo ' Solamente archivos xls, xlsx, .csv';$sube=2;
-                    $uploadOk = 0;
-                }*/
-                // Check if $uploadOk is set to 0 by an error
-                if ($uploadOk == 0) {
-                    $mensaje= ' El archivo no fue adjuntado.';$sube=2;
-                // if everything is ok, try to upload file
-                } else {
-                    if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $newnamecompleto)) {
-                        $sube=1;            
-                    } else {
-                        $mensaje= ' Hubo un error subiendo el archivo.';$sube=2;
-                    }
-                }
-            }
+    {
+        if (!Auth::check()) {
+            return response()->json(['error' => 'No autenticado'], 401);
         }
-        $totcantidad=0;
-        if($sube==0||$sube==1)
-        {   $fecha_actual = date("Y-m-d");
-            
-            $fecha_hasta= date("Y-m-d",strtotime($fecha_actual."+ ".$tiempocalculado." days"));
-            
+
+        $comentarios = preg_replace('/[^\w.\s\n\r]/u', '', $request->input('comentarios', ''));
+        $sube = 0;
+        $newnamecompleto = '-';
+
+        // Manejo del archivo si existe
+        if ($request->hasFile('fileToUpload') && $request->file('fileToUpload')->isValid()) {
+            $archivo = $request->file('fileToUpload');
+            $filename = 'autorizacion_' . time() . '.' . $archivo->getClientOriginalExtension();
+            $ruta = $archivo->storeAs('auth', $filename, 'public'); // storage/app/public/docs
+            $newnamecompleto = 'storage/' . $ruta;
+            $sube = 1;
+        }
+        
+        // Crear la solicitud
+        if ($sube == 0 || $sube == 1) {
+            $fecha_actual = now();
+            $fecha_hasta = $fecha_actual->copy()->addDays($request->tiempocalculado);
             $new = new Solvacantes();
-            $new->id_puesto = $id_puesto;
-            $new->codigo_puesto = $codigo_puesto;
-            $new->cantidad =  $cantidad;
-            $new->proceso= 0;
-            $new->contratados= 0;
-            $new->genero =  $genero;
-            $new->rango_edad =  $rango_edad;
-            $new->comentarios =  $comentarios;
-            $new->id_secc =  $id_secc;
-            $new->id_ue =  $id_ue;
-            $new->id_jer =  $id_jer;
-            $new->id_estatus =  1;
-            $new->id_escala =  $id_escala;
-            $new->tiemporeal =  $tiemporeal;
-            $new->tiempocalculado =  $tiempocalculado;
-            $new->hasta =  $fecha_hasta;
-            $new->id_motivo =  $id_motivo;
-            $new->autorizacion =  $newnamecompleto;
-            $new->id_user_solicitante =  $id_user_solicitante;
-            $new->COD_PAGADORA =  $sel_PAGADORA;
-            $new->cod_cia =  $sel_ceco;
+            $new->id_puesto = $request->id_puesto;
+            $new->codigo_puesto = $request->codigo_puesto;
+            $new->cantidad = $request->cantidad;
+            $new->proceso = 0;
+            $new->contratados = 0;
+            $new->genero = $request->genero;
+            $new->rango_edad = $request->rango_edad;
+            $new->comentarios = $comentarios;
+            $new->id_secc = $request->id_secc;
+            $new->id_ue = $request->id_ue;
+            $new->id_jer = $request->id_jer;
+            $new->id_estatus = 1;
+            $new->id_escala = $request->id_escala;
+            $new->tiemporeal = $request->tiemporeal;
+            $new->tiempocalculado = $request->tiempocalculado;
+            $new->hasta = $fecha_hasta->format('Y-m-d');
+            $new->id_motivo = $request->id_motivo;
+            $new->autorizacion = $newnamecompleto;
+            $new->confidencial = $request->confidencial;
+            if($request->confidencial==1){  $new->reclutador_asignado = Auth::id(); }
+            $new->min_salario = $request->min_salarial;
+            $new->max_salario = $request->max_salarial;
+            $new->id_user_solicitante = Auth::id();
             $new->save();
-
-            $query = DB::select("SELECT  `vacsol`.`id_puesto`,sum(`vacsol`.`cantidad`) as `totcantidad`
-			FROM `vacantes_solicitudes` `vacsol` WHERE vacsol.id_puesto=$id_puesto and `id_estatus`<4 and `vacsol`.`contratados`<`vacsol`.`cantidad`");
-            foreach ($query as $r)
-            {   $totcantidad=$r->totcantidad;}
         }
-        $salidaJson=array(
-            "totcantidad"=>$totcantidad,
-            "sube"=>$sube,
-        );
-        echo(json_encode($salidaJson));
-      }
-      else{   return view('auth.login');}
+        // Calcular total de vacantes activas para ese puesto
+        if(Auth::user()->rol==1)
+        {
+            $totcantidad = DB::table('vacantes_solicitudes as vacsol')
+            ->where('vacsol.id_puesto', $request->id_puesto)
+            ->where('vacsol.id_estatus', '<', 10)// Abiertas o en Proceso
+            ->whereRaw('vacsol.contratados < vacsol.cantidad')
+            ->sum('vacsol.cantidad');}
+        else{
+            $totcantidad = DB::table('vacantes_solicitudes as vacsol')
+            ->where('vacsol.id_puesto', $request->id_puesto)
+            ->where('vacsol.id_estatus', '<', 4)
+            ->whereRaw('vacsol.contratados < vacsol.cantidad')
+            ->where(function($query) {
+                $query->where('vacsol.confidencial', 0)
+                    ->orWhere(function($q) {
+                        $q->where('vacsol.confidencial', 1)
+                            ->where('vacsol.reclutador_asignado', Auth::id());
+                    });
+            })
+            ->sum('vacsol.cantidad');
+        }
+
+
+        $usuario = Auth::user();
+        $Nomb_puesto = DB::table('posiciones')->where('id', $request->id_puesto)->value('descpue');
+
+        exec('start /B php ' . base_path('artisan') . ' mail:solicitud "' . $usuario->email . '" "' . $usuario->name . '" "' . $Nomb_puesto . '"');
+
+        // Datos de la solicitud
+        $solicitudData = (object)[
+            'id' => $new->id,
+            'jefe_nombre' => $usuario->name,
+            'puesto' => $Nomb_puesto,
+            'fecha_envio' => Carbon::now(),
+            'comentarios' => $request->comentarios,
+            'cantidad' => $request->cantidad,
+        ];
+        
+        $solicitudJson = addslashes(json_encode($solicitudData));
+
+        $reclutadores_emails = \App\Models\User::where('rol', 4)->pluck('email')->toArray();
+        foreach ($reclutadores_emails as $emails) {
+            exec('start /B php ' . base_path('artisan') . ' mail:reclutador "' . $emails . '" "' . $solicitudJson . '"');
+        }
+
+        return response()->json([
+            "success" => true,
+            "totcantidad" => $totcantidad,
+            "sube" => $sube,
+            "mensaje" => "Solicitud creada correctamente"
+        ]);
     }
 
     public function show(Solvacantes $solvacantes)
-    {   if (isset(Auth::user()->id)) 
-        {   $data= request()->except('_token');
-            $id_pue= $data['id_pue'];
-            $proposito='-';$id_jer='0';$idue='0';
-            $query = DB::select("SELECT df.proposito, df.idjer, po.idue, po.iduni
-            FROM posiciones po INNER JOIN descriptivos df ON (po.iddf=df.id) 
-            WHERE po.id=$id_pue");
-            foreach ($query as $r)
-            {   $proposito=$r->proposito;
-                $id_jer=$r->idjer;
-                $id_ue=$r->idue;
-                $id_secc=$r->iduni;}
-            $tiempo=0;
-            $query = DB::select("SELECT esc.id_escala, esc.tiempo
-            FROM 
-            escalas_unidades_rel rel INNER JOIN 
-            escalas_jeraquias esc ON (esc.id_escala=rel.id_escala and esc.id_jerarquia=$id_jer) 
-            
-            WHERE rel.id_unidad=$id_ue");
-            foreach ($query as $r)
-            {   $tiempo=$r->tiempo;
-                $id_escala=$r->id_escala;}
-
-            $salidaJson=array(
-                "proposito"=>$proposito,
-                "tiempo"=>$tiempo,
-                "id_jer"=>$id_jer,
-                "id_ue"=>$id_ue,
-                "id_secc"=>$id_secc,
-                "id_escala"=>$id_escala,
-                );
-
-            echo(json_encode($salidaJson));
-
+    {
+        if (!Auth::check()) {
+            return view('auth.login');
         }
-        else{   return view('auth.login');}
+        $id_pue = (int) request('id_pue');
+        // 1. Obtener datos principales
+        $posicion = DB::table('vw_pue_est_jer_tiempo')->where('idpu', $id_pue)->select('proposito','idjer','idue','iduni','iddf','id_escala','tiempo')->first();
+        // 2. Obtener competencias
+        $competencias = DB::table('posiciones as po')
+        ->join('descriptivos as df', 'po.iddf', '=', 'df.id')
+        ->leftJoin('reljercomp as rel', 'rel.idjer', '=', 'df.idjer')
+        ->leftJoin('competencias as comp', 'rel.idcomp', '=', 'comp.id')
+        ->where('po.id', $id_pue)
+        ->select(
+            'comp.id',
+            'comp.nombre',
+            'rel.esperado as perfil',            
+            DB::raw("
+                CASE rel.idtipocomp
+                    WHEN 1 THEN 'Crítica'
+                    WHEN 2 THEN 'Muy Importante'
+                    WHEN 3 THEN 'Importante'
+                    ELSE 'No definido'
+                END as nomtipocomp
+            "),
+            'color'
+        )
+        ->orderBy('rel.idtipocomp')
+        ->orderBy('comp.nombre')
+        ->get();
+        $habilidades= DB::select("SELECT habi.habilidad, habi.nivel
+        FROM descrip_habilidades as habi
+        WHERE habi.iddf = $posicion->iddf
+        ORDER BY habi.id");
+        // 3. Consolidar datos
+        $result = [
+            'proposito'   => $posicion->proposito,
+            'idjer'       => $posicion->idjer,
+            'idue'        => $posicion->idue,
+            'iduni'       => $posicion->iduni,
+            'tiempo'      => $posicion->tiempo   ?? null,
+            'id_escala'   => $posicion->id_escala ?? null,
+            'competencias'=> $competencias,
+            'habilidades' => $habilidades,
+        ];
+        return response()->json($result);
     }
 
     public function viewmotivo(Request $request)
@@ -217,13 +289,7 @@ class SolvacantesController extends Controller
         echo(json_encode($salidaJson));
     }
 
-    public function ceco(Solvacantes $solvacantes)
-    {
-        $data= request()->except('_token');
-        $COD_PAGADORA= $data['COD_PAGADORA'];           
-        $data_cecos = DB::select("SELECT cod_cia,nom_cia FROM colab_planillera_ceco WHERE COD_PAGADORA='$COD_PAGADORA' order by cod_cia");
-        echo (json_encode($data_cecos));
-    }
+
 
     public function update(Request $request, Solvacantes $solvacantes)
     {

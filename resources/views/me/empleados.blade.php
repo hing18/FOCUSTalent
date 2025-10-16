@@ -77,13 +77,16 @@
                 <div class="row justify-content-start">        
                     @csrf            
                     <div class="row pt-4 justify-content-between">
-                        <div class="col-4 text-center">
-                            <span class="align-items-center justify-content-center text-center" style="cursor: pointer;" onclick="document.getElementById('insert_image_emplo').click()" id="space_photo"></span>
-                            <input  name="insert_image_emplo" id="insert_image_emplo" accept="image/*"  style="display: none;" type="file">
+                        <div class="col-4 d-flex flex-column justify-content-center align-items-center text-center">
+                          <span class=" d-flex justify-content-center align-items-center" style="cursor: pointer; width: 120px; height: 120px;" onclick="document.getElementById('insert_image_emplo').click()" id="space_photo"> </span>
+                          <input name="insert_image_emplo" id="insert_image_emplo" accept="image/*" style="display: none;" type="file"> 
 
-                            <h6 id="lb_nombre" class="fw-bold mb-0 pt-1 text-primary"></h6>
-                            <div id="lb_codigo" class="text-secondary small mt-0 pb-1"></div>                            
-                        </div>
+                          <h6 id="lb_nombre" class="fw-bold mb-0 pt-1 text-primary"></h6>
+                          <div id="lb_codigo" class="text-secondary small mt-0 pb-1"></div>
+                      </div>
+
+
+
                         <div class="col-4 text-center" style="vertical-align: middle;">
                             <div class="mt-4 pt-4 mb-0 d-flex flex-column align-items-end">
                                 <button type="button" class="btn btn-secondary btn-sm" onclick="back()"><i class="fas fa-arrow-left"></i> Volver</a>
@@ -92,8 +95,7 @@
                     </div>
                 </div>
                 
-                <div class="row pt-4">
-                
+                <div class="row pt-4">                
                     <div class="col-12">
                             <!-- Bordered Tabs -->
                             <ul class="nav nav-tabs">
@@ -300,8 +302,7 @@
                                 <div class="tab-pane fade" id="tab5">                                
                                     5555
                                 </div>
-                            </div>
-                        
+                            </div>                        
                     </div>
                 </div>
             </div>
@@ -350,7 +351,23 @@
             $('#space_photo').html('<div id="preload_img" style="height: 75px" class="align-items-center justify-content-center text-center mt-4"><div class="spinner-border text-primary" role="status"></div></div>');
           },
             success:  function (data) { 
-                $('#space_photo').html(data.photo);
+
+                const nombre = `${data.prinombre} ${data.priapellido}`;
+                const iniciales = `${data.prinombre.charAt(0)}${data.priapellido.charAt(0)}`.toUpperCase();
+
+                const color_tx = data.color_text;
+                const color_bg = data.color_bg;
+                let fotoHtml = `<img src="${data.foto}" alt="Foto de ${nombre}" class="rounded-circle" style="background:#FFFFFF; width: 120px; height: 120px; object-fit: cover; border: 1px solid #aeafb0;">`;
+                if (!data.foto) {
+                  fotoHtml = `
+                    <span class="rounded-circle d-flex align-items-center justify-content-center" style="
+                      width: 120px; height: 120px; background-color: ${color_bg};  border-radius: 50%;  display: flex;  align-items: center;  justify-content: center;  color: ${color_tx};  font-family: 'Segoe UI', 'Roboto', sans-serif;
+                      font-size: 60px;  text-transform: uppercase;  border: 1px solid ${color_tx}">
+                        ${iniciales}
+                    </span>`;
+                  }
+
+                $('#space_photo').html(fotoHtml);
                 $('#prinombre').val(data.prinombre);
                 $('#segnombre').val(data.segnombre);
                 $('#priapellido').val(data.priapellido);
@@ -362,12 +379,8 @@
                 $('#mail').val(data.email);
                 $('#sel_tipodoc').val(data.id_tipo_doc_letra);
                 $('#num_docip').val(data.num_doc);
-                
-              
             }
-          });1/27/1952
-          10/14/1977
-
+          });
     }
     function back()
     {   $('#div_tabla_listado').removeClass('visually-hidden');

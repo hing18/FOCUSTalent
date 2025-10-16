@@ -25,7 +25,8 @@ class GapDirController extends Controller
             foreach ($query as $r)
             {   $data=$r->id_menu;}
                 if($data!=0)
-                {   $query_dir= Db::select("SELECT grupo, codigo, nameund, tipo FROM v_unidades_direcciones ORDER BY idgrupo, nameund asc");
+                {   //$query_dir= Db::select("SELECT grupo, codigo, nameund, tipo FROM v_unidades_direcciones ORDER BY idgrupo, nameund asc");
+                    $query_dir= Db::select("SELECT u.grupo, u.codigo, u.nameund, u.tipo FROM eval_usr_ver_gap uu RIGHT JOIN v_unidades_direcciones u on (uu.id_uni=u.codigo) WHERE uu.id_usr=$id_user ORDER BY u.idgrupo, u.nameund asc;"); 
                     return view('gd.dashgapdir')
                     ->with('id_menu',$id_menu)
                     ->with('id_menu_sup',$id_menu_sup)
@@ -52,7 +53,7 @@ class GapDirController extends Controller
     {
         //
     }
-
+ 
     /**
      * Display the specified resource.
      */
@@ -79,10 +80,14 @@ class GapDirController extends Controller
                     NIVEL_ACADEMICO,
                     COMPETENCIAS,
                     HABILIDADES,
-                    GAP
+                    GAP,
+                    CUMPLIMIENTO,
+                    sum(hc) as hc
                 FROM rpt_gap_und_consolidado
                 WHERE idunidad = ? 
-                GROUP BY idgrupo, grupo, idunidad, unidad, COEFICIENTE_INTELECTUAL, NIVEL_ACADEMICO, COMPETENCIAS, HABILIDADES, GAP", [$idund]);
+                GROUP BY idgrupo, grupo, idunidad, unidad, COEFICIENTE_INTELECTUAL, NIVEL_ACADEMICO, COMPETENCIAS, HABILIDADES, GAP, CUMPLIMIENTO", [$idund]);
+
+                
 
         // Inicializar variables
         $ano = "";
@@ -105,11 +110,12 @@ class GapDirController extends Controller
             gap_na,
             gap_comp as gap_com,
             gap_hab,
-            tot_gap
+            tot_gap,
+            hc
             FROM rpt_gap_und_jer
             WHERE idunidad = ? AND id_eval = ? 
             ORDER BY orden_jer ASC", [$idund, $id_eval]);
-
+        $prom_desemp ="";
         if($tipo==2)
         { $query_colab=DB::select("SELECT 
             jerarquia,
@@ -135,8 +141,53 @@ class GapDirController extends Controller
             WHERE r.idarea_cadena NOT IN (129,157) 
             AND r.id_eval = ? 
             AND r.idunidad = ?", [$id_eval, $idund]);
+
+            $data_escalas = DB::select("
+                SELECT 
+                    escala.categoria,
+                    COUNT(r.resultado) AS total_personas,
+                    COALESCE(
+                        ROUND(COUNT(r.resultado) * 100.0 / NULLIF(t.total_general, 0), 0),
+                        0
+                    ) AS porcentaje
+                FROM 
+                    eval_res_escala escala
+                LEFT JOIN 
+                    rpt_gap_consolidado r 
+                        ON r.resultado > escala.minimo 
+                        AND r.resultado <= escala.maximo 
+                        AND r.idunidad = ? 
+                        AND r.id_eval = ? 
+                        AND r.idarea_cadena NOT IN (129,157)
+                JOIN (
+                    SELECT COUNT(*) AS total_general
+                    FROM rpt_gap_consolidado
+                    WHERE idunidad = ? AND id_eval = ? 
+                    AND resultado > 0 
+                    AND idarea_cadena NOT IN (129,157)
+                ) t
+                WHERE 
+                    escala.id_eval = ?
+                GROUP BY 
+                    escala.categoria, escala.maximo, t.total_general
+                ORDER BY 
+                    escala.maximo DESC
+            ", [$idund, $id_eval, $idund, $id_eval, $id_eval]);
+
+                $query_prom_desemp= DB::select("
+                -- 1: Calcular el promedio
+                    WITH promedio_general AS (
+                        SELECT AVG(resultado) AS promedio FROM rpt_gap_consolidado where id_eval= ? AND idunidad = ? AND idarea_cadena NOT IN (129,157)
+                    )
+
+                -- 2: Buscar el rango correspondiente
+                    SELECT ROUND((p.promedio), 1) as promedio, e.categoria, e.color
+                    FROM promedio_general p
+                    JOIN eval_res_escala e ON p.promedio >= e.minimo AND p.promedio < e.maximo
+                    WHERE e.id_eval = ?", [$id_eval, $idund, $id_eval ]);
+                $prom_desemp = $query_prom_desemp[0] ?? null;
+                        
         }
-            
         if($tipo==3)
         {   $query_colab=DB::select("SELECT 
             jerarquia,
@@ -160,6 +211,51 @@ class GapDirController extends Controller
             LEFT JOIN m_empleados m ON (m.id = r.id_evaluado)
             WHERE r.id_eval = ? 
             AND r.idarea_cadena = ?", [$id_eval, $idund]);
+
+
+                $data_escalas = DB::select("
+                SELECT 
+                    escala.categoria,
+                    COUNT(r.resultado) AS total_personas,
+                    COALESCE(
+                        ROUND(COUNT(r.resultado) * 100.0 / NULLIF(t.total_general, 0), 0),
+                        0
+                    ) AS porcentaje
+                FROM 
+                    eval_res_escala escala
+                LEFT JOIN 
+                    rpt_gap_consolidado r 
+                        ON r.resultado > escala.minimo 
+                        AND r.resultado <= escala.maximo 
+                        AND r.idarea_cadena = ? 
+                        AND r.id_eval = ? 
+                JOIN (
+                    SELECT COUNT(*) AS total_general
+                    FROM rpt_gap_consolidado
+                    WHERE idarea_cadena = ? AND id_eval = ? 
+                    AND resultado > 0 
+                ) t
+                WHERE 
+                    escala.id_eval = ?
+                GROUP BY 
+                    escala.categoria, escala.maximo,t.total_general
+                ORDER BY 
+                    escala.maximo DESC
+            ", [$idund, $id_eval, $idund, $id_eval, $id_eval]);
+
+
+            $query_prom_desemp= DB::select("
+                -- 1: Calcular el promedio
+                    WITH promedio_general AS (
+                        SELECT AVG(resultado) AS promedio FROM rpt_gap_consolidado where id_eval= ? AND idarea_cadena = ? 
+                    )
+
+                -- 2: Buscar el rango correspondiente
+                    SELECT ROUND((p.promedio), 1) as promedio, e.categoria, e.color
+                    FROM promedio_general p
+                    JOIN eval_res_escala e ON p.promedio >= e.minimo AND p.promedio < e.maximo
+                    WHERE e.id_eval = ?", [$id_eval, $idund, $id_eval ]);
+                $prom_desemp = $query_prom_desemp[0] ?? null;
         }
         $datos_photo = []; // Array para guardar todas las fotos
         foreach ($query_fotos as $res) {
@@ -186,6 +282,8 @@ class GapDirController extends Controller
             "gapundjer" => $query_gapundjer,
             "colab" => $query_colab,
             "photos"=> $datos_photo,
+            "data_escalas"=> $data_escalas,
+            "prom_desemp"=> $prom_desemp
         );
 
         // Devolver la respuesta en formato JSON
@@ -205,6 +303,12 @@ class GapDirController extends Controller
         where id_eval= ?
         and id_evaluado= ? ", [$id_eval,$id_evaluado]);
 
+        
+        $query_pid_res=DB::select("SELECT resultado, categoria, color 
+        FROM eval_evaluado_evaluador
+        where id_evaluacion= ?
+        and id_evaluado= ? ", [$id_eval,$id_evaluado]);
+
         $query_pidhab=DB::select("SELECT curso,fecha 
         FROM eval_res_cursos_pid_hab
         where id_eval= ?
@@ -219,6 +323,7 @@ class GapDirController extends Controller
 
         // Crear el arreglo de salida
         $salidaJson = array(
+            "pid_res" => $query_pid_res,
             "pidcomp" => $query_pidcomp,
             "pidhab" => $query_pidhab,
             "pidad" => $query_pidad,

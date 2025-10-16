@@ -26,8 +26,12 @@ use App\Http\Controllers\emails\ContactanosController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\gd\GapDirController;
 use App\Http\Controllers\go\ProcedimientosController;
+use App\Http\Controllers\re\bdController;
 use App\Http\Controllers\re\CartapdfController;
+use App\Http\Controllers\re\ConfigEntrevistasController;
 use App\Http\Controllers\re\EscalasController;
+use App\Http\Controllers\re\evalreclutamientoController;
+use App\Http\Controllers\re\TernasController;
 use App\Mail\ContactanosMailable;
 use App\Models\re\Entrevistas;
 use App\Models\re\Ofertas;
@@ -56,6 +60,7 @@ Auth::routes();
 
 //GESTIÓN ORGANIZATIVA
 
+
     Route::controller(EstructuraController::class)
     ->middleware(['auth', 'session.expired'])
     ->group(function(){
@@ -72,7 +77,10 @@ Auth::routes();
     ->middleware(['auth', 'session.expired'])    
     ->group(function(){
         Route::post('procedimientos/show','show')->name('procedimientos.show');
+        Route::post('procedimientos/edit','edit')->name('procedimientos.edit');
     });
+
+
 
     Route::controller(CompetenciasController::class)
     ->middleware(['auth', 'session.expired'])    
@@ -144,7 +152,7 @@ Auth::routes();
         Route::post('vacantes/show','show')->name('solvacantes.show');
         Route::post('vacantes/viewmotivo','viewmotivo')->name('solvacantes.viewmotivo');
         Route::post('vacantes/store','store')->name('solvacantes.store');
-        Route::post('vacantes/ceco','ceco')->name('solvacantes.ceco');
+        Route::post('vacantes/unidades','unidades')->name('solvacantes.unidades');
     });
     
     Route::controller(EscalasController::class)
@@ -163,10 +171,10 @@ Auth::routes();
     ->middleware(['auth', 'session.expired'])
     ->group(function(){
         Route::get('ofertas','index')->name('ofertas');
-        Route::post('ofertas/show','show')->name('ofertas.show');        
+        Route::post('ofertas/show','show')->name('ofertas.show');  
+        Route::post('ofertas/reasignarReclutador','reasignarReclutador')->name('ofertas.reasignarReclutador');
         Route::post('ofertas/update','update')->name('ofertas.update');
-        Route::post('ofertas/finddistcor','finddistcor')->name('ofertas.finddistcor');
-        Route::post('ofertas/store','store')->name('ofertas.store');        
+        Route::post('ofertas/finddistcor','finddistcor')->name('ofertas.finddistcor');   
         Route::post('ofertas/edit','edit')->name('ofertas.edit');         
         Route::post('ofertas/destroy','destroy')->name('ofertas.destroy'); 
         Route::post('ofertas/findidcurri','findidcurri')->name('ofertas.findidcurri');    
@@ -174,9 +182,9 @@ Auth::routes();
         Route::post('ofertas/sigpaso','sigpaso')->name('ofertas.sigpaso');     
         Route::post('ofertas/deldoc','deldoc')->name('ofertas.deldoc');   
         Route::post('ofertas/fentrevist','fentrevist')->name('ofertas.fentrevist');
-        Route::post('ofertas/notientre','notientre')->name('ofertas.notientre');
+     
         Route::post('ofertas/destroyentre','destroyentre')->name('ofertas.destroyentre');
-        Route::post('ofertas/pdf','pdf')->name('ofertas.pdf');
+        //Route::post('ofertas/pdf','pdf')->name('ofertas.pdf');
         Route::post('ofertas/cartapdf','cartapdf')->name('ofertas.cartapdf');
         Route::post('ofertas/subir','subir')->name('ofertas.subir');
         Route::post('ofertas/subirfoto','subirfoto')->name('ofertas.subirfoto');
@@ -187,25 +195,98 @@ Auth::routes();
         Route::post('ofertas/destroycontacto','destroycontacto')->name('ofertas.destroycontacto');
         Route::post('ofertas/valsipe','valsipe')->name('ofertas.valsipe');
         Route::post('ofertas/valmarcacion','valmarcacion')->name('ofertas.valmarcacion');
-        Route::post('ofertas/cartapdfcontrato','cartapdfcontrato')->name('ofertas.cartapdfcontrato');
+        Route::post('ofertas/crearCartaOferta','crearCartaOferta')->name('ofertas.crearCartaOferta');
+        Route::post('ofertas/editcartaoferta','editcartaoferta')->name('ofertas.editcartaoferta');
+        Route::post('ofertas/tempUploadCartaOferta','tempUploadCartaOferta')->name('ofertas.tempUploadCartaOferta');
+        Route::post('ofertas/saveCartaOfertaFinal','saveCartaOfertaFinal')->name('ofertas.saveCartaOfertaFinal');
+        Route::post('ofertas/validaPaseFirma','validaPaseFirma')->name('ofertas.validaPaseFirma');
+        Route::post('ofertas/sendfirmaContrato','sendfirmaContrato')->name('ofertas.sendfirmaContrato');
+        
         Route::post('ofertas/pruebaspsico','pruebaspsico')->name('ofertas.pruebaspsico');
         Route::post('ofertas/destroypruebapsico','destroypruebapsico')->name('ofertas.destroypruebapsico');
         Route::post('ofertas/descarte','descarte')->name('ofertas.descarte');
+        Route::post('ofertas/findcandidate','findcandidate')->name('ofertas.findcandidate');
+        Route::post('ofertas/agregarcandidatos','agregarcandidatos')->name('ofertas.agregarcandidatos');        
+        Route::post('ofertas/ver_det_candicate','ver_det_candicate')->name('ofertas.ver_det_candicate');  
+        Route::post('ofertas/valida_ref','valida_ref')->name('ofertas.valida_ref'); 
+        Route::post('ofertas/update_validacion_ref_p','update_validacion_ref_p')->name('ofertas.update_validacion_ref_p'); 
+        Route::post('ofertas/update_validacion_ref_l','update_validacion_ref_l')->name('ofertas.update_validacion_ref_l');
+        Route::post('ofertas/save_entrevista_ini','save_entrevista_ini')->name('ofertas.save_entrevista_ini');
+        Route::post('ofertas/importardocs','importardocs')->name('ofertas.importardocs'); 
+        Route::post('ofertas/deldocs','deldocs')->name('ofertas.deldocs'); 
+        Route::post('ofertas/listar_candidate_terna','listar_candidate_terna')->name('ofertas.listar_candidate_terna');         
+        Route::post('ofertas/addOBSTerna','addOBSTerna')->name('ofertas.addOBSTerna');
+        Route::post('ofertas/editOBSTerna','editOBSTerna')->name('ofertas.editOBSTerna');
+        Route::post('ofertas/msg_sendTerna','msg_sendTerna')->name('ofertas.msg_sendTerna');
+        Route::post('ofertas/sendTerna','sendTerna')->name('ofertas.sendTerna');
+        Route::post('ofertas/save_ent_funcional','save_ent_funcional')->name('ofertas.save_ent_funcional');
+        Route::post('ofertas/viewEntFuncional','viewEntFuncional')->name('ofertas.viewEntFuncional');
+        Route::post('ofertas/saveDescarte','saveDescarte')->name('ofertas.saveDescarte');        
+        Route::post('ofertas/ceco','ceco')->name('ofertas.ceco');
     });
 
+    Route::controller(TernasController::class)
+    ->middleware(['auth', 'session.expired'])
+    ->group(function(){        
+        Route::get('ternas','index')->name('ternas');  
+        Route::post('ternas/verDetalle','verDetalle')->name('ternas.verDetalle');  
+        Route::post('ternas/programarEntrevista','programarEntrevista')->name('ternas.programarEntrevista');
+        Route::post('ternas/verEntrevista','verEntrevista')->name('ternas.verEntrevista'); 
+        Route::post('ternas/declinarCandidato','declinarCandidato')->name('ternas.declinarCandidato');
+        Route::post('ternas/verDeclinacion','verDeclinacion')->name('ternas.verDeclinacion');                 
+    });
+
+    
+
+    Route::controller(bdController::class)
+    ->middleware(['auth', 'session.expired'])
+    ->group(function(){
+        Route::get('bd','index')->name('bd');
+        Route::post('bd/subirfoto','subirfoto')->name('bd.subirfoto');
+        Route::post('bd/findreg','findreg')->name('bd.findreg');       
+        Route::post('bd/importarResultados','importarResultados')->name('bd.importarResultados');     
+        Route::post('bd/importarResultadosrazi','importarResultadosrazi')->name('bd.importarResultadosrazi');    
+        Route::post('bd/savepruebas','savepruebas')->name('bd.savepruebas');   
+        Route::post('bd/eliminarPrueba','eliminarPrueba')->name('bd.eliminarPrueba');    
+        Route::post('bd/store','store')->name('bd.store');     
+        Route::post('bd/destroy','destroy')->name('bd.destroy');
+    });
+    
     Route::controller(ContworkController::class)
     ->middleware(['auth', 'session.expired'])
     ->group(function(){
-        Route::get('contratos','index')->name('contwork');
-        Route::post('contratos/show','show')->name('rl.show');
-        Route::post('contratos/showfoto','showfoto')->name('rl.showfoto');
-});
+        Route::get('relacionesLaborales','index')->name('contwork');
+        Route::post('relacionesLaborales/show','show')->name('rl.show');
+        Route::post('relacionesLaborales/cartapdfcontrato','cartapdfcontrato')->name('rl.cartapdfcontrato');
+        Route::post('relacionesLaborales/contratoPdf','contratoPdf')->name('rl.contratoPdf');
+        Route::post('relacionesLaborales/PDFcontwork','PDFcontwork')->name('rl.PDFcontwork');
+        Route::post('relacionesLaborales/tempUploadContrato','tempUploadContrato')->name('rl.tempUploadContrato');
+        Route::post('relacionesLaborales/saveContratofirmado','saveContratofirmado')->name('rl.saveContratofirmado');
+        Route::post('relacionesLaborales/porcontrato','porcontrato')->name('rl.porcontrato');
+        
+    });
+
     Route::controller(EntrevistasController::class)
     ->middleware(['auth', 'session.expired'])
     ->group(function(){
         Route::get('entrevistas','index')->name('entrevistas');
+        Route::post('entrevistas/show','show')->name('entrevistas.show');
+        Route::post('entrevistas/list','list')->name('entrevistas.list');
+        Route::post('entrevistas/verCandidato','verCandidato')->name('entrevistas.verCandidato');
+        Route::post('entrevistas/saveEntrevistaFun','saveEntrevistaFun')->name('entrevistas.saveEntrevistaFun');  
     });
 
+    
+    
+    Route::controller(ConfigEntrevistasController::class)
+    ->middleware(['auth', 'session.expired'])
+    ->group(function(){
+        Route::get('ConfigEntrevistas','index')->name('entrevistasconfig');
+        Route::post('ConfigEntrevistas/edit','edit')->name('entrevistasconfig.edit');//('procedimientos.edit');
+        Route::post('ConfigEntrevistas/editpreg','editpreg')->name('entrevistasconfig.editpreg');//('procedimientos.editpreg');
+        Route::post('ConfigEntrevistas/store','store')->name('entrevistasconfig.store');//('procedimientos.store');
+        Route::post('ConfigEntrevistas/update','destroy')->name('entrevistasconfig.destroy');//('procedimientos.destroy');
+    });
 //ADMINISTRACIÓN
 
     Route::controller(UsersController::class)
@@ -247,7 +328,7 @@ Auth::routes();
         Route::post('empleados/employee','employee')->name('empleados.employee');
         Route::post('empleados/subirfoto','subirfoto')->name('empleados.subirfoto');
     });
-
+ 
     Route::controller(ConfevalController::class)
     ->middleware(['auth', 'session.expired'])
     ->group(function(){
@@ -285,14 +366,23 @@ Auth::routes();
 
 // ENVIO DE EMAIL
 
-/*Route::get('contactanos', function(){
-        Mail::to('mario.espinosa@itregencybrands.com')->send(new ContactanosMailable);
-        return('Mensaje Enviado');
-    })->name('contactanos');
-    
-    Route::controller(ContactanosController::class)->group(function(){
-        Route::post('contactanos','store')->name('contactanos.store');
-    });*/
-   
+
+Route::prefix('evaluacion-reclutamiento')->name('re.')->group(function () {
+
+    // Vistas estáticas
+    Route::get('ya-enviado', function () { return view('re.ya_enviado'); })->name('ya_enviado');
+
+    Route::get('gracias', function () { return view('re.gracias'); })->name('gracias');
+
+    // Evaluación con token
+    Route::get('{token}', [evalreclutamientoController::class, 'showForm'])
+        ->where('token', '[A-Za-z0-9]{60}')
+        ->name('evalreclutamiento');
+
+    Route::post('{token}', [evalreclutamientoController::class, 'submitForm'])
+        ->where('token', '[A-Za-z0-9]{60}');
+});
+
+
 
     

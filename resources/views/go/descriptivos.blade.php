@@ -185,7 +185,7 @@
           <div class="accordion-item">
             <h2 class="accordion-header" id="panel_3-heading">
               <button class="accordion-button collapsed text-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#panel_3" aria-expanded="false" aria-controls="panel_3">
-                <i class="fas fa-list-ol fa-lg me-3 text-primary"></i> <span class="fw-bold me-2">III.</span> <span class="text-primary">Principales Responsablebilidades del Cargo</span>
+                <i class="fas fa-list-ol fa-lg me-3 text-primary"></i> <span class="fw-bold me-2">III.</span> <span class="text-primary">Principales Responsabilidades del Cargo</span>
                 <span id="msg_panel_3" class="text-warning" style="display: none"> <small><small><i class="fas fa-exclamation-triangle ps-2"></i> Incompleto</small></small></span>
               </button>
             </h2>
@@ -208,10 +208,8 @@
                           <th class="text-light text-center align-middle bg-info" width='6%'><i class="fas fa-cog"></i></th>
                         </tr>
                       </thead>
-                      <tbody class="text-secondary" id="body_respon">
-                        
+                      <tbody class="text-secondary" id="body_respon">                        
                         <!-- Listado de responsabilidades -->
-
                       </tbody>
                     </table>
                 </div>
@@ -480,7 +478,7 @@
           <div class="accordion-item">
             <h2 class="accordion-header" id="panel_7-heading">
               <button class="accordion-button collapsed text-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#panel_7" aria-expanded="false" aria-controls="panel_7">
-                <i class="fas fa-lightbulb me-3 fa-lg text-primary"></i> <span class="fw-bold me-2">VII.</span> <span class="text-primary">Habilidaes y Otros Conocimientos del Puesto</span>
+                <i class="fas fa-lightbulb me-3 fa-lg text-primary"></i> <span class="fw-bold me-2">VII.</span> <span class="text-primary">Habilidades y Otros Conocimientos del Puesto</span>
                 <span id="msg_panel_7" class="text-warning" style="display: none"> <small><small><i class="fas fa-exclamation-triangle ps-2"></i> Incompleto</small></small></span>
               </button>
             </h2>
@@ -633,7 +631,7 @@
                 </div>
                 <hr>
                 <div class="text-secondary mb-3">
-                  <small>Temas que deben ser consultados con los superiores para tomas de desiciones</small>
+                  <small>Temas que deben ser consultados con los superiores para tomas de decisiones</small>
                 </div>              
                 <div class="row align-items-center justify-content-center text-center">
                   <div class="col-sm-10 align-items-center justify-content-center text-center">
@@ -1109,37 +1107,34 @@
             dataType: "json",
             cache: true, 
             success:  function (data) { 
-
-            if(data.resp==1)
-            { $("#body_respon").html('');
-              jQuery(data.respons).each(function(i, item){ 
-                contendor  = $("#body_respon").html();
-                nuevaFila  ="";
-                nuevaFila   += '<tr>';
-                nuevaFila  += '<td class="ps-2 align-middle text-uppercase" rowspan="'+item.cant_tarea+'">'+item.area_respon+'</td>';      
-                x=0;
-                jQuery(data.tareas).each(function(i, item2){
-                  if(item.id_respon===item2.idarearespon)
-                  { x++;
-                    nuevaFila  += '<td class="align-middle">'+item2.tarea+'</td>';
-                    nuevaFila  += '<td class="text-center  align-middle">'+item2.criticidad+'</td>';
-                    if(x==1){
-                      nuevaFila  += '<td class="ps-2 align-middle" rowspan="'+item.cant_tarea+'">'+item.kpi+'</td>'; 
-                      nuevaFila  += '<td rowspan="'+item.cant_tarea+'" class="text-center align-middle"><i class="fas fa-pencil-alt edit" onclick=edit_respon('+item.id_respon+')></i><span class="p-1"> </span><i class="fas fa-trash-alt dell" onclick=delrespon(this,"respon",'+item.id_respon+')></i></td></tr>';
+              if(data.resp==1)
+              { $("#body_respon").html('');
+                jQuery(data.respons).each(function(i, item){ 
+                  contendor  = $("#body_respon").html();
+                  nuevaFila  ="";
+                  nuevaFila   += '<tr>';
+                  nuevaFila  += '<td class="ps-2 align-middle text-uppercase" rowspan="'+item.cant_tarea+'">'+item.area_respon+'</td>';      
+                  x=0;
+                  jQuery(data.tareas).each(function(i, item2){
+                    if(item.id_respon===item2.idarearespon)
+                    { x++;
+                      nuevaFila  += '<td class="align-middle">'+item2.tarea+'</td>';
+                      nuevaFila  += '<td class="text-center  align-middle">'+item2.criticidad+'</td>';
+                      if(x==1){
+                        nuevaFila  += '<td class="ps-2 align-middle" rowspan="'+item.cant_tarea+'">'+item.kpi+'</td>'; 
+                        nuevaFila  += '<td rowspan="'+item.cant_tarea+'" class="text-center align-middle"><i class="fas fa-pencil-alt edit" onclick=edit_respon('+item.id_respon+')></i><span class="p-1"> </span><i class="fas fa-trash-alt dell" onclick=delrespon(this,"respon",'+item.id_respon+')></i></td></tr>';
+                      }
+                      else
+                      { nuevaFila  += '</tr>';}
                     }
-                    else
-                    { nuevaFila  += '</tr>';}
-                  }
-                });
-                $("#body_respon").html(contendor+nuevaFila);
-              }); 
-              bien('Área de responsabildiad eliminada.');
-            }
-            else{
-              mal("No fue posible eliminar el área de responabildiad.")
-            }
-
-             
+                  });
+                  $("#body_respon").html(contendor+nuevaFila);
+                }); 
+                bien('Área de responsabildiad eliminada.');
+              }
+              else{
+                mal("No fue posible eliminar el área de responabildiad.")
+              }
             }
           });            
           }
@@ -1364,7 +1359,6 @@
               '</tr>';
               $("#tbody_"+tabla).html(contendor+nuevaFila); 
             }); 
-
         }
       });
 
